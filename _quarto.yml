@@ -13,8 +13,6 @@ book:
     - index.qmd
     - chapters/model_serving.qmd
 
-bibliography: references.bib
-
 format:
   html:
     theme: cosmo
