@@ -1,5 +1,5 @@
 project:
-  type: website
+  type: book
   output-dir: docs
 
 execute:
@@ -8,10 +8,23 @@ execute:
 book:
   title: "R on Databricks Compendium"
   author: "Zac Davies"
+  reader-mode: true
   date: "6/20/2024"
+  site-url: https://zacdav-db.github.io/dbrx-r-compendium/
+  repo-url: https://github.com/zacdav-db/dbrx-r-compendium
+  repo-branch: main
+  repo-actions: [edit, issue]
+  
   chapters:
     - index.qmd
-    - chapters/model_serving.qmd
+    
+    - part: chapters/model-serving/intro.qmd
+      chapters:
+        - chapters/model-serving/logging.qmd
+        
+    - part: "Mlflow"
+      chapters:
+        - chapters/mlflow/log-to-uc.qmd
 
 format:
   html:

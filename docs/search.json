@@ -16,7 +16,7 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Overview",
+    "title": "R on Databricks Compendium",
     "section": "",
     "text": "Overview\n\n\n\n\n\n\nUnder Development\n\n\n\n\n\n\n\n\n\n\n\n\nThis is not intended to be an exhaustive guide, it’s currently a place for me to clearly document and collate useful information regarding R on Databricks.\n\n\n\n\n\n\nThere aren’t many definitive examples of how to use R and Databricks together - hopefully the content here will serve as a useful resource."
   }
