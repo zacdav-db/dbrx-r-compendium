@@ -1,6 +1,6 @@
 # Log R Models to Unity Catalog
 
-Currently `{mlflow}` doesn't support directly logging R models to Unity Catalog. This section will cover why and then how to overcome each roadblock.
+Currently `{mlflow}` doesn't support directly logging R models to Unity Catalog. This section will cover why, and then how to overcome each roadblock.
 
 ## Unity Catalog Model Requirements
 
