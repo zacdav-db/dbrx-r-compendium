@@ -230,7 +230,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Currently <code>{mlflow}</code> doesn’t supporting directly logging R models to Unity Catalog. Before I explain how to work around this, I’ll explain why the existing code doesn’t work.</p>
+<p>Currently <code>{mlflow}</code> doesn’t support directly logging R models to Unity Catalog. This section will cover why and then how to overcome each roadblock.</p>
 <section id="unity-catalog-model-requirements" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="unity-catalog-model-requirements"><span class="header-section-number">1.1</span> Unity Catalog Model Requirements</h2>
 <p>For models to be logged into Unity Catalog they <strong>must</strong> have a <a href="https://mlflow.org/docs/latest/model/signatures.html">model signature</a>. The Model signature defines the schema for model inputs/outputs.</p>
