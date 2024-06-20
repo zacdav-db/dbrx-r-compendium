@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://zacdav-db.github.io/dbrx-r-compendium/references.html</loc>
-    <lastmod>2024-06-20T06:18:05.885Z</lastmod>
-  </url>
-  <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/model_serving.html</loc>
-    <lastmod>2024-06-20T06:17:56.804Z</lastmod>
+    <lastmod>2024-06-20T06:32:25.759Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/index.html</loc>
-    <lastmod>2024-06-20T06:18:01.944Z</lastmod>
+    <lastmod>2024-06-20T06:32:25.767Z</lastmod>
   </url>
 </urlset>

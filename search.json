@@ -1,12 +1,5 @@
 [
   {
-    "objectID": "references.html",
-    "href": "references.html",
-    "title": "References",
-    "section": "",
-    "text": "References"
-  },
-  {
     "objectID": "chapters/model_serving.html",
     "href": "chapters/model_serving.html",
     "title": "Databricks Model Serving",
