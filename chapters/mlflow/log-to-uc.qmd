@@ -86,7 +86,7 @@ Benefit of this method is that all model flavors will inherit the capability to 
 
 To keep things simple we'll be logging a "model" (a function which divides by two).
 
-```{r}
+```{r, eval=FALSE}
 half <- function(x) x / 2
 
 half(1:10)
