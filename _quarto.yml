@@ -1,6 +1,9 @@
-project:touch .nojekyll
+project:
   type: website
   output-dir: docs
+
+execute:
+  freeze: auto
 
 book:
   title: "R on Databricks Compendium"
