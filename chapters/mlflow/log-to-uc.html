@@ -297,24 +297,36 @@ Important
 <p>That means we can focus on <a href="https://github.com/mlflow/mlflow/blob/4bcded857b5618ed43a7ba8bd19dc490de7b74d0/mlflow/R/mlflow/R/model.R#L30C1-L48"><code>mlflow::mlflow_log_model</code></a> directly, we’d need to adjust the code as follows:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="annotated-cell-2"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-2-1" class="code-annotation-target"><a href="#annotated-cell-2-1"></a>mlflow_log_model <span class="ot">&lt;-</span> <span class="cf">function</span>(model, artifact_path, ...) {</span>
-<span id="annotated-cell-2-2"><a href="#annotated-cell-2-2"></a>  temp_path <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">path_temp</span>(artifact_path)</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-2-3" class="code-annotation-target"><a href="#annotated-cell-2-3"></a>  model_spec <span class="ot">&lt;-</span> <span class="fu">mlflow_save_model</span>(model, <span class="at">path =</span> temp_path, <span class="at">model_spec =</span> <span class="fu">list</span>(</span>
-<span id="annotated-cell-2-4"><a href="#annotated-cell-2-4"></a>    <span class="at">utc_time_created =</span> <span class="fu">mlflow_timestamp</span>(),</span>
-<span id="annotated-cell-2-5"><a href="#annotated-cell-2-5"></a>    <span class="at">run_id =</span> <span class="fu">mlflow_get_active_run_id_or_start_run</span>(),</span>
-<span id="annotated-cell-2-6"><a href="#annotated-cell-2-6"></a>    <span class="at">artifact_path =</span> artifact_path,</span>
-<span id="annotated-cell-2-7"><a href="#annotated-cell-2-7"></a>    <span class="at">flavors =</span> <span class="fu">list</span>()</span>
-<span id="annotated-cell-2-8"><a href="#annotated-cell-2-8"></a>  ), ...)</span>
-<span id="annotated-cell-2-9"><a href="#annotated-cell-2-9"></a>  res <span class="ot">&lt;-</span> <span class="fu">mlflow_log_artifact</span>(<span class="at">path =</span> temp_path, <span class="at">artifact_path =</span> artifact_path)</span>
-<span id="annotated-cell-2-10"><a href="#annotated-cell-2-10"></a>  <span class="fu">tryCatch</span>({ <span class="fu">mlflow_record_logged_model</span>(model_spec) }, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
-<span id="annotated-cell-2-11"><a href="#annotated-cell-2-11"></a>    <span class="fu">warning</span>(<span class="fu">paste</span>(<span class="st">"Logging model metadata to the tracking server has failed, possibly due to older"</span>,</span>
-<span id="annotated-cell-2-12"><a href="#annotated-cell-2-12"></a>                  <span class="st">"server version. The model artifacts have been logged successfully."</span>,</span>
-<span id="annotated-cell-2-13"><a href="#annotated-cell-2-13"></a>                  <span class="st">"In addition to exporting model artifacts, MLflow clients 1.7.0 and above"</span>,</span>
-<span id="annotated-cell-2-14"><a href="#annotated-cell-2-14"></a>                  <span class="st">"attempt to record model metadata to the  tracking store. If logging to a"</span>,</span>
-<span id="annotated-cell-2-15"><a href="#annotated-cell-2-15"></a>                  <span class="st">"mlflow server via REST, consider  upgrading the server version to MLflow"</span>,</span>
-<span id="annotated-cell-2-16"><a href="#annotated-cell-2-16"></a>                  <span class="st">"1.7.0 or above."</span>, <span class="at">sep=</span><span class="st">" "</span>))</span>
-<span id="annotated-cell-2-17"><a href="#annotated-cell-2-17"></a>  })</span>
-<span id="annotated-cell-2-18"><a href="#annotated-cell-2-18"></a>  res</span>
-<span id="annotated-cell-2-19"><a href="#annotated-cell-2-19"></a>}</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="annotated-cell-2-2"><a href="#annotated-cell-2-2"></a>  </span>
+<span id="annotated-cell-2-3"><a href="#annotated-cell-2-3"></a>  temp_path <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">path_temp</span>(artifact_path)</span>
+<span id="annotated-cell-2-4"><a href="#annotated-cell-2-4"></a>  </span>
+<span id="annotated-cell-2-5"><a href="#annotated-cell-2-5"></a>  model_spec <span class="ot">&lt;-</span> <span class="fu">mlflow_save_model</span>(</span>
+<span id="annotated-cell-2-6"><a href="#annotated-cell-2-6"></a>    model, <span class="at">path =</span> temp_path,</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-2-7" class="code-annotation-target"><a href="#annotated-cell-2-7"></a>    <span class="at">model_spec =</span> <span class="fu">list</span>(</span>
+<span id="annotated-cell-2-8"><a href="#annotated-cell-2-8"></a>      <span class="at">utc_time_created =</span> <span class="fu">mlflow_timestamp</span>(),</span>
+<span id="annotated-cell-2-9"><a href="#annotated-cell-2-9"></a>      <span class="at">run_id =</span> <span class="fu">mlflow_get_active_run_id_or_start_run</span>(),</span>
+<span id="annotated-cell-2-10"><a href="#annotated-cell-2-10"></a>      <span class="at">artifact_path =</span> artifact_path,</span>
+<span id="annotated-cell-2-11"><a href="#annotated-cell-2-11"></a>      <span class="at">flavors =</span> <span class="fu">list</span>()</span>
+<span id="annotated-cell-2-12"><a href="#annotated-cell-2-12"></a>    ),</span>
+<span id="annotated-cell-2-13"><a href="#annotated-cell-2-13"></a>  ...)</span>
+<span id="annotated-cell-2-14"><a href="#annotated-cell-2-14"></a>  </span>
+<span id="annotated-cell-2-15"><a href="#annotated-cell-2-15"></a>  res <span class="ot">&lt;-</span> <span class="fu">mlflow_log_artifact</span>(<span class="at">path =</span> temp_path, <span class="at">artifact_path =</span> artifact_path)</span>
+<span id="annotated-cell-2-16"><a href="#annotated-cell-2-16"></a>  </span>
+<span id="annotated-cell-2-17"><a href="#annotated-cell-2-17"></a>  <span class="fu">tryCatch</span>({</span>
+<span id="annotated-cell-2-18"><a href="#annotated-cell-2-18"></a>    mlflow<span class="sc">:::</span><span class="fu">mlflow_record_logged_model</span>(model_spec)</span>
+<span id="annotated-cell-2-19"><a href="#annotated-cell-2-19"></a>  },</span>
+<span id="annotated-cell-2-20"><a href="#annotated-cell-2-20"></a>  <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="annotated-cell-2-21"><a href="#annotated-cell-2-21"></a>    <span class="fu">warning</span>(</span>
+<span id="annotated-cell-2-22"><a href="#annotated-cell-2-22"></a>      <span class="fu">paste</span>(<span class="st">"Logging model metadata to the tracking server has failed, possibly due to older"</span>,</span>
+<span id="annotated-cell-2-23"><a href="#annotated-cell-2-23"></a>            <span class="st">"server version. The model artifacts have been logged successfully."</span>,</span>
+<span id="annotated-cell-2-24"><a href="#annotated-cell-2-24"></a>            <span class="st">"In addition to exporting model artifacts, MLflow clients 1.7.0 and above"</span>,</span>
+<span id="annotated-cell-2-25"><a href="#annotated-cell-2-25"></a>            <span class="st">"attempt to record model metadata to the  tracking store. If logging to a"</span>,</span>
+<span id="annotated-cell-2-26"><a href="#annotated-cell-2-26"></a>            <span class="st">"mlflow server via REST, consider  upgrading the server version to MLflow"</span>,</span>
+<span id="annotated-cell-2-27"><a href="#annotated-cell-2-27"></a>            <span class="st">"1.7.0 or above."</span>, <span class="at">sep=</span><span class="st">" "</span>)</span>
+<span id="annotated-cell-2-28"><a href="#annotated-cell-2-28"></a>    )</span>
+<span id="annotated-cell-2-29"><a href="#annotated-cell-2-29"></a>  })</span>
+<span id="annotated-cell-2-30"><a href="#annotated-cell-2-30"></a>  res</span>
+<span id="annotated-cell-2-31"><a href="#annotated-cell-2-31"></a>}</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-annotation">
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
@@ -323,7 +335,7 @@ Important
 </dd>
 <dt data-target-cell="annotated-cell-2" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="3,4,5,6,7,8" data-code-annotation="2">Propagate <code>signature</code> to the <code>model_spec</code> parameter when invoking <code>mlflow::mlflow_save_model</code></span>
+<span data-code-cell="annotated-cell-2" data-code-lines="7,8,9,10,11" data-code-annotation="2">Propagate <code>signature</code> to the <code>model_spec</code> parameter when invoking <code>mlflow::mlflow_save_model</code></span>
 </dd>
 </dl>
 </div>
