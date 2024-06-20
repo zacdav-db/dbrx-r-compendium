@@ -1,5 +1,247 @@
-# Log R models to Unity Catalog
+# Log R Models to Unity Catalog
 
 ::: callout-caution
 ## Under Development
 :::
+
+Currently `{mlflow}` doesn't supporting directly logging R models to Unity Catalog. Before I explain how to work around this, I'll explain why the existing code doesn't work.
+
+## Unity Catalog Model Requirements
+
+For models to be logged into Unity Catalog they **must** have a [model signature](https://mlflow.org/docs/latest/model/signatures.html). The Model signature defines the schema for model inputs/outputs.
+
+Typically when using python this would be inferred via [model input examples](https://mlflow.org/docs/latest/model/signatures.html#input-example). Input examples are optional but strongly recommended.
+
+The documentation discusses [signature enforcement](https://mlflow.org/docs/latest/model/signatures.html#signature-enforcement), currently this isn't implemented for R. Therefore you can decide if the signature is a dummy value for the sake of moving forward, or correct to clearly communicate the behaviour of the model.
+
+::: callout-important
+It's important to clarify that for python the signature is enforced at time of inference *not* when registering the model to Unity Catalog.
+
+The signature correctness is not validated when registering the model, it just has to be syntactically valid.
+:::
+
+So, let's look at the [existing code](https://github.com/mlflow/mlflow/blob/4bcded857b5618ed43a7ba8bd19dc490de7b74d0/mlflow/R/mlflow/R/model-crate.R#L3-L22) to log models in the `crate` flavour:
+
+```{r, eval=FALSE}
+
+mlflow_save_model.crate <- function(model, path, model_spec=list(), ...) {
+  if (dir.exists(path)) unlink(path, recursive = TRUE) # <1>
+  dir.create(path) # <1>
+
+  serialized <- serialize(model, NULL) # <2>
+
+  saveRDS( # <3>
+    serialized, # <3>
+    file.path(path, "crate.bin") # <3>
+  )
+
+  model_spec$flavors <- append(model_spec$flavors, list( # <4>
+    crate = list( # <4>
+      version = "0.1.0", # <4>
+      model = "crate.bin" # <4>
+    ) # <4>
+  )) # <4>
+  mlflow_write_model_spec(path, model_spec)  # <4>
+  model_spec  # <4>
+}
+```
+
+1.  Create the directory to save the model if it doesn't exist, if it does, empty it
+
+2.  Serialise the model, which is an object of class `crate` (from `{carrier}` package)
+
+3.  Save the serialised model via `saveRDS` to the directory as `crate.bin`
+
+4.  Define the model specification, this contains metadata required ensure reproducibility. In this case it's only specifying a version and what file the model can be found within.
+
+The missing puzzle piece is the definition of a signature. Instead of explicitly adding code to the crate flavour itself, we'll take advantage of the `model_spec` parameter.
+
+That means we can focus on [`mlflow::mlflow_log_model`](https://github.com/mlflow/mlflow/blob/4bcded857b5618ed43a7ba8bd19dc490de7b74d0/mlflow/R/mlflow/R/model.R#L30C1-L48) directly, we'd need to adjust the code as follows:
+
+```{r, eval=FALSE}
+mlflow_log_model <- function(model, artifact_path, ...) { # <1>
+  temp_path <- fs::path_temp(artifact_path)
+  model_spec <- mlflow_save_model(model, path = temp_path, model_spec = list( # <2>
+    utc_time_created = mlflow_timestamp(), # <2>
+    run_id = mlflow_get_active_run_id_or_start_run(), # <2>
+    artifact_path = artifact_path, # <2>
+    flavors = list() # <2>
+  ), ...) # <2>
+  res <- mlflow_log_artifact(path = temp_path, artifact_path = artifact_path)
+  tryCatch({ mlflow_record_logged_model(model_spec) }, error = function(e) {
+    warning(paste("Logging model metadata to the tracking server has failed, possibly due to older",
+                  "server version. The model artifacts have been logged successfully.",
+                  "In addition to exporting model artifacts, MLflow clients 1.7.0 and above",
+                  "attempt to record model metadata to the  tracking store. If logging to a",
+                  "mlflow server via REST, consider  upgrading the server version to MLflow",
+                  "1.7.0 or above.", sep=" "))
+  })
+  res
+}
+```
+
+1.  Add a new parameter `signature`
+
+2.  Propagate `signature` to the `model_spec` parameter when invoking `mlflow::mlflow_save_model`
+
+Benefit of this method is that all model flavors will inherit the capability to log a signature.
+
+## Working Through the Solution
+
+To keep things simple we'll be logging a "model" (a function which divides by two).
+
+```{r}
+half <- function(x) x / 2
+
+half(1:10)
+```
+
+Without any changes, a simplified example of logging to `{mlflow}` would look like:
+
+```{r, eval=FALSE}
+library(carrier)
+library(mlflow)
+
+with(mlflow_start_run(), {
+  # typically you'd do more modelling related activities here
+  model <- carrier::crate(~half(.x))
+  mlflow_log_model(model, "model") # <1>
+})
+```
+
+1.  As discussed earlier, this is where things start to go awry with respect to Unity Catalog
+
+### Patching `mlflow_log_model`
+
+::: callout-note
+Technically, patching `mlflow_log_model` isn't the only way to achieve this fix - you could modify the yaml after it's written.
+
+I won't be showing that method as It's just as tedious and can change depending on the model flavour (with respect to where artifacts may reside), patching is more robust.
+:::
+
+```{r, eval=FALSE}
+mlflow_log_model <- function(model, artifact_path, signature = NULL, ...) { # <1>
+  
+  format_signature <- function(signature) { # <2>
+    lapply(signature, function(x) { # <2>
+      jsonlite::toJSON(x, auto_unbox = TRUE) # <2>
+    }) # <2> 
+  } # <2>
+  
+  temp_path <- fs::path_temp(artifact_path)
+  
+  model_spec <- mlflow_save_model(model, path = temp_path, model_spec = list(
+    utc_time_created = mlflow:::mlflow_timestamp(),
+    run_id = mlflow:::mlflow_get_active_run_id_or_start_run(),
+    artifact_path = artifact_path, 
+    flavors = list(),
+    signature = format_signature(signature) # <3>
+  ), ...)
+  
+  res <- mlflow_log_artifact(path = temp_path, artifact_path = artifact_path)
+  
+  tryCatch({
+    mlflow:::mlflow_record_logged_model(model_spec)
+  },
+  error = function(e) {
+    warning(
+      paste("Logging model metadata to the tracking server has failed, possibly due to older",
+            "server version. The model artifacts have been logged successfully.",
+            "In addition to exporting model artifacts, MLflow clients 1.7.0 and above",
+            "attempt to record model metadata to the  tracking store. If logging to a",
+            "mlflow server via REST, consider  upgrading the server version to MLflow",
+            "1.7.0 or above.", sep=" ")
+    )
+  })
+  res
+}
+
+# overriding the function in the existing mlflow namespace 
+assignInNamespace("mlflow_log_model", mlflow_log_model, ns = "mlflow")
+```
+
+1.  `signature` has been added to function parameters, it's defaulting to `NULL` so that existing code won't break
+
+2.  Adding `format_signature` function so don't need to write JSON by hand, adding this within function for simplicity
+
+3.  `signature` is propagated to `mlflow_save_model`'s `model_spec` parameter which will write a valid signature
+
+### Logging Model with a Signature
+
+```{r, eval=FALSE}
+with(mlflow_start_run(), {
+  # typically you'd do more modelling related activities here
+  model <- carrier::crate(~half(.x))
+  signature <- list( # <1>
+    inputs = list(list(type = "double", name = "x")), # <1>
+    outputs = list(list(type = "double")) # <1>
+  )
+  mlflow_log_model(model, "model", signature = signature) # <2>
+})
+```
+
+1.  Explicitly defining a `signature`, a list that contains `input` and `outputs`, each are lists of lists respectively
+
+2.  Passing defined signature to the now patched `mlflow_log_model` function
+
+### Registration to Unity Catalog
+
+Now that the prerequisite of adding a model signature has been satisfied there is one last hurdle to overcome, registering to Unity Catalog.
+
+The hurdle is due to `{mlflow}` not having been updated yet to support registration to Unity Catalog directly. The easiest way to overcome this is to simply register the run via python.
+
+For example:
+
+```{python, python.reticulate = FALSE, eval = FALSE}
+import mlflow
+mlflow.set_registry_uri("databricks-uc")
+
+catalog = "main"
+schema = "default"
+model_name = "my_model"
+run_uri = "runs:/<run_id>/model" #<1>
+
+mlflow.register_model(run_uri, f"{catalog}.{schema}.{model_name}")
+```
+
+1.  You'll need to either get the `run_uri` programmatically or copy it manually
+
+To do this with R you'll need to make a series of requests to Unity Catalog endpoints for registering model, the specific steps are:
+
+1.  **(Optional) Create a new model in Unity Catalog**
+
+    -   `POST` request on `/api/2.0/mlflow/unity-catalog/registered-models/create`
+
+        -   `name`: 3 tiered namespace (e.g. `main.default.my_model`)
+
+2.  **Create a version for the model**
+
+    -   `POST` request on `/api/2.0/mlflow/unity-catalog/model-versions/create`
+
+        -   `name`: 3 tiered namespace (e.g. `main.default.my_model`)
+
+        -   `source`: URI indicating the location of the model artifacts
+
+        -   `run_id`: `run_id` from tracking server that generated the model
+
+        -   `run_tracking_server_id`: Workspace ID of run that generated the model
+
+    -   This will return `storage_location` and `version`
+
+3.  **Copy model artifacts**
+
+    -   Need to copy the artifacts to `storage_location` from step (2)
+
+4.  **Finalise the model version**
+
+    -   `POST` request on `/api/2.0/mlflow/unity-catalog/model-versions/finalize`
+
+        -   `name`: 3 tiered namespace (e.g. `main.default.my_model`)
+
+        -   `version`: `version` returned from step (2)
+
+It's *considerably* easier to just use Python to register the model at this time.
+
+## Fixing `mlflow`
+
+Ideally this page wouldn't exist and `{mlflow}` would support Unity Catalog. Hopefully sometime soon I find the time to make a pull request myself - until then this serves as a guide.
