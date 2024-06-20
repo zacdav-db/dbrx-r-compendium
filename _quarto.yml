@@ -14,6 +14,8 @@ book:
   repo-url: https://github.com/zacdav-db/dbrx-r-compendium
   repo-branch: main
   repo-actions: [edit, issue]
+  downloads: []
+  sharing: [twitter, linkedin]
   
   chapters:
     - index.qmd
