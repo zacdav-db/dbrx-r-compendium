@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>R on Databricks Compendium - 2&nbsp; Log R Models to Unity Catalog</title>
+<title>R on Databricks Compendium - 1&nbsp; Log R Models to Unity Catalog</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,7 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../chapters/model-serving/logging.html" rel="prev">
+<link href="../../index.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -107,7 +107,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mlflow/log-to-uc.html">Mlflow</a></li><li class="breadcrumb-item"><a href="../../chapters/mlflow/log-to-uc.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Log R Models to Unity Catalog</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mlflow/log-to-uc.html">Mlflow</a></li><li class="breadcrumb-item"><a href="../../chapters/mlflow/log-to-uc.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Log R Models to Unity Catalog</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -165,8 +165,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../chapters/model-serving/intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Databricks Model Serving</span></a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Mlflow</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -174,25 +174,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/model-serving/logging.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Logging Adjustments</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
- <span class="menu-text">Mlflow</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../../chapters/mlflow/log-to-uc.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Log R Models to Unity Catalog</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Log R Models to Unity Catalog</span></span></a>
   </div>
 </li>
       </ul>
@@ -207,14 +190,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#unity-catalog-model-requirements" id="toc-unity-catalog-model-requirements" class="nav-link active" data-scroll-target="#unity-catalog-model-requirements"><span class="header-section-number">2.1</span> Unity Catalog Model Requirements</a></li>
-  <li><a href="#working-through-the-solution" id="toc-working-through-the-solution" class="nav-link" data-scroll-target="#working-through-the-solution"><span class="header-section-number">2.2</span> Working Through the Solution</a>
+  <li><a href="#unity-catalog-model-requirements" id="toc-unity-catalog-model-requirements" class="nav-link active" data-scroll-target="#unity-catalog-model-requirements"><span class="header-section-number">1.1</span> Unity Catalog Model Requirements</a></li>
+  <li><a href="#working-through-the-solution" id="toc-working-through-the-solution" class="nav-link" data-scroll-target="#working-through-the-solution"><span class="header-section-number">1.2</span> Working Through the Solution</a>
   <ul class="collapse">
-  <li><a href="#patching-mlflow_log_model" id="toc-patching-mlflow_log_model" class="nav-link" data-scroll-target="#patching-mlflow_log_model"><span class="header-section-number">2.2.1</span> Patching <code>mlflow_log_model</code></a></li>
-  <li><a href="#logging-model-with-a-signature" id="toc-logging-model-with-a-signature" class="nav-link" data-scroll-target="#logging-model-with-a-signature"><span class="header-section-number">2.2.2</span> Logging Model with a Signature</a></li>
-  <li><a href="#registration-to-unity-catalog" id="toc-registration-to-unity-catalog" class="nav-link" data-scroll-target="#registration-to-unity-catalog"><span class="header-section-number">2.2.3</span> Registration to Unity Catalog</a></li>
+  <li><a href="#patching-mlflow_log_model" id="toc-patching-mlflow_log_model" class="nav-link" data-scroll-target="#patching-mlflow_log_model"><span class="header-section-number">1.2.1</span> Patching <code>mlflow_log_model</code></a></li>
+  <li><a href="#logging-model-with-a-signature" id="toc-logging-model-with-a-signature" class="nav-link" data-scroll-target="#logging-model-with-a-signature"><span class="header-section-number">1.2.2</span> Logging Model with a Signature</a></li>
+  <li><a href="#registration-to-unity-catalog" id="toc-registration-to-unity-catalog" class="nav-link" data-scroll-target="#registration-to-unity-catalog"><span class="header-section-number">1.2.3</span> Registration to Unity Catalog</a></li>
   </ul></li>
-  <li><a href="#fixing-mlflow" id="toc-fixing-mlflow" class="nav-link" data-scroll-target="#fixing-mlflow"><span class="header-section-number">2.3</span> Fixing <code>mlflow</code></a></li>
+  <li><a href="#fixing-mlflow" id="toc-fixing-mlflow" class="nav-link" data-scroll-target="#fixing-mlflow"><span class="header-section-number">1.3</span> Fixing <code>mlflow</code></a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/zacdav-db/dbrx-r-compendium/edit/main/chapters/mlflow/log-to-uc.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/zacdav-db/dbrx-r-compendium/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -223,7 +206,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Log R Models to Unity Catalog</span></h1>
+<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Log R Models to Unity Catalog</span></h1>
 </div>
 
 
@@ -238,22 +221,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<div class="callout callout-style-default callout-caution callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Under Development
-</div>
-</div>
-<div class="callout-body-container callout-body">
-
-</div>
-</div>
 <p>Currently <code>{mlflow}</code> doesn’t supporting directly logging R models to Unity Catalog. Before I explain how to work around this, I’ll explain why the existing code doesn’t work.</p>
-<section id="unity-catalog-model-requirements" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="unity-catalog-model-requirements"><span class="header-section-number">2.1</span> Unity Catalog Model Requirements</h2>
+<section id="unity-catalog-model-requirements" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="unity-catalog-model-requirements"><span class="header-section-number">1.1</span> Unity Catalog Model Requirements</h2>
 <p>For models to be logged into Unity Catalog they <strong>must</strong> have a <a href="https://mlflow.org/docs/latest/model/signatures.html">model signature</a>. The Model signature defines the schema for model inputs/outputs.</p>
 <p>Typically when using python this would be inferred via <a href="https://mlflow.org/docs/latest/model/signatures.html#input-example">model input examples</a>. Input examples are optional but strongly recommended.</p>
 <p>The documentation discusses <a href="https://mlflow.org/docs/latest/model/signatures.html#signature-enforcement">signature enforcement</a>, currently this isn’t implemented for R. Therefore you can decide if the signature is a dummy value for the sake of moving forward, or correct to clearly communicate the behaviour of the model.</p>
@@ -297,19 +267,19 @@ Important
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-annotation="1" data-code-lines="2,3" data-code-cell="annotated-cell-1">Create the directory to save the model if it doesn’t exist, if it does, empty it</span>
+<span data-code-lines="2,3" data-code-annotation="1" data-code-cell="annotated-cell-1">Create the directory to save the model if it doesn’t exist, if it does, empty it</span>
 </dd>
 <dt data-target-cell="annotated-cell-1" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-annotation="2" data-code-lines="5" data-code-cell="annotated-cell-1">Serialise the model, which is an object of class <code>crate</code> (from <code>{carrier}</code> package)</span>
+<span data-code-lines="5" data-code-annotation="2" data-code-cell="annotated-cell-1">Serialise the model, which is an object of class <code>crate</code> (from <code>{carrier}</code> package)</span>
 </dd>
 <dt data-target-cell="annotated-cell-1" data-target-annotation="3">3</dt>
 <dd>
-<span data-code-annotation="3" data-code-lines="7,8,9" data-code-cell="annotated-cell-1">Save the serialised model via <code>saveRDS</code> to the directory as <code>crate.bin</code></span>
+<span data-code-lines="7,8,9" data-code-annotation="3" data-code-cell="annotated-cell-1">Save the serialised model via <code>saveRDS</code> to the directory as <code>crate.bin</code></span>
 </dd>
 <dt data-target-cell="annotated-cell-1" data-target-annotation="4">4</dt>
 <dd>
-<span data-code-annotation="4" data-code-lines="12,13,14,15,16,17,18,19" data-code-cell="annotated-cell-1">Define the model specification, this contains metadata required ensure reproducibility. In this case it’s only specifying a version and what file the model can be found within.</span>
+<span data-code-lines="12,13,14,15,16,17,18,19" data-code-annotation="4" data-code-cell="annotated-cell-1">Define the model specification, this contains metadata required ensure reproducibility. In this case it’s only specifying a version and what file the model can be found within.</span>
 </dd>
 </dl>
 </div>
@@ -340,19 +310,19 @@ Important
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-annotation="1" data-code-lines="1" data-code-cell="annotated-cell-2">Add a new parameter <code>signature</code></span>
+<span data-code-lines="1" data-code-annotation="1" data-code-cell="annotated-cell-2">Add a new parameter <code>signature</code></span>
 </dd>
 <dt data-target-cell="annotated-cell-2" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-annotation="2" data-code-lines="3,4,5,6,7,8" data-code-cell="annotated-cell-2">Propagate <code>signature</code> to the <code>model_spec</code> parameter when invoking <code>mlflow::mlflow_save_model</code></span>
+<span data-code-lines="3,4,5,6,7,8" data-code-annotation="2" data-code-cell="annotated-cell-2">Propagate <code>signature</code> to the <code>model_spec</code> parameter when invoking <code>mlflow::mlflow_save_model</code></span>
 </dd>
 </dl>
 </div>
 </div>
 <p>Benefit of this method is that all model flavors will inherit the capability to log a signature.</p>
 </section>
-<section id="working-through-the-solution" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="working-through-the-solution"><span class="header-section-number">2.2</span> Working Through the Solution</h2>
+<section id="working-through-the-solution" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="working-through-the-solution"><span class="header-section-number">1.2</span> Working Through the Solution</h2>
 <p>To keep things simple we’ll be logging a “model” (a function which divides by two).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>half <span class="ot">&lt;-</span> <span class="cf">function</span>(x) x <span class="sc">/</span> <span class="dv">2</span></span>
@@ -376,13 +346,13 @@ Important
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-4" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-annotation="1" data-code-lines="7" data-code-cell="annotated-cell-4">As discussed earlier, this is where things start to go awry with respect to Unity Catalog</span>
+<span data-code-lines="7" data-code-annotation="1" data-code-cell="annotated-cell-4">As discussed earlier, this is where things start to go awry with respect to Unity Catalog</span>
 </dd>
 </dl>
 </div>
 </div>
-<section id="patching-mlflow_log_model" class="level3" data-number="2.2.1">
-<h3 data-number="2.2.1" class="anchored" data-anchor-id="patching-mlflow_log_model"><span class="header-section-number">2.2.1</span> Patching <code>mlflow_log_model</code></h3>
+<section id="patching-mlflow_log_model" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="patching-mlflow_log_model"><span class="header-section-number">1.2.1</span> Patching <code>mlflow_log_model</code></h3>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -440,22 +410,22 @@ Note
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-5" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-annotation="1" data-code-lines="1" data-code-cell="annotated-cell-5"><code>signature</code> has been added to function parameters, it’s defaulting to <code>NULL</code> so that existing code won’t break</span>
+<span data-code-lines="1" data-code-annotation="1" data-code-cell="annotated-cell-5"><code>signature</code> has been added to function parameters, it’s defaulting to <code>NULL</code> so that existing code won’t break</span>
 </dd>
 <dt data-target-cell="annotated-cell-5" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-annotation="2" data-code-lines="3,4,5,6,7" data-code-cell="annotated-cell-5">Adding <code>format_signature</code> function so don’t need to write JSON by hand, adding this within function for simplicity</span>
+<span data-code-lines="3,4,5,6,7" data-code-annotation="2" data-code-cell="annotated-cell-5">Adding <code>format_signature</code> function so don’t need to write JSON by hand, adding this within function for simplicity</span>
 </dd>
 <dt data-target-cell="annotated-cell-5" data-target-annotation="3">3</dt>
 <dd>
-<span data-code-annotation="3" data-code-lines="16" data-code-cell="annotated-cell-5"><code>signature</code> is propagated to <code>mlflow_save_model</code>’s <code>model_spec</code> parameter which will write a valid signature</span>
+<span data-code-lines="16" data-code-annotation="3" data-code-cell="annotated-cell-5"><code>signature</code> is propagated to <code>mlflow_save_model</code>’s <code>model_spec</code> parameter which will write a valid signature</span>
 </dd>
 </dl>
 </div>
 </div>
 </section>
-<section id="logging-model-with-a-signature" class="level3" data-number="2.2.2">
-<h3 data-number="2.2.2" class="anchored" data-anchor-id="logging-model-with-a-signature"><span class="header-section-number">2.2.2</span> Logging Model with a Signature</h3>
+<section id="logging-model-with-a-signature" class="level3" data-number="1.2.2">
+<h3 data-number="1.2.2" class="anchored" data-anchor-id="logging-model-with-a-signature"><span class="header-section-number">1.2.2</span> Logging Model with a Signature</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="annotated-cell-6"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-6-1"><a href="#annotated-cell-6-1"></a><span class="fu">with</span>(<span class="fu">mlflow_start_run</span>(), {</span>
 <span id="annotated-cell-6-2"><a href="#annotated-cell-6-2"></a>  <span class="co"># typically you'd do more modelling related activities here</span></span>
@@ -470,18 +440,18 @@ Note
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-6" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-annotation="1" data-code-lines="4,5,6" data-code-cell="annotated-cell-6">Explicitly defining a <code>signature</code>, a list that contains <code>input</code> and <code>outputs</code>, each are lists of lists respectively</span>
+<span data-code-lines="4,5,6" data-code-annotation="1" data-code-cell="annotated-cell-6">Explicitly defining a <code>signature</code>, a list that contains <code>input</code> and <code>outputs</code>, each are lists of lists respectively</span>
 </dd>
 <dt data-target-cell="annotated-cell-6" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-annotation="2" data-code-lines="8" data-code-cell="annotated-cell-6">Passing defined signature to the now patched <code>mlflow_log_model</code> function</span>
+<span data-code-lines="8" data-code-annotation="2" data-code-cell="annotated-cell-6">Passing defined signature to the now patched <code>mlflow_log_model</code> function</span>
 </dd>
 </dl>
 </div>
 </div>
 </section>
-<section id="registration-to-unity-catalog" class="level3" data-number="2.2.3">
-<h3 data-number="2.2.3" class="anchored" data-anchor-id="registration-to-unity-catalog"><span class="header-section-number">2.2.3</span> Registration to Unity Catalog</h3>
+<section id="registration-to-unity-catalog" class="level3" data-number="1.2.3">
+<h3 data-number="1.2.3" class="anchored" data-anchor-id="registration-to-unity-catalog"><span class="header-section-number">1.2.3</span> Registration to Unity Catalog</h3>
 <p>Now that the prerequisite of adding a model signature has been satisfied there is one last hurdle to overcome, registering to Unity Catalog.</p>
 <p>The hurdle is due to <code>{mlflow}</code> not having been updated yet to support registration to Unity Catalog directly. The easiest way to overcome this is to simply register the run via python.</p>
 <p>For example:</p>
@@ -499,7 +469,7 @@ Note
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-7" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-annotation="1" data-code-lines="7" data-code-cell="annotated-cell-7">You’ll need to either get the <code>run_uri</code> programmatically or copy it manually</span>
+<span data-code-lines="7" data-code-annotation="1" data-code-cell="annotated-cell-7">You’ll need to either get the <code>run_uri</code> programmatically or copy it manually</span>
 </dd>
 </dl>
 </div>
@@ -540,8 +510,8 @@ Note
 <p>It’s <em>considerably</em> easier to just use Python to register the model at this time.</p>
 </section>
 </section>
-<section id="fixing-mlflow" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="fixing-mlflow"><span class="header-section-number">2.3</span> Fixing <code>mlflow</code></h2>
+<section id="fixing-mlflow" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="fixing-mlflow"><span class="header-section-number">1.3</span> Fixing <code>mlflow</code></h2>
 <p>Ideally this page wouldn’t exist and <code>{mlflow}</code> would support Unity Catalog. Hopefully sometime soon I find the time to make a pull request myself - until then this serves as a guide.</p>
 
 
@@ -783,8 +753,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../chapters/model-serving/logging.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Logging Adjustments</span></span>
+      <a href="../../index.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Overview</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

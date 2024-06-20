@@ -19,10 +19,6 @@ book:
   
   chapters:
     - index.qmd
-    
-    - part: chapters/model-serving/intro.qmd
-      chapters:
-        - chapters/model-serving/logging.qmd
         
     - part: "Mlflow"
       chapters:
