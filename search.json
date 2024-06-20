@@ -52,5 +52,82 @@
       "Mlflow",
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Log R Models to Unity Catalog</span>"
     ]
+  },
+  {
+    "objectID": "chapters/mlflow/model-serving.html",
+    "href": "chapters/mlflow/model-serving.html",
+    "title": "2  Model Serving",
+    "section": "",
+    "text": "Under Development",
+    "crumbs": [
+      "Mlflow",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Model Serving</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/pkg-management/fast-installs.html",
+    "href": "chapters/pkg-management/fast-installs.html",
+    "title": "3  Faster Package Installs",
+    "section": "",
+    "text": "Under Development",
+    "crumbs": [
+      "Package Management",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Faster Package Installs</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/pkg-management/persisting-libs.html",
+    "href": "chapters/pkg-management/persisting-libs.html",
+    "title": "4  Persisting Packages",
+    "section": "",
+    "text": "Under Development",
+    "crumbs": [
+      "Package Management",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Persisting Packages</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/pkg-management/renv.html",
+    "href": "chapters/pkg-management/renv.html",
+    "title": "5  {renv}",
+    "section": "",
+    "text": "Under Development",
+    "crumbs": [
+      "Package Management",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>`{renv}`</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/data-eng/odbc-dbplyr.html",
+    "href": "chapters/data-eng/odbc-dbplyr.html",
+    "title": "6  {dbplyr} & {odbc}",
+    "section": "",
+    "text": "Under Development",
+    "crumbs": [
+      "Data Engineering",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>`{dbplyr}` & `{odbc}`</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/misc/htmlwidgets.html",
+    "href": "chapters/misc/htmlwidgets.html",
+    "title": "7  {htmlwidgets} in notebooks",
+    "section": "",
+    "text": "Under Development",
+    "crumbs": [
+      "Miscellaneous",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>`{htmlwidgets}` in notebooks</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/misc/odbc-oauth.html",
+    "href": "chapters/misc/odbc-oauth.html",
+    "title": "8  OAuth 🤝 {odbc}",
+    "section": "",
+    "text": "Under Development",
+    "crumbs": [
+      "Miscellaneous",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>OAuth 🤝 `{odbc}`</span>"
+    ]
   }
 ]
