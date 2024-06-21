@@ -11,7 +11,7 @@ remotes::install_github("zacdav-db/brickster")
 brickstrer::notebook_enable_htmlwidgets()
 ```
 
-The function itself is straightforward, here is code (simplified version of `brickster::notebook_enable_htmlwidgets`) doesn't require installing `{brickster}`:
+The function itself is straightforward, here is code (simplified version of `brickster::notebook_enable_htmlwidgets`) that doesn't require installing `{brickster}`:
 
 ```{r}
 enable_htmlwidgets <- function(height = 450) {
