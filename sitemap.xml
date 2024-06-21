@@ -2,42 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/index.html</loc>
-    <lastmod>2024-06-21T02:30:40.865Z</lastmod>
+    <lastmod>2024-06-21T02:31:24.684Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/mlflow/log-to-uc.html</loc>
-    <lastmod>2024-06-21T02:30:40.857Z</lastmod>
+    <lastmod>2024-06-21T02:31:24.680Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/mlflow/model-serving.html</loc>
-    <lastmod>2024-06-21T02:30:40.857Z</lastmod>
+    <lastmod>2024-06-21T02:31:24.680Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/pkg-management/fast-installs.html</loc>
-    <lastmod>2024-06-21T02:30:40.857Z</lastmod>
+    <lastmod>2024-06-21T02:31:24.680Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/pkg-management/persisting-libs.html</loc>
-    <lastmod>2024-06-21T02:30:40.857Z</lastmod>
+    <lastmod>2024-06-21T02:31:24.680Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/pkg-management/renv.html</loc>
-    <lastmod>2024-06-21T02:30:40.857Z</lastmod>
+    <lastmod>2024-06-21T02:31:24.680Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/data-eng/odbc-dbplyr.html</loc>
-    <lastmod>2024-06-21T02:30:40.857Z</lastmod>
+    <lastmod>2024-06-21T02:31:24.680Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/misc/htmlwidgets.html</loc>
-    <lastmod>2024-06-21T02:30:40.857Z</lastmod>
+    <lastmod>2024-06-21T02:31:24.680Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/misc/odbc-oauth.html</loc>
-    <lastmod>2024-06-21T02:30:40.857Z</lastmod>
+    <lastmod>2024-06-21T02:31:24.680Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/R-on-Databricks-Compendium.pdf</loc>
-    <lastmod>2024-06-21T02:31:54.706Z</lastmod>
+    <lastmod>2024-06-21T02:32:45.261Z</lastmod>
   </url>
 </urlset>
