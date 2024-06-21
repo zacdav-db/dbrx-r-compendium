@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -259,17 +293,61 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="callout callout-style-default callout-caution callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<p>When you try to view a <a href="https://www.htmlwidgets.org/"><code>{htmlwidget}</code></a> based visualisation (e.g.&nbsp;<a href="https://rstudio.github.io/leaflet/"><code>{leaflet}</code></a>) in a Databricks notebook you’ll find there is no rendered output by default.</p>
+<p>The Databricks <a href="https://docs.databricks.com/en/visualizations/htmlwidgets.html">documentation</a> details how to get this working but requires specification of the workspace URL explicitly.</p>
+<p><a href="https://zacdav-db.github.io/brickster/index.html"><code>{brickster}</code></a> has a <a href="https://zacdav-db.github.io/brickster/reference/notebook_enable_htmlwidgets.html">helper function</a> that simplifies enabling <code>{htmlwidgets}</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"zacdav-db/brickster"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>brickstrer<span class="sc">::</span><span class="fu">notebook_enable_htmlwidgets</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="callout-title-container flex-fill">
-Under Development
-</div>
-</div>
-<div class="callout-body-container callout-body">
-
+<p>The function itself is straightforward, here is code (simplified version of <code>brickster::notebook_enable_htmlwidgets</code>) doesn’t require installing <code>{brickster}</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-2"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-2-1"><a href="#annotated-cell-2-1"></a>enable_htmlwidgets <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">height =</span> <span class="dv">450</span>) {</span>
+<span id="annotated-cell-2-2"><a href="#annotated-cell-2-2"></a></span>
+<span id="annotated-cell-2-3"><a href="#annotated-cell-2-3"></a>  <span class="co"># new option to control default widget height, default is 450px</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-2-4" class="code-annotation-target"><a href="#annotated-cell-2-4"></a>  <span class="fu">options</span>(<span class="at">db_htmlwidget_height =</span> height)</span>
+<span id="annotated-cell-2-5"><a href="#annotated-cell-2-5"></a></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-2-6" class="code-annotation-target"><a href="#annotated-cell-2-6"></a>  <span class="fu">system</span>(<span class="st">"apt-get --yes install pandoc"</span>, <span class="at">intern =</span> T)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-2-7" class="code-annotation-target"><a href="#annotated-cell-2-7"></a>  <span class="cf">if</span> (<span class="sc">!</span>base<span class="sc">::</span><span class="fu">require</span>(<span class="st">"htmlwidgets"</span>)) {</span>
+<span id="annotated-cell-2-8"><a href="#annotated-cell-2-8"></a>    utils<span class="sc">::</span><span class="fu">install.packages</span>(<span class="st">"htmlwidgets"</span>)</span>
+<span id="annotated-cell-2-9"><a href="#annotated-cell-2-9"></a>  }</span>
+<span id="annotated-cell-2-10"><a href="#annotated-cell-2-10"></a></span>
+<span id="annotated-cell-2-11"><a href="#annotated-cell-2-11"></a>  <span class="co"># new method will fetch height based on new option, or default to 450px</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-2-12" class="code-annotation-target"><a href="#annotated-cell-2-12"></a>  new_method <span class="ot">&lt;-</span> <span class="cf">function</span>(x, ...) {</span>
+<span id="annotated-cell-2-13"><a href="#annotated-cell-2-13"></a>    x<span class="sc">$</span>height <span class="ot">&lt;-</span> <span class="fu">getOption</span>(<span class="st">"db_htmlwidget_height"</span>, <span class="dv">450</span>)</span>
+<span id="annotated-cell-2-14"><a href="#annotated-cell-2-14"></a>    file <span class="ot">&lt;-</span> <span class="fu">tempfile</span>(<span class="at">fileext =</span> <span class="st">".html"</span>)</span>
+<span id="annotated-cell-2-15"><a href="#annotated-cell-2-15"></a>    htmlwidgets<span class="sc">::</span><span class="fu">saveWidget</span>(x, <span class="at">file =</span> file)</span>
+<span id="annotated-cell-2-16"><a href="#annotated-cell-2-16"></a>    contents <span class="ot">&lt;-</span> <span class="fu">as.character</span>(rvest<span class="sc">::</span><span class="fu">read_html</span>(file))</span>
+<span id="annotated-cell-2-17"><a href="#annotated-cell-2-17"></a>    <span class="fu">displayHTML</span>(contents)</span>
+<span id="annotated-cell-2-18"><a href="#annotated-cell-2-18"></a>  }</span>
+<span id="annotated-cell-2-19"><a href="#annotated-cell-2-19"></a></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-2-20" class="code-annotation-target"><a href="#annotated-cell-2-20"></a>  utils<span class="sc">::</span><span class="fu">assignInNamespace</span>(<span class="st">"print.htmlwidget"</span>, new_method, <span class="at">ns =</span> <span class="st">"htmlwidgets"</span>)</span>
+<span id="annotated-cell-2-21"><a href="#annotated-cell-2-21"></a>  <span class="fu">invisible</span>(<span class="fu">list</span>(<span class="at">default_height =</span> height, <span class="at">print =</span> new_method))</span>
+<span id="annotated-cell-2-22"><a href="#annotated-cell-2-22"></a>  </span>
+<span id="annotated-cell-2-23"><a href="#annotated-cell-2-23"></a>}</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-2" data-code-lines="4" data-code-annotation="1">The height of the htmlwidget output is controlled via an option (<code>db_htmlwidget_height</code>), this allows the height to be adjusted without re-running the function</span>
+</dd>
+<dt data-target-cell="annotated-cell-2" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-2" data-code-lines="6" data-code-annotation="2">Installing <code>pandoc</code> as it’s required to use <code>htmlwidgets::saveWidget</code></span>
+</dd>
+<dt data-target-cell="annotated-cell-2" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-2" data-code-lines="7,8,9" data-code-annotation="3">Ensure <code>{htmlwidgets}</code> is installed</span>
+</dd>
+<dt data-target-cell="annotated-cell-2" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-cell="annotated-cell-2" data-code-lines="12,13,14,15,16,17,18" data-code-annotation="4">Define a function that writes the widget to a temporary file as a self-contained <code>html</code> file and then reads the contents and presents via <code>displayHTML</code></span>
+</dd>
+<dt data-target-cell="annotated-cell-2" data-target-annotation="5">5</dt>
+<dd>
+<span data-code-cell="annotated-cell-2" data-code-lines="20" data-code-annotation="5">Override the <code>htmlwidgets::print.htmlwidget</code> method</span>
+</dd>
+</dl>
 </div>
 </div>
 
