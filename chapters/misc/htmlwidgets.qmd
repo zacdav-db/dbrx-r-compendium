@@ -8,7 +8,7 @@ The Databricks [documentation](https://docs.databricks.com/en/visualizations/htm
 
 ```{r, eval=FALSE}
 remotes::install_github("zacdav-db/brickster")
-brickstrer::notebook_enable_htmlwidgets()
+brickster::notebook_enable_htmlwidgets()
 ```
 
 The function itself is straightforward, here is code (simplified version of `brickster::notebook_enable_htmlwidgets`) that doesn't require installing `{brickster}`:
@@ -43,8 +43,8 @@ enable_htmlwidgets <- function(height = 450) {
 
 2.  Installing `pandoc` as it's required to use `htmlwidgets::saveWidget`
 
-3.  Ensure `{htmlwidgets}` is installed
+3.  Ensure that `{htmlwidgets}` is installed
 
-4.  Define a function that writes the widget to a temporary file as a self-contained `html` file and then reads the contents and presents via `displayHTML`
+4.  Function that writes the widget to a temporary file as a self-contained `html` file and then reads the contents and presents via `displayHTML`
 
 5.  Override the `htmlwidgets::print.htmlwidget` method

@@ -52,13 +52,13 @@ You can again refer to the [wizard](https://packagemanager.posit.co/client/#/rep
 DATABRICKS_DEFAULT_R_REPOS=<posit-package-manager-url-goes-here>
 ```
 
-Unfortunately this isn't as dynamic as the first option and you still need to set the `HTTPUserAgent` in [`.Rprofile.site`](https://support.posit.co/hc/en-us/articles/360047157094-Managing-R-with-Rprofile-Renviron-Rprofile-site-Renviron-site-rsession-conf-and-repos-conf) via an [init script](https://docs.databricks.com/en/init-scripts/index.html).
+Unfortunately this isn't as dynamic as the first option and you still need to set the `HTTPUserAgent` in `Rprofile.site` via an [init script](https://docs.databricks.com/en/init-scripts/index.html).
 
 The init script will be:
 
 ```{sh, eval=FALSE}
 #!/bin/bash
-# Append changes to .Rprofile.site
+# Append changes to Rprofile.site
 cat <<EOF >> "/etc/R/Rprofile.site"
 options(
   HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"]))
@@ -69,7 +69,7 @@ EOF
 ::: callout-important
 Due to how Databricks starts up the R shell for notebook sessions it's not straightforward to adjust the `repos` option in an init script alone.
 
-`DATABRICKS_DEFAULT_R_REPOS` is referenced as part of the startup process *after* `.Rprofile.site` is executed and therefore will override any earlier attempt to adjust `repos`.
+`DATABRICKS_DEFAULT_R_REPOS` is referenced as part of the startup process *after* `Rprofile.site` is executed and will override any earlier attempt to adjust `repos`.
 
 Therefore you'll need to use both the init script and the environment variable configuration.
 :::
