@@ -58,7 +58,51 @@
     "href": "chapters/mlflow/model-serving.html",
     "title": "2  Model Serving",
     "section": "",
-    "text": "Under Development",
+    "text": "2.1 Serving Overview",
+    "crumbs": [
+      "Mlflow",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Model Serving</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/mlflow/model-serving.html#serving-overview",
+    "href": "chapters/mlflow/model-serving.html#serving-overview",
+    "title": "2  Model Serving",
+    "section": "",
+    "text": "Caution\n\n\n\nWork In Progress",
+    "crumbs": [
+      "Mlflow",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Model Serving</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/mlflow/model-serving.html#xgboost",
+    "href": "chapters/mlflow/model-serving.html#xgboost",
+    "title": "2  Model Serving",
+    "section": "2.2 XGBoost",
+    "text": "2.2 XGBoost\n\n\n\n\n\n\nCaution\n\n\n\nWork In Progress\n\n\nXGBoost is relatively straightforward since it the artifacts generated when saving the model are universally understood across each language the library is available in.",
+    "crumbs": [
+      "Mlflow",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Model Serving</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/mlflow/model-serving.html#onnx",
+    "href": "chapters/mlflow/model-serving.html#onnx",
+    "title": "2  Model Serving",
+    "section": "2.3 ONNX",
+    "text": "2.3 ONNX\n\n\n\n\n\n\nCaution\n\n\n\nWork In Progress",
+    "crumbs": [
+      "Mlflow",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Model Serving</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/mlflow/model-serving.html#crate",
+    "href": "chapters/mlflow/model-serving.html#crate",
+    "title": "2  Model Serving",
+    "section": "2.4 Crate",
+    "text": "2.4 Crate\n\n\n\n\n\n\nCaution\n\n\n\nWork In Progress",
     "crumbs": [
       "Mlflow",
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Model Serving</span>"
@@ -80,7 +124,7 @@
     "href": "chapters/pkg-management/fast-installs.html#cluster-environment-variable-init-script",
     "title": "3  Faster Package Installs",
     "section": "3.2 Cluster Environment Variable & Init Script",
-    "text": "3.2 Cluster Environment Variable & Init Script\nDatabricks clusters allow specification of environment variables, there is a specific variable (DATABRICKS_DEFAULT_R_REPOS) that can be set to adjust the default repository for the entire cluster.\nYou can again refer to the wizard, the environment variables section of cluster should be:\n\nDATABRICKS_DEFAULT_R_REPOS=&lt;posit-package-manager-url-goes-here&gt;\n\nUnfortunately this isn’t as dynamic as the first option and you still need to set the HTTPUserAgent in .Rprofile.site via an init script.\nThe init script will be:\n\n#!/bin/bash\n# Append changes to .Rprofile.site\ncat &lt;&lt;EOF &gt;&gt; \"/etc/R/Rprofile.site\"\noptions(\n  HTTPUserAgent = sprintf(\"R/%s R (%s)\", getRversion(), paste(getRversion(), R.version[\"platform\"], R.version[\"arch\"], R.version[\"os\"]))\n)\nEOF\n\n\n\n\n\n\n\nImportant\n\n\n\nDue to how Databricks starts up the R shell for notebook sessions it’s not straightforward to adjust the repos option in an init script alone.\nDATABRICKS_DEFAULT_R_REPOS is referenced as part of the startup process after .Rprofile.site is executed and therefore will override any earlier attempt to adjust repos.\nTherefore you’ll need to use both the init script and the environment variable configuration.",
+    "text": "3.2 Cluster Environment Variable & Init Script\nDatabricks clusters allow specification of environment variables, there is a specific variable (DATABRICKS_DEFAULT_R_REPOS) that can be set to adjust the default repository for the entire cluster.\nYou can again refer to the wizard, the environment variables section of cluster should be:\n\nDATABRICKS_DEFAULT_R_REPOS=&lt;posit-package-manager-url-goes-here&gt;\n\nUnfortunately this isn’t as dynamic as the first option and you still need to set the HTTPUserAgent in Rprofile.site via an init script.\nThe init script will be:\n\n#!/bin/bash\n# Append changes to Rprofile.site\ncat &lt;&lt;EOF &gt;&gt; \"/etc/R/Rprofile.site\"\noptions(\n  HTTPUserAgent = sprintf(\"R/%s R (%s)\", getRversion(), paste(getRversion(), R.version[\"platform\"], R.version[\"arch\"], R.version[\"os\"]))\n)\nEOF\n\n\n\n\n\n\n\nImportant\n\n\n\nDue to how Databricks starts up the R shell for notebook sessions it’s not straightforward to adjust the repos option in an init script alone.\nDATABRICKS_DEFAULT_R_REPOS is referenced as part of the startup process after Rprofile.site is executed and will override any earlier attempt to adjust repos.\nTherefore you’ll need to use both the init script and the environment variable configuration.",
     "crumbs": [
       "Package Management",
       "<span class='chapter-number'>3</span>  <span class='chapter-title'>Faster Package Installs</span>"
@@ -135,7 +179,7 @@
     "href": "chapters/misc/htmlwidgets.html",
     "title": "7  {htmlwidgets} in notebooks",
     "section": "",
-    "text": "When you try to view a {htmlwidget} based visualisation (e.g. {leaflet}) in a Databricks notebook you’ll find there is no rendered output by default.\nThe Databricks documentation details how to get this working but requires specification of the workspace URL explicitly.\n{brickster} has a helper function that simplifies enabling {htmlwidgets}:\n\nremotes::install_github(\"zacdav-db/brickster\")\nbrickstrer::notebook_enable_htmlwidgets()\n\nThe function itself is straightforward, here is code (simplified version of brickster::notebook_enable_htmlwidgets) that doesn’t require installing {brickster}:\n\nenable_htmlwidgets &lt;- function(height = 450) {\n\n  # new option to control default widget height, default is 450px\n1  options(db_htmlwidget_height = height)\n\n2  system(\"apt-get --yes install pandoc\", intern = T)\n3  if (!base::require(\"htmlwidgets\")) {\n    utils::install.packages(\"htmlwidgets\")\n  }\n\n  # new method will fetch height based on new option, or default to 450px\n4  new_method &lt;- function(x, ...) {\n    x$height &lt;- getOption(\"db_htmlwidget_height\", 450)\n    file &lt;- tempfile(fileext = \".html\")\n    htmlwidgets::saveWidget(x, file = file)\n    contents &lt;- as.character(rvest::read_html(file))\n    displayHTML(contents)\n  }\n\n5  utils::assignInNamespace(\"print.htmlwidget\", new_method, ns = \"htmlwidgets\")\n  invisible(list(default_height = height, print = new_method))\n  \n}\n\n\n1\n\nThe height of the htmlwidget output is controlled via an option (db_htmlwidget_height), this allows the height to be adjusted without re-running the function\n\n2\n\nInstalling pandoc as it’s required to use htmlwidgets::saveWidget\n\n3\n\nEnsure {htmlwidgets} is installed\n\n4\n\nDefine a function that writes the widget to a temporary file as a self-contained html file and then reads the contents and presents via displayHTML\n\n5\n\nOverride the htmlwidgets::print.htmlwidget method",
+    "text": "When you try to view a {htmlwidget} based visualisation (e.g. {leaflet}) in a Databricks notebook you’ll find there is no rendered output by default.\nThe Databricks documentation details how to get this working but requires specification of the workspace URL explicitly.\n{brickster} has a helper function that simplifies enabling {htmlwidgets}:\n\nremotes::install_github(\"zacdav-db/brickster\")\nbrickster::notebook_enable_htmlwidgets()\n\nThe function itself is straightforward, here is code (simplified version of brickster::notebook_enable_htmlwidgets) that doesn’t require installing {brickster}:\n\nenable_htmlwidgets &lt;- function(height = 450) {\n\n  # new option to control default widget height, default is 450px\n1  options(db_htmlwidget_height = height)\n\n2  system(\"apt-get --yes install pandoc\", intern = T)\n3  if (!base::require(\"htmlwidgets\")) {\n    utils::install.packages(\"htmlwidgets\")\n  }\n\n  # new method will fetch height based on new option, or default to 450px\n4  new_method &lt;- function(x, ...) {\n    x$height &lt;- getOption(\"db_htmlwidget_height\", 450)\n    file &lt;- tempfile(fileext = \".html\")\n    htmlwidgets::saveWidget(x, file = file)\n    contents &lt;- as.character(rvest::read_html(file))\n    displayHTML(contents)\n  }\n\n5  utils::assignInNamespace(\"print.htmlwidget\", new_method, ns = \"htmlwidgets\")\n  invisible(list(default_height = height, print = new_method))\n  \n}\n\n\n1\n\nThe height of the htmlwidget output is controlled via an option (db_htmlwidget_height), this allows the height to be adjusted without re-running the function\n\n2\n\nInstalling pandoc as it’s required to use htmlwidgets::saveWidget\n\n3\n\nEnsure that {htmlwidgets} is installed\n\n4\n\nFunction that writes the widget to a temporary file as a self-contained html file and then reads the contents and presents via displayHTML\n\n5\n\nOverride the htmlwidgets::print.htmlwidget method",
     "crumbs": [
       "Miscellaneous",
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>`{htmlwidgets}` in notebooks</span>"

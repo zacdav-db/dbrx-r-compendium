@@ -345,11 +345,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="va">DATABRICKS_DEFAULT_R_REPOS</span><span class="op">=&lt;</span>posit-package-manager-url-goes-here<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Unfortunately this isn’t as dynamic as the first option and you still need to set the <code>HTTPUserAgent</code> in <a href="https://support.posit.co/hc/en-us/articles/360047157094-Managing-R-with-Rprofile-Renviron-Rprofile-site-Renviron-site-rsession-conf-and-repos-conf"><code>.Rprofile.site</code></a> via an <a href="https://docs.databricks.com/en/init-scripts/index.html">init script</a>.</p>
+<p>Unfortunately this isn’t as dynamic as the first option and you still need to set the <code>HTTPUserAgent</code> in <code>Rprofile.site</code> via an <a href="https://docs.databricks.com/en/init-scripts/index.html">init script</a>.</p>
 <p>The init script will be:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">#!/bin/bash</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="co"># Append changes to .Rprofile.site</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co"># Append changes to Rprofile.site</span></span>
 <span id="cb3-3"><a href="#cb3-3"></a><span class="fu">cat</span> <span class="op">&lt;&lt;EOF</span> <span class="op">&gt;&gt;</span> <span class="st">"/etc/R/Rprofile.site"</span></span>
 <span id="cb3-4"><a href="#cb3-4"></a><span class="st">options(</span></span>
 <span id="cb3-5"><a href="#cb3-5"></a><span class="st">  HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"]))</span></span>
@@ -367,7 +367,7 @@ Important
 </div>
 <div class="callout-body-container callout-body">
 <p>Due to how Databricks starts up the R shell for notebook sessions it’s not straightforward to adjust the <code>repos</code> option in an init script alone.</p>
-<p><code>DATABRICKS_DEFAULT_R_REPOS</code> is referenced as part of the startup process <em>after</em> <code>.Rprofile.site</code> is executed and therefore will override any earlier attempt to adjust <code>repos</code>.</p>
+<p><code>DATABRICKS_DEFAULT_R_REPOS</code> is referenced as part of the startup process <em>after</em> <code>Rprofile.site</code> is executed and will override any earlier attempt to adjust <code>repos</code>.</p>
 <p>Therefore you’ll need to use both the init script and the environment variable configuration.</p>
 </div>
 </div>

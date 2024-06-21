@@ -235,7 +235,16 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#serving-overview" id="toc-serving-overview" class="nav-link active" data-scroll-target="#serving-overview"><span class="header-section-number">2.1</span> Serving Overview</a></li>
+  <li><a href="#xgboost" id="toc-xgboost" class="nav-link" data-scroll-target="#xgboost"><span class="header-section-number">2.2</span> XGBoost</a></li>
+  <li><a href="#onnx" id="toc-onnx" class="nav-link" data-scroll-target="#onnx"><span class="header-section-number">2.3</span> ONNX</a></li>
+  <li><a href="#crate" id="toc-crate" class="nav-link" data-scroll-target="#crate"><span class="header-section-number">2.4</span> Crate</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/edit/main/chapters/mlflow/model-serving.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -272,8 +281,75 @@ Under Development
 
 </div>
 </div>
+<p><a href="https://docs.databricks.com/en/machine-learning/model-serving/index.html">Model serving on Databricks</a> is well documented for Python. It is a common misconception that you cannot serve R models on Databricks, you can!</p>
+<p>The amount of effort is going to depend heavily on the model flavour. In most occasions the amount of effort is not worth it - but that decision is not mine to make, I will show you how and you can decide for yourself.</p>
+<section id="serving-overview" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="serving-overview"><span class="header-section-number">2.1</span> Serving Overview</h2>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Work In Progress</p>
+</div>
+</div>
+</section>
+<section id="xgboost" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="xgboost"><span class="header-section-number">2.2</span> XGBoost</h2>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Work In Progress</p>
+</div>
+</div>
+<p>XGBoost is relatively straightforward since it the artifacts generated when saving the model are universally understood across each language the library is available in.</p>
+</section>
+<section id="onnx" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="onnx"><span class="header-section-number">2.3</span> ONNX</h2>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Work In Progress</p>
+</div>
+</div>
+</section>
+<section id="crate" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="crate"><span class="header-section-number">2.4</span> Crate</h2>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Work In Progress</p>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -702,4 +778,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/edit/main/chapters/mlflow/model-serving.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/edit/main/chapters/mlflow/model-serving.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
