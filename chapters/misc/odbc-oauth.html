@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -234,7 +268,13 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#u2m-example" id="toc-u2m-example" class="nav-link active" data-scroll-target="#u2m-example"><span class="header-section-number">8.1</span> U2M Example</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/edit/main/chapters/misc/odbc-oauth.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -258,21 +298,47 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="callout callout-style-default callout-caution callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<p>When using <code>{odbc}</code> to connect to Databricks clusters and SQL warehouses you’ll likely have used a personal access token (PAT). It’s not uncommon for workspace administrators to <a href="https://docs.databricks.com/en/admin/access-control/tokens.html#enable-or-disable-personal-access-token-authentication-for-the-workspace">disable the use of PATs</a>.</p>
+<p>If you are unable to create a PAT you are still able to connect to Databricks but you’ll need to use OAuth (either <a href="https://docs.databricks.com/en/dev-tools/auth/oauth-m2m.html">M2M</a> or <a href="https://docs.databricks.com/en/dev-tools/auth/oauth-u2m.html">U2M</a>).</p>
+<p>User-to-machine (U2M) is typically what you’d want to use. Good news, <a href="https://docs.databricks.com/en/integrations/odbc/authentication.html#oauth-20-tokens">the Databricks ODBC driver supports both since <code>2.7.5</code></a>.</p>
+<section id="u2m-example" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="u2m-example"><span class="header-section-number">8.1</span> U2M Example</h2>
+<p>OAuth U2M or OAuth 2.0 browser-based authentication works only with applications that run locally. It does not work with server-based or cloud-based applications.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-1"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-1-1"><a href="#annotated-cell-1-1"></a><span class="fu">library</span>(odbc)</span>
+<span id="annotated-cell-1-2"><a href="#annotated-cell-1-2"></a><span class="fu">library</span>(DBI)</span>
+<span id="annotated-cell-1-3"><a href="#annotated-cell-1-3"></a></span>
+<span id="annotated-cell-1-4"><a href="#annotated-cell-1-4"></a>con <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbConnect</span>(</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-5" class="code-annotation-target"><a href="#annotated-cell-1-5"></a>  <span class="at">drv =</span> odbc<span class="sc">::</span><span class="fu">databricks</span>(),</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-1-6" class="code-annotation-target"><a href="#annotated-cell-1-6"></a>  <span class="at">httpPath =</span> <span class="st">"/sql/1.0/warehouses/&lt;warehouse-id&gt;"</span>,</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-1-7" class="code-annotation-target"><a href="#annotated-cell-1-7"></a>  <span class="at">workspace =</span> <span class="st">"&lt;workspace-name&gt;.cloud.databricks.com"</span>,</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-1-8" class="code-annotation-target"><a href="#annotated-cell-1-8"></a>  <span class="at">authMech =</span> <span class="dv">11</span>,</span>
+<span id="annotated-cell-1-9"><a href="#annotated-cell-1-9"></a>  <span class="at">auth_flow =</span> <span class="dv">2</span></span>
+<span id="annotated-cell-1-10"><a href="#annotated-cell-1-10"></a>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="5" data-code-annotation="1"><code>{odbc}</code> recently added <a href="https://odbc.r-dbi.org/reference/databricks.html"><code>odbc::databricks()</code></a> to simplify connecting to Databricks (<a href="https://github.com/r-dbi/odbc/blob/main/NEWS.md#odbc-140">requires version <code>&gt;=1.4.0</code></a>)</span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="6" data-code-annotation="2">The <a href="https://docs.databricks.com/en/integrations/compute-details.html"><code>httpPath</code></a> can be found in the ‘Connection Details’ tab of a SQL warehouse</span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="7" data-code-annotation="3"><code>workspace</code> refers to the workspace URL, also found in ‘Connection Details’ tab as ‘Server hostname’</span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="8,9" data-code-annotation="4">The <a href="https://docs.databricks.com/en/integrations/odbc/authentication.html#oauth-user-to-machine-u2m-authentication">docs</a> mention setting <code>AuthMech</code> to <code>11</code> and <code>Auth_Flow</code> to <code>2</code></span>
+</dd>
+</dl>
 </div>
-<div class="callout-title-container flex-fill">
-Under Development
 </div>
-</div>
-<div class="callout-body-container callout-body">
 
-</div>
-</div>
 
-
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -698,4 +764,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/edit/main/chapters/misc/odbc-oauth.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/edit/main/chapters/misc/odbc-oauth.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
