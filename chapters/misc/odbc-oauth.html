@@ -303,7 +303,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>User-to-machine (U2M) is typically what you’d want to use. Good news, <a href="https://docs.databricks.com/en/integrations/odbc/authentication.html#oauth-20-tokens">the Databricks ODBC driver supports both since <code>2.7.5</code></a>.</p>
 <section id="u2m-example" class="level2" data-number="8.1">
 <h2 data-number="8.1" class="anchored" data-anchor-id="u2m-example"><span class="header-section-number">8.1</span> U2M Example</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p>OAuth U2M or OAuth 2.0 browser-based authentication works only with applications that run locally. It does not work with server-based or cloud-based applications.</p>
+</div>
+</div>
+<p>When running this code you should be prompted to login to the workspace or you’ll see a window that says “success”. You can close the window and continue working in R.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="annotated-cell-1"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-1-1"><a href="#annotated-cell-1-1"></a><span class="fu">library</span>(odbc)</span>
 <span id="annotated-cell-1-2"><a href="#annotated-cell-1-2"></a><span class="fu">library</span>(DBI)</span>
