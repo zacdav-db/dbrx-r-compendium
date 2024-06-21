@@ -1,34 +1,5 @@
 # `{dbplyr}` & `{odbc}`
 
-When using `{odbc}` to connect to Databricks clusters and SQL warehouses you'll likely have used a personal access token (PAT). It's not uncommon for workspace administrators to [disable the use of PATs](https://docs.databricks.com/en/admin/access-control/tokens.html#enable-or-disable-personal-access-token-authentication-for-the-workspace).
-
-If you are unable to create a PAT you are still able to connect to Databricks but you'll need to use OAuth (either [M2M](https://docs.databricks.com/en/dev-tools/auth/oauth-m2m.html) or [U2M](https://docs.databricks.com/en/dev-tools/auth/oauth-u2m.html)).
-
-User-to-machine (U2M) is typically what you'd want to use. Good news, [the Databricks ODBC driver supports both since `2.7.5`](https://docs.databricks.com/en/integrations/odbc/authentication.html#oauth-20-tokens).
-
-## U2M Example
-
-::: callout-note
-OAuth U2M or OAuth 2.0 browser-based authentication works only with applications that run locally. It does not work with server-based or cloud-based applications.
+::: callout-caution
+## Under Development
 :::
-
-```{r, eval=FALSE}
-library(odbc)
-library(DBI)
-
-con <- DBI::dbConnect(
-  drv = odbc::databricks(), #<1>
-  httpPath = "/sql/1.0/warehouses/<warehouse-id>", #<2>
-  workspace = "<workspace-name>.cloud.databricks.com", #<3>
-  authMech = 11, #<4>
-  auth_flow = 2 #<4>
-)
-```
-
-1.  `{odbc}` recently added [`odbc::databricks()`](https://odbc.r-dbi.org/reference/databricks.html) to simplify connecting to Databricks ([requires version `>=1.4.0`](https://github.com/r-dbi/odbc/blob/main/NEWS.md#odbc-140))
-
-2.  The [`httpPath`](https://docs.databricks.com/en/integrations/compute-details.html) can be found in the 'Connection Details' tab of a SQL warehouse
-
-3.  `workspace` refers to the workspace URL, also found in 'Connection Details' tab as 'Server hostname'
-
-4.  The [docs](https://docs.databricks.com/en/integrations/odbc/authentication.html#oauth-user-to-machine-u2m-authentication) mention setting `AuthMech` to `11` and `Auth_Flow` to `2`

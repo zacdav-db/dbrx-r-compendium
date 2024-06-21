@@ -82,5 +82,12 @@
     "title": "6  {dbplyr} & {odbc}",
     "section": "6.1 U2M Example",
     "text": "6.1 U2M Example\n\n\n\n\n\n\nNote\n\n\n\nOAuth U2M or OAuth 2.0 browser-based authentication works only with applications that run locally. It does not work with server-based or cloud-based applications.\n\n\n\nlibrary(odbc)\nlibrary(DBI)\n\ncon &lt;- DBI::dbConnect(\n1  drv = odbc::databricks(),\n2  httpPath = \"/sql/1.0/warehouses/&lt;warehouse-id&gt;\",\n3  workspace = \"&lt;workspace-name&gt;.cloud.databricks.com\",\n4  authMech = 11,\n  auth_flow = 2\n)\n\n\n1\n\n{odbc} recently added odbc::databricks() to simplify connecting to Databricks (requires version &gt;=1.4.0)\n\n2\n\nThe httpPath can be found in the ‘Connection Details’ tab of a SQL warehouse\n\n3\n\nworkspace refers to the workspace URL, also found in ‘Connection Details’ tab as ‘Server hostname’\n\n4\n\nThe docs mention setting AuthMech to 11 and Auth_Flow to 2"
+  },
+  {
+    "objectID": "chapters/misc/odbc-oauth.html#u2m-example",
+    "href": "chapters/misc/odbc-oauth.html#u2m-example",
+    "title": "8  OAuth 🤝 {odbc}",
+    "section": "8.1 U2M Example",
+    "text": "8.1 U2M Example\nOAuth U2M or OAuth 2.0 browser-based authentication works only with applications that run locally. It does not work with server-based or cloud-based applications.\n\nlibrary(odbc)\nlibrary(DBI)\n\ncon &lt;- DBI::dbConnect(\n1  drv = odbc::databricks(),\n2  httpPath = \"/sql/1.0/warehouses/&lt;warehouse-id&gt;\",\n3  workspace = \"&lt;workspace-name&gt;.cloud.databricks.com\",\n4  authMech = 11,\n  auth_flow = 2\n)\n\n\n1\n\n{odbc} recently added odbc::databricks() to simplify connecting to Databricks (requires version &gt;=1.4.0)\n\n2\n\nThe httpPath can be found in the ‘Connection Details’ tab of a SQL warehouse\n\n3\n\nworkspace refers to the workspace URL, also found in ‘Connection Details’ tab as ‘Server hostname’\n\n4\n\nThe docs mention setting AuthMech to 11 and Auth_Flow to 2"
   }
 ]
