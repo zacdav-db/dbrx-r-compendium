@@ -51,9 +51,9 @@
   {
     "objectID": "chapters/misc/htmlwidgets.html",
     "href": "chapters/misc/htmlwidgets.html",
-    "title": "6  {htmlwidgets} in notebooks",
+    "title": "7  {htmlwidgets} in notebooks",
     "section": "",
-    "text": "Under Development"
+    "text": "When you try to view a {htmlwidget} based visualisation (e.g. {leaflet}) in a Databricks notebook you’ll find there is no rendered output by default.\nThe Databricks documentation details how to get this working but requires specification of the workspace URL explicitly.\n{brickster} has a helper function that simplifies enabling {htmlwidgets}:\n\nremotes::install_github(\"zacdav-db/brickster\")\nbrickstrer::notebook_enable_htmlwidgets()\n\nThe function itself is straightforward, here is code (simplified version of brickster::notebook_enable_htmlwidgets) doesn’t require installing {brickster}:\n\nenable_htmlwidgets &lt;- function(height = 450) {\n\n  # new option to control default widget height, default is 450px\n1  options(db_htmlwidget_height = height)\n\n2  system(\"apt-get --yes install pandoc\", intern = T)\n3  if (!base::require(\"htmlwidgets\")) {\n    utils::install.packages(\"htmlwidgets\")\n  }\n\n  # new method will fetch height based on new option, or default to 450px\n4  new_method &lt;- function(x, ...) {\n    x$height &lt;- getOption(\"db_htmlwidget_height\", 450)\n    file &lt;- tempfile(fileext = \".html\")\n    htmlwidgets::saveWidget(x, file = file)\n    contents &lt;- as.character(rvest::read_html(file))\n    displayHTML(contents)\n  }\n\n5  utils::assignInNamespace(\"print.htmlwidget\", new_method, ns = \"htmlwidgets\")\n  invisible(list(default_height = height, print = new_method))\n  \n}\n\n\n1\n\nThe height of the htmlwidget output is controlled via an option (db_htmlwidget_height), this allows the height to be adjusted without re-running the function\n\n2\n\nInstalling pandoc as it’s required to use htmlwidgets::saveWidget\n\n3\n\nEnsure {htmlwidgets} is installed\n\n4\n\nDefine a function that writes the widget to a temporary file as a self-contained html file and then reads the contents and presents via displayHTML\n\n5\n\nOverride the htmlwidgets::print.htmlwidget method"
   },
   {
     "objectID": "chapters/mlflow/model-serving.html",

@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/index.html</loc>
-    <lastmod>2024-06-20T14:46:58.851Z</lastmod>
+    <lastmod>2024-06-21T07:40:26.627Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/mlflow/log-to-uc.html</loc>
@@ -22,7 +22,7 @@
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/misc/htmlwidgets.html</loc>
-    <lastmod>2024-06-20T14:40:36.714Z</lastmod>
+    <lastmod>2024-06-21T07:46:56.485Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/mlflow/model-serving.html</loc>
@@ -34,6 +34,6 @@
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/data-eng/odbc-dbplyr.html</loc>
-    <lastmod>2024-06-21T05:40:52.188Z</lastmod>
+    <lastmod>2024-06-21T05:43:24.386Z</lastmod>
   </url>
 </urlset>

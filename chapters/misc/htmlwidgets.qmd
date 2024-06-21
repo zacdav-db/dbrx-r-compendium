@@ -1,5 +1,50 @@
 # `{htmlwidgets}` in notebooks
 
-::: callout-caution
-## Under Development
-:::
+When you try to view a [`{htmlwidget}`](https://www.htmlwidgets.org/) based visualisation (e.g. [`{leaflet}`](https://rstudio.github.io/leaflet/)) in a Databricks notebook you'll find there is no rendered output by default.
+
+The Databricks [documentation](https://docs.databricks.com/en/visualizations/htmlwidgets.html) details how to get this working but requires specification of the workspace URL explicitly.
+
+[`{brickster}`](https://zacdav-db.github.io/brickster/index.html) has a [helper function](https://zacdav-db.github.io/brickster/reference/notebook_enable_htmlwidgets.html) that simplifies enabling `{htmlwidgets}`:
+
+```{r, eval=FALSE}
+remotes::install_github("zacdav-db/brickster")
+brickstrer::notebook_enable_htmlwidgets()
+```
+
+The function itself is straightforward, here is code (simplified version of `brickster::notebook_enable_htmlwidgets`) doesn't require installing `{brickster}`:
+
+```{r}
+enable_htmlwidgets <- function(height = 450) {
+
+  # new option to control default widget height, default is 450px
+  options(db_htmlwidget_height = height) # <1>
+
+  system("apt-get --yes install pandoc", intern = T)  # <2>
+  if (!base::require("htmlwidgets")) {  # <3>
+    utils::install.packages("htmlwidgets")  # <3>
+  }  # <3>
+
+  # new method will fetch height based on new option, or default to 450px
+  new_method <- function(x, ...) { # <4>
+    x$height <- getOption("db_htmlwidget_height", 450) # <4>
+    file <- tempfile(fileext = ".html") # <4>
+    htmlwidgets::saveWidget(x, file = file) # <4>
+    contents <- as.character(rvest::read_html(file)) # <4>
+    displayHTML(contents) # <4>
+  } # <4>
+
+  utils::assignInNamespace("print.htmlwidget", new_method, ns = "htmlwidgets") # <5>
+  invisible(list(default_height = height, print = new_method))
+  
+}
+```
+
+1.  The height of the htmlwidget output is controlled via an option (`db_htmlwidget_height`), this allows the height to be adjusted without re-running the function
+
+2.  Installing `pandoc` as it's required to use `htmlwidgets::saveWidget`
+
+3.  Ensure `{htmlwidgets}` is installed
+
+4.  Define a function that writes the widget to a temporary file as a self-contained `html` file and then reads the contents and presents via `displayHTML`
+
+5.  Override the `htmlwidgets::print.htmlwidget` method

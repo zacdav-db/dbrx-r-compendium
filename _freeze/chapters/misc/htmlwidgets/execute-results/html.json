@@ -1,0 +1,14 @@
+{
+  "hash": "6c5bf3c94b288d69fb45b3a9bdadfa90",
+  "result": {
+    "markdown": "# `{htmlwidgets}` in notebooks\n\nWhen you try to view a [`{htmlwidget}`](https://www.htmlwidgets.org/) based visualisation (e.g. [`{leaflet}`](https://rstudio.github.io/leaflet/)) in a Databricks notebook you'll find there is no rendered output by default.\n\nThe Databricks [documentation](https://docs.databricks.com/en/visualizations/htmlwidgets.html) details how to get this working but requires specification of the workspace URL explicitly.\n\n[`{brickster}`](https://zacdav-db.github.io/brickster/index.html) has a [helper function](https://zacdav-db.github.io/brickster/reference/notebook_enable_htmlwidgets.html) that simplifies enabling `{htmlwidgets}`:\n\n\n::: {.cell}\n\n```{.r .cell-code}\nremotes::install_github(\"zacdav-db/brickster\")\nbrickstrer::notebook_enable_htmlwidgets()\n```\n:::\n\n\nThe function itself is straightforward, here is code (simplified version of `brickster::notebook_enable_htmlwidgets`) doesn't require installing `{brickster}`:\n\n\n::: {.cell}\n\n```{.r .cell-code}\nenable_htmlwidgets <- function(height = 450) {\n\n  # new option to control default widget height, default is 450px\n  options(db_htmlwidget_height = height) # <1>\n\n  system(\"apt-get --yes install pandoc\", intern = T)  # <2>\n  if (!base::require(\"htmlwidgets\")) {  # <3>\n    utils::install.packages(\"htmlwidgets\")  # <3>\n  }  # <3>\n\n  # new method will fetch height based on new option, or default to 450px\n  new_method <- function(x, ...) { # <4>\n    x$height <- getOption(\"db_htmlwidget_height\", 450) # <4>\n    file <- tempfile(fileext = \".html\") # <4>\n    htmlwidgets::saveWidget(x, file = file) # <4>\n    contents <- as.character(rvest::read_html(file)) # <4>\n    displayHTML(contents) # <4>\n  } # <4>\n\n  utils::assignInNamespace(\"print.htmlwidget\", new_method, ns = \"htmlwidgets\") # <5>\n  invisible(list(default_height = height, print = new_method))\n  \n}\n```\n:::\n\n\n1.  The height of the htmlwidget output is controlled via an option (`db_htmlwidget_height`), this allows the height to be adjusted without re-running the function\n\n2.  Installing `pandoc` as it's required to use `htmlwidgets::saveWidget`\n\n3.  Ensure `{htmlwidgets}` is installed\n\n4.  Define a function that writes the widget to a temporary file as a self-contained `html` file and then reads the contents and presents via `displayHTML`\n\n5.  Override the `htmlwidgets::print.htmlwidget` method\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
