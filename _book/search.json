@@ -32,7 +32,7 @@
     "href": "chapters/pkg-management/fast-installs.html",
     "title": "3  Faster Package Installs",
     "section": "",
-    "text": "Under Development"
+    "text": "Under Development\n\n\n\n\n\n\nYou may have noticed that when installing packages in the notebook it can take a while. It could be minutes, hours in extreme cases, to install the suite of packages your project requires. This is especially tedious if you need to do this every time a job runs or each morning when your cluster is started (clusters are ephemeral and by default have no persistent storage).\nThis is because by default Databricks installs packages from CRAN. CRAN does not provide pre-compiled binaries for Linux (and Databricks clusters underlying virtual machines are all Linux, Ubuntu specifically).\nPosit to save the day! Posit provides a public package manager that has all packages from CRAN (and Bioconductor!). There is a helpful wizard to get started.\nWith our new found knowledge we can make installing R packages within Databricks significantly faster. There are three ways to solve this, each differing slightly, but fundamentally the same."
   },
   {
     "objectID": "chapters/pkg-management/persisting-libs.html",
@@ -88,6 +88,76 @@
     "href": "chapters/misc/odbc-oauth.html#u2m-example",
     "title": "8  OAuth 🤝 {odbc}",
     "section": "8.1 U2M Example",
-    "text": "8.1 U2M Example\nOAuth U2M or OAuth 2.0 browser-based authentication works only with applications that run locally. It does not work with server-based or cloud-based applications.\n\nlibrary(odbc)\nlibrary(DBI)\n\ncon &lt;- DBI::dbConnect(\n1  drv = odbc::databricks(),\n2  httpPath = \"/sql/1.0/warehouses/&lt;warehouse-id&gt;\",\n3  workspace = \"&lt;workspace-name&gt;.cloud.databricks.com\",\n4  authMech = 11,\n  auth_flow = 2\n)\n\n\n1\n\n{odbc} recently added odbc::databricks() to simplify connecting to Databricks (requires version &gt;=1.4.0)\n\n2\n\nThe httpPath can be found in the ‘Connection Details’ tab of a SQL warehouse\n\n3\n\nworkspace refers to the workspace URL, also found in ‘Connection Details’ tab as ‘Server hostname’\n\n4\n\nThe docs mention setting AuthMech to 11 and Auth_Flow to 2"
+    "text": "8.1 U2M Example\n\n\n\n\n\n\nNote\n\n\n\nOAuth U2M or OAuth 2.0 browser-based authentication works only with applications that run locally. It does not work with server-based or cloud-based applications.\n\n\nWhen running this code you should be prompted to login to the workspace or you’ll see a window that says “success”. You can close the window and continue working in R.\n\nlibrary(odbc)\nlibrary(DBI)\n\ncon &lt;- DBI::dbConnect(\n1  drv = odbc::databricks(),\n2  httpPath = \"/sql/1.0/warehouses/&lt;warehouse-id&gt;\",\n3  workspace = \"&lt;workspace-name&gt;.cloud.databricks.com\",\n4  authMech = 11,\n  auth_flow = 2\n)\n\n\n1\n\n{odbc} recently added odbc::databricks() to simplify connecting to Databricks (requires version &gt;=1.4.0)\n\n2\n\nThe httpPath can be found in the ‘Connection Details’ tab of a SQL warehouse\n\n3\n\nworkspace refers to the workspace URL, also found in ‘Connection Details’ tab as ‘Server hostname’\n\n4\n\nThe docs mention setting AuthMech to 11 and Auth_Flow to 2"
+  },
+  {
+    "objectID": "chapters/pkg-management/fast-installs.html#notebook-one-liner",
+    "href": "chapters/pkg-management/fast-installs.html#notebook-one-liner",
+    "title": "3  Faster Package Installs",
+    "section": "3.1 Notebook one-liner",
+    "text": "3.1 Notebook one-liner"
+  },
+  {
+    "objectID": "chapters/pkg-management/fast-installs.html#section",
+    "href": "chapters/pkg-management/fast-installs.html#section",
+    "title": "3  Faster Package Installs",
+    "section": "3.4 ",
+    "text": "3.4"
+  },
+  {
+    "objectID": "chapters/pkg-management/fast-installs.html#setting-repo-within-notebook",
+    "href": "chapters/pkg-management/fast-installs.html#setting-repo-within-notebook",
+    "title": "3  Faster Package Installs",
+    "section": "3.1 Setting Repo within Notebook",
+    "text": "3.1 Setting Repo within Notebook\nThe quickest method is to follow the wizard and adjust the repos option:\n\n# need to set the user agent string otherwise installs will be slow\n# e.g. selecting Ubuntu 22.04 in wizard \noptions(\n  HTTPUserAgent = sprintf(\"R/%s R (%s)\", getRversion(), paste(getRversion(), R.version[\"platform\"], R.version[\"arch\"], R.version[\"os\"])),\n  repos = \"https://packagemanager.posit.co/cran/__linux__/jammy/latest\"\n)\n\nThis works well but not all versions of the Databricks Runtime use the same version of Ubuntu.\nIt’s easier to detect the Ubuntu release code name dynamically:\n\n1release &lt;- system(\"lsb_release -c --short\", intern = T)\n\n# need to set the user agent string otherwise installs will be slow\noptions(\n  HTTPUserAgent = sprintf(\"R/%s R (%s)\", getRversion(), paste(getRversion(), R.version[\"platform\"], R.version[\"arch\"], R.version[\"os\"])),\n  repos = paste0(\"https://packagemanager.posit.co/cran/__linux__/\", release, \"/latest\")\n)\n\n\n1\n\nsystem is used to run the command to retrieve the release code name\n\n\n\n\nThe downside of this method is that it requires every notebook to adjust the repos and HTTPUserAgent options."
+  },
+  {
+    "objectID": "chapters/pkg-management/fast-installs.html#cluster-settings",
+    "href": "chapters/pkg-management/fast-installs.html#cluster-settings",
+    "title": "3  Faster Package Installs",
+    "section": "3.2 Cluster Settings",
+    "text": "3.2 Cluster Settings"
+  },
+  {
+    "objectID": "chapters/pkg-management/fast-installs.html#adjusting-cluster-settings",
+    "href": "chapters/pkg-management/fast-installs.html#adjusting-cluster-settings",
+    "title": "3  Faster Package Installs",
+    "section": "3.2 Adjusting Cluster Settings",
+    "text": "3.2 Adjusting Cluster Settings\nDatabricks clusters allow specification of environment variables, there is a specific variable (DATABRICKS_DEFAULT_R_REPOS) that can be set to adjust the default repository for the entire cluster.\nUnfortunately this isn’t as dynamic as the first option. The Ubuntu version used doesn’t change often, so it’s not a big issue\nYou can again refer to the wizard, your environment variables section of cluster should have:\n\n# be sure to use the correct URL\nDATABRICKS_DEFAULT_R_REPOS=&lt;posit-package-manager-url-goes-here&gt;"
+  },
+  {
+    "objectID": "chapters/pkg-management/fast-installs.html#setting-repo-for-cluster-library",
+    "href": "chapters/pkg-management/fast-installs.html#setting-repo-for-cluster-library",
+    "title": "3  Faster Package Installs",
+    "section": "3.3 Setting Repo for Cluster Library",
+    "text": "3.3 Setting Repo for Cluster Library\n\n\n\n\n\n\nNote\n\n\n\nSimilar to setting DATABRICKS_DEFAULT_R_REPOS this requires the HTTPUserAgent also to be set and it’s unlikely to be helpful other than for it’s purpose of installing a package to make it available for all cluster users.\n\n\nCluster libraries can install R packages and support specification of the repository."
+  },
+  {
+    "objectID": "chapters/pkg-management/fast-installs.html#init-script",
+    "href": "chapters/pkg-management/fast-installs.html#init-script",
+    "title": "3  Faster Package Installs",
+    "section": "3.4 Init Script",
+    "text": "3.4 Init Script\n\n\n#"
+  },
+  {
+    "objectID": "chapters/pkg-management/fast-installs.html#adjusting-cluster-environment-variable",
+    "href": "chapters/pkg-management/fast-installs.html#adjusting-cluster-environment-variable",
+    "title": "3  Faster Package Installs",
+    "section": "3.2 Adjusting Cluster Environment Variable",
+    "text": "3.2 Adjusting Cluster Environment Variable\nDatabricks clusters allow specification of environment variables, there is a specific variable (DATABRICKS_DEFAULT_R_REPOS) that can be set to adjust the default repository for the entire cluster.\nUnfortunately this isn’t as dynamic as the first option. The Ubuntu version used doesn’t change often, so it’s not a big issue\nYou can again refer to the wizard, your environment variables section of cluster should have:\n\n# be sure to use the correct URL\nDATABRICKS_DEFAULT_R_REPOS=&lt;posit-package-manager-url-goes-here&gt;"
+  },
+  {
+    "objectID": "chapters/pkg-management/fast-installs.html#cluster-environment-variable",
+    "href": "chapters/pkg-management/fast-installs.html#cluster-environment-variable",
+    "title": "3  Faster Package Installs",
+    "section": "3.2 Cluster Environment Variable",
+    "text": "3.2 Cluster Environment Variable\nDatabricks clusters allow specification of environment variables, there is a specific variable (DATABRICKS_DEFAULT_R_REPOS) that can be set to adjust the default repository for the entire cluster.\nUnfortunately this isn’t as dynamic as the first option. The Ubuntu version used doesn’t change often, so it’s not a big issue\nYou can again refer to the wizard, your environment variables section of cluster should have:\n\n# be sure to use the correct URL\nDATABRICKS_DEFAULT_R_REPOS=&lt;posit-package-manager-url-goes-here&gt;"
+  },
+  {
+    "objectID": "chapters/pkg-management/fast-installs.html#cluster-environment-variable-init-script",
+    "href": "chapters/pkg-management/fast-installs.html#cluster-environment-variable-init-script",
+    "title": "3  Faster Package Installs",
+    "section": "3.2 Cluster Environment Variable & Init Script",
+    "text": "3.2 Cluster Environment Variable & Init Script\nDatabricks clusters allow specification of environment variables, there is a specific variable (DATABRICKS_DEFAULT_R_REPOS) that can be set to adjust the default repository for the entire cluster.\nYou can again refer to the wizard, the environment variables section of cluster should be:\n\nDATABRICKS_DEFAULT_R_REPOS=&lt;posit-package-manager-url-goes-here&gt;\n\nUnfortunately this isn’t as dynamic as the first option and you still need to set the HTTPUserAgent in .Rprofile.site via an init script.\nThe init script will be:\n\n#!/bin/bash\n# Append changes to .Rprofile.site\ncat &lt;&lt;EOF &gt;&gt; \"/etc/R/Rprofile.site\"\noptions(\n  HTTPUserAgent = sprintf(\"R/%s R (%s)\", getRversion(), paste(getRversion(), R.version[\"platform\"], R.version[\"arch\"], R.version[\"os\"]))\n)\nEOF\n\n\n\n\n\n\n\nImportant\n\n\n\nDue to how Databricks starts up the R shell for notebook sessions it’s not straightforward to adjust the repos option in an init script alone.\nDATABRICKS_DEFAULT_R_REPOS is referenced as part of the startup process after .Rprofile.site is executed and therefore will override any earlier attempt to adjust repos.\nTherefore you’ll need to use both the init script and the environment variable configuration."
   }
 ]

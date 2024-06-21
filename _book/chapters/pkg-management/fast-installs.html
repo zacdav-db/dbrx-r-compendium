@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -185,7 +219,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
- <span class="menu-text">Miscellaneous</span></a>
+ <span class="menu-text">Data Engineering</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -193,8 +227,31 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../chapters/data-eng/odbc-dbplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title"><code>{dbplyr}</code> &amp; <code>{odbc}</code></span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Miscellaneous</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../chapters/misc/htmlwidgets.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/misc/odbc-oauth.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">OAuth 🤝 <code>{odbc}</code></span></span></a>
   </div>
 </li>
       </ul>
@@ -205,7 +262,15 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#setting-repo-within-notebook" id="toc-setting-repo-within-notebook" class="nav-link active" data-scroll-target="#setting-repo-within-notebook"><span class="header-section-number">3.1</span> Setting Repo within Notebook</a></li>
+  <li><a href="#cluster-environment-variable-init-script" id="toc-cluster-environment-variable-init-script" class="nav-link" data-scroll-target="#cluster-environment-variable-init-script"><span class="header-section-number">3.2</span> Cluster Environment Variable &amp; Init Script</a></li>
+  <li><a href="#setting-repo-for-cluster-library" id="toc-setting-repo-for-cluster-library" class="nav-link" data-scroll-target="#setting-repo-for-cluster-library"><span class="header-section-number">3.3</span> Setting Repo for Cluster Library</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/zacdav-db/dbrx-r-compendium/edit/main/chapters/pkg-management/fast-installs.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/zacdav-db/dbrx-r-compendium/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -227,21 +292,96 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<div class="callout callout-style-default callout-caution callout-titled">
+<p>You may have noticed that when installing packages in the notebook it can take a while. It could be minutes, hours in extreme cases, to install the suite of packages your project requires. This is especially tedious if you need to do this every time a job runs, or each morning when your cluster is started.</p>
+<p>Clusters are ephemeral and by default have no persistent storage, therefore installed packages will not be available on restart.</p>
+<p>By default Databricks installs packages from <a href="https://cran.r-project.org/">CRAN</a>. CRAN does not provide pre-compiled binaries for Linux (Databricks clusters’ underlying virtual machines are Linux, Ubuntu specifically).</p>
+<p><a href="https://posit.co/">Posit</a> to save the day! <a href="https://packagemanager.posit.co/">Posit provides a public package manager</a> that has all packages from CRAN (and <a href="https://www.bioconductor.org/">Bioconductor</a>!). There is a <a href="https://packagemanager.posit.co/client/#/repos/cran/setup?r_environment=other">helpful wizard</a> to get started.</p>
+<p>With our new found knowledge we can make installing R packages within Databricks significantly faster. There are multiple ways to solve this, each differing slightly, but fundamentally the same.</p>
+<section id="setting-repo-within-notebook" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="setting-repo-within-notebook"><span class="header-section-number">3.1</span> Setting Repo within Notebook</h2>
+<p>The quickest method is to follow the <a href="https://packagemanager.posit.co/client/#/repos/cran/setup?r_environment=other">wizard</a> and adjust the <code>repos</code> option:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># need to set the user agent string otherwise installs will be slow</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="co"># e.g. selecting Ubuntu 22.04 in wizard </span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">options</span>(</span>
+<span id="cb1-4"><a href="#cb1-4"></a>  <span class="at">HTTPUserAgent =</span> <span class="fu">sprintf</span>(<span class="st">"R/%s R (%s)"</span>, <span class="fu">getRversion</span>(), <span class="fu">paste</span>(<span class="fu">getRversion</span>(), R.version[<span class="st">"platform"</span>], R.version[<span class="st">"arch"</span>], R.version[<span class="st">"os"</span>])),</span>
+<span id="cb1-5"><a href="#cb1-5"></a>  <span class="at">repos =</span> <span class="st">"https://packagemanager.posit.co/cran/__linux__/jammy/latest"</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This works well but not all versions of the <a href="https://www.databricks.com/glossary/what-is-databricks-runtime">Databricks Runtime</a> use the same version of Ubuntu.</p>
+<p>It’s easier to detect the Ubuntu <a href="https://wiki.ubuntu.com/DevelopmentCodeNames">release code name</a> dynamically:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-2"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-2-1" class="code-annotation-target"><a href="#annotated-cell-2-1"></a>release <span class="ot">&lt;-</span> <span class="fu">system</span>(<span class="st">"lsb_release -c --short"</span>, <span class="at">intern =</span> T)</span>
+<span id="annotated-cell-2-2"><a href="#annotated-cell-2-2"></a></span>
+<span id="annotated-cell-2-3"><a href="#annotated-cell-2-3"></a><span class="co"># need to set the user agent string otherwise installs will be slow</span></span>
+<span id="annotated-cell-2-4"><a href="#annotated-cell-2-4"></a><span class="fu">options</span>(</span>
+<span id="annotated-cell-2-5"><a href="#annotated-cell-2-5"></a>  <span class="at">HTTPUserAgent =</span> <span class="fu">sprintf</span>(<span class="st">"R/%s R (%s)"</span>, <span class="fu">getRversion</span>(), <span class="fu">paste</span>(<span class="fu">getRversion</span>(), R.version[<span class="st">"platform"</span>], R.version[<span class="st">"arch"</span>], R.version[<span class="st">"os"</span>])),</span>
+<span id="annotated-cell-2-6"><a href="#annotated-cell-2-6"></a>  <span class="at">repos =</span> <span class="fu">paste0</span>(<span class="st">"https://packagemanager.posit.co/cran/__linux__/"</span>, release, <span class="st">"/latest"</span>)</span>
+<span id="annotated-cell-2-7"><a href="#annotated-cell-2-7"></a>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-2" data-code-annotation="1" data-code-lines="1"><code>system</code> is used to run the command to retrieve the release code name</span>
+</dd>
+</dl>
+</div>
+</div>
+<p>The downside of this method is that it requires every notebook to adjust the <code>repos</code> and <code>HTTPUserAgent</code> options.</p>
+</section>
+<section id="cluster-environment-variable-init-script" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="cluster-environment-variable-init-script"><span class="header-section-number">3.2</span> Cluster Environment Variable &amp; Init Script</h2>
+<p>Databricks clusters allow specification of <a href="https://docs.databricks.com/en/compute/configure.html#environment-variables">environment variables</a>, there is a specific variable (<code>DATABRICKS_DEFAULT_R_REPOS</code>) that can be set to adjust the default repository for the entire cluster.</p>
+<p>You can again refer to the <a href="https://packagemanager.posit.co/client/#/repos/cran/setup?r_environment=other">wizard</a>, the environment variables section of cluster should be:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="va">DATABRICKS_DEFAULT_R_REPOS</span><span class="op">=&lt;</span>posit-package-manager-url-goes-here<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Unfortunately this isn’t as dynamic as the first option and you still need to set the <code>HTTPUserAgent</code> in <a href="https://support.posit.co/hc/en-us/articles/360047157094-Managing-R-with-Rprofile-Renviron-Rprofile-site-Renviron-site-rsession-conf-and-repos-conf"><code>.Rprofile.site</code></a> via an <a href="https://docs.databricks.com/en/init-scripts/index.html">init script</a>.</p>
+<p>The init script will be:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co"># Append changes to .Rprofile.site</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="fu">cat</span> <span class="op">&lt;&lt;EOF</span> <span class="op">&gt;&gt;</span> <span class="st">"/etc/R/Rprofile.site"</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="st">options(</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="st">  HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"]))</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="st">)</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="op">EOF</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Under Development
+Important
 </div>
 </div>
 <div class="callout-body-container callout-body">
-
+<p>Due to how Databricks starts up the R shell for notebook sessions it’s not straightforward to adjust the <code>repos</code> option in an init script alone.</p>
+<p><code>DATABRICKS_DEFAULT_R_REPOS</code> is referenced as part of the startup process <em>after</em> <code>.Rprofile.site</code> is executed and therefore will override any earlier attempt to adjust <code>repos</code>.</p>
+<p>Therefore you’ll need to use both the init script and the environment variable configuration.</p>
 </div>
 </div>
+</section>
+<section id="setting-repo-for-cluster-library" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="setting-repo-for-cluster-library"><span class="header-section-number">3.3</span> Setting Repo for Cluster Library</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Similar to setting <code>DATABRICKS_DEFAULT_R_REPOS</code> this requires the <code>HTTPUserAgent</code> also to be set and it’s unlikely to be helpful other than for it’s purpose of installing a package to make it available for all cluster users.</p>
+</div>
+</div>
+<p><a href="https://docs.databricks.com/en/libraries/cluster-libraries.html">Cluster libraries</a> can install R packages and support specification of the repository.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -493,4 +633,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/zacdav-db/dbrx-r-compendium/edit/main/chapters/pkg-management/fast-installs.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/zacdav-db/dbrx-r-compendium/issues/new" class="toc-action">Report an issue</a></p></div></div></div></div></footer></body></html>
+</body></html>

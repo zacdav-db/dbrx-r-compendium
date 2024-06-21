@@ -217,8 +217,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Data Engineering</span></span>
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Data Engineering</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/data-eng/odbc-dbplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title"><code>{dbplyr}</code> &amp; <code>{odbc}</code></span></span></a>
+  </div>
+</li>
+      </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
@@ -232,13 +245,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/misc/htmlwidgets.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/misc/odbc-oauth.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">OAuth 🤝</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">OAuth 🤝 <code>{odbc}</code></span></span></a>
   </div>
 </li>
       </ul>
@@ -330,19 +343,19 @@ Important
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-annotation="1" data-code-lines="2,3">Create the directory to save the model if it doesn’t exist, if it does, empty it</span>
+<span data-code-annotation="1" data-code-lines="2,3" data-code-cell="annotated-cell-1">Create the directory to save the model if it doesn’t exist, if it does, empty it</span>
 </dd>
 <dt data-target-cell="annotated-cell-1" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-annotation="2" data-code-lines="5">Serialise the model, which is an object of class <code>crate</code> (from <code>{carrier}</code> package)</span>
+<span data-code-annotation="2" data-code-lines="5" data-code-cell="annotated-cell-1">Serialise the model, which is an object of class <code>crate</code> (from <code>{carrier}</code> package)</span>
 </dd>
 <dt data-target-cell="annotated-cell-1" data-target-annotation="3">3</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-annotation="3" data-code-lines="7,8,9">Save the serialised model via <code>saveRDS</code> to the directory as <code>crate.bin</code></span>
+<span data-code-annotation="3" data-code-lines="7,8,9" data-code-cell="annotated-cell-1">Save the serialised model via <code>saveRDS</code> to the directory as <code>crate.bin</code></span>
 </dd>
 <dt data-target-cell="annotated-cell-1" data-target-annotation="4">4</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-annotation="4" data-code-lines="12,13,14,15,16,17,18,19">Define the model specification, this contains metadata required ensure reproducibility. In this case it’s only specifying a version and what file the model can be found within.</span>
+<span data-code-annotation="4" data-code-lines="12,13,14,15,16,17,18,19" data-code-cell="annotated-cell-1">Define the model specification, this contains metadata required ensure reproducibility. In this case it’s only specifying a version and what file the model can be found within.</span>
 </dd>
 </dl>
 </div>
@@ -385,11 +398,11 @@ Important
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-2" data-code-annotation="1" data-code-lines="1">Add a new parameter <code>signature</code></span>
+<span data-code-annotation="1" data-code-lines="1" data-code-cell="annotated-cell-2">Add a new parameter <code>signature</code></span>
 </dd>
 <dt data-target-cell="annotated-cell-2" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-2" data-code-annotation="2" data-code-lines="7,8,9,10,11">Propagate <code>signature</code> to the <code>model_spec</code> parameter when invoking <code>mlflow::mlflow_save_model</code></span>
+<span data-code-annotation="2" data-code-lines="7,8,9,10,11" data-code-cell="annotated-cell-2">Propagate <code>signature</code> to the <code>model_spec</code> parameter when invoking <code>mlflow::mlflow_save_model</code></span>
 </dd>
 </dl>
 </div>
@@ -421,7 +434,7 @@ Important
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-4" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-4" data-code-annotation="1" data-code-lines="7">As discussed earlier, this is where things start to go awry with respect to Unity Catalog</span>
+<span data-code-annotation="1" data-code-lines="7" data-code-cell="annotated-cell-4">As discussed earlier, this is where things start to go awry with respect to Unity Catalog</span>
 </dd>
 </dl>
 </div>
@@ -485,15 +498,15 @@ Note
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-5" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-5" data-code-annotation="1" data-code-lines="1"><code>signature</code> has been added to function parameters, it’s defaulting to <code>NULL</code> so that existing code won’t break</span>
+<span data-code-annotation="1" data-code-lines="1" data-code-cell="annotated-cell-5"><code>signature</code> has been added to function parameters, it’s defaulting to <code>NULL</code> so that existing code won’t break</span>
 </dd>
 <dt data-target-cell="annotated-cell-5" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-5" data-code-annotation="2" data-code-lines="3,4,5,6,7">Adding <code>format_signature</code> function so don’t need to write JSON by hand, adding this within function for simplicity</span>
+<span data-code-annotation="2" data-code-lines="3,4,5,6,7" data-code-cell="annotated-cell-5">Adding <code>format_signature</code> function so don’t need to write JSON by hand, adding this within function for simplicity</span>
 </dd>
 <dt data-target-cell="annotated-cell-5" data-target-annotation="3">3</dt>
 <dd>
-<span data-code-cell="annotated-cell-5" data-code-annotation="3" data-code-lines="16"><code>signature</code> is propagated to <code>mlflow_save_model</code>’s <code>model_spec</code> parameter which will write a valid signature</span>
+<span data-code-annotation="3" data-code-lines="16" data-code-cell="annotated-cell-5"><code>signature</code> is propagated to <code>mlflow_save_model</code>’s <code>model_spec</code> parameter which will write a valid signature</span>
 </dd>
 </dl>
 </div>
@@ -515,11 +528,11 @@ Note
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-6" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-6" data-code-annotation="1" data-code-lines="4,5,6">Explicitly defining a <code>signature</code>, a list that contains <code>input</code> and <code>outputs</code>, each are lists of lists respectively</span>
+<span data-code-annotation="1" data-code-lines="4,5,6" data-code-cell="annotated-cell-6">Explicitly defining a <code>signature</code>, a list that contains <code>input</code> and <code>outputs</code>, each are lists of lists respectively</span>
 </dd>
 <dt data-target-cell="annotated-cell-6" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-6" data-code-annotation="2" data-code-lines="8">Passing defined signature to the now patched <code>mlflow_log_model</code> function</span>
+<span data-code-annotation="2" data-code-lines="8" data-code-cell="annotated-cell-6">Passing defined signature to the now patched <code>mlflow_log_model</code> function</span>
 </dd>
 </dl>
 </div>
@@ -544,7 +557,7 @@ Note
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-7" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-7" data-code-annotation="1" data-code-lines="7">You’ll need to either get the <code>run_uri</code> programmatically or copy it manually</span>
+<span data-code-annotation="1" data-code-lines="7" data-code-cell="annotated-cell-7">You’ll need to either get the <code>run_uri</code> programmatically or copy it manually</span>
 </dd>
 </dl>
 </div>

@@ -8,7 +8,11 @@ User-to-machine (U2M) is typically what you'd want to use. Good news, [the Datab
 
 ## U2M Example
 
+::: callout-note
 OAuth U2M or OAuth 2.0 browser-based authentication works only with applications that run locally. It does not work with server-based or cloud-based applications.
+:::
+
+When running this code you should be prompted to login to the workspace or you'll see a window that says "success". You can close the window and continue working in R.
 
 ```{r, eval=FALSE}
 library(odbc)

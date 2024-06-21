@@ -1,5 +1,83 @@
 # Faster Package Installs
 
-::: callout-caution
-## Under Development
+You may have noticed that when installing packages in the notebook it can take a while. It could be minutes, hours in extreme cases, to install the suite of packages your project requires. This is especially tedious if you need to do this every time a job runs, or each morning when your cluster is started.
+
+Clusters are ephemeral and by default have no persistent storage, therefore installed packages will not be available on restart.
+
+By default Databricks installs packages from [CRAN](https://cran.r-project.org/). CRAN does not provide pre-compiled binaries for Linux (Databricks clusters' underlying virtual machines are Linux, Ubuntu specifically).
+
+[Posit](https://posit.co/) to save the day! [Posit provides a public package manager](https://packagemanager.posit.co/) that has all packages from CRAN (and [Bioconductor](https://www.bioconductor.org/)!). There is a [helpful wizard](https://packagemanager.posit.co/client/#/repos/cran/setup?r_environment=other) to get started.
+
+With our new found knowledge we can make installing R packages within Databricks significantly faster. There are multiple ways to solve this, each differing slightly, but fundamentally the same.
+
+## Setting Repo within Notebook
+
+The quickest method is to follow the [wizard](https://packagemanager.posit.co/client/#/repos/cran/setup?r_environment=other) and adjust the `repos` option:
+
+```{r, eval=FALSE}
+# need to set the user agent string otherwise installs will be slow
+# e.g. selecting Ubuntu 22.04 in wizard 
+options(
+  HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"])),
+  repos = "https://packagemanager.posit.co/cran/__linux__/jammy/latest"
+)
+```
+
+This works well but not all versions of the [Databricks Runtime](https://www.databricks.com/glossary/what-is-databricks-runtime) use the same version of Ubuntu.
+
+It's easier to detect the Ubuntu [release code name](https://wiki.ubuntu.com/DevelopmentCodeNames) dynamically:
+
+```{r, eval=FALSE}
+
+release <- system("lsb_release -c --short", intern = T) # <1>
+
+# need to set the user agent string otherwise installs will be slow
+options(
+  HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"])),
+  repos = paste0("https://packagemanager.posit.co/cran/__linux__/", release, "/latest")
+)
+```
+
+1.  `system` is used to run the command to retrieve the release code name
+
+The downside of this method is that it requires every notebook to adjust the `repos` and `HTTPUserAgent` options.
+
+## Cluster Environment Variable & Init Script
+
+Databricks clusters allow specification of [environment variables](https://docs.databricks.com/en/compute/configure.html#environment-variables), there is a specific variable (`DATABRICKS_DEFAULT_R_REPOS`) that can be set to adjust the default repository for the entire cluster.
+
+You can again refer to the [wizard](https://packagemanager.posit.co/client/#/repos/cran/setup?r_environment=other), the environment variables section of cluster should be:
+
+```{sh, eval=FALSE}
+DATABRICKS_DEFAULT_R_REPOS=<posit-package-manager-url-goes-here>
+```
+
+Unfortunately this isn't as dynamic as the first option and you still need to set the `HTTPUserAgent` in [`.Rprofile.site`](https://support.posit.co/hc/en-us/articles/360047157094-Managing-R-with-Rprofile-Renviron-Rprofile-site-Renviron-site-rsession-conf-and-repos-conf) via an [init script](https://docs.databricks.com/en/init-scripts/index.html).
+
+The init script will be:
+
+```{sh, eval=FALSE}
+#!/bin/bash
+# Append changes to .Rprofile.site
+cat <<EOF >> "/etc/R/Rprofile.site"
+options(
+  HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"]))
+)
+EOF
+```
+
+::: callout-important
+Due to how Databricks starts up the R shell for notebook sessions it's not straightforward to adjust the `repos` option in an init script alone.
+
+`DATABRICKS_DEFAULT_R_REPOS` is referenced as part of the startup process *after* `.Rprofile.site` is executed and therefore will override any earlier attempt to adjust `repos`.
+
+Therefore you'll need to use both the init script and the environment variable configuration.
 :::
+
+## Setting Repo for Cluster Library
+
+::: callout-note
+Similar to setting `DATABRICKS_DEFAULT_R_REPOS` this requires the `HTTPUserAgent` also to be set and it's unlikely to be helpful other than for it's purpose of installing a package to make it available for all cluster users.
+:::
+
+[Cluster libraries](https://docs.databricks.com/en/libraries/cluster-libraries.html) can install R packages and support specification of the repository.
