@@ -23,7 +23,7 @@ options(
 )
 ```
 
-1.  The `HTTPUserAgent` is [required when using R 3.6 or later](https://docs.posit.co/rspm/admin/serving-binaries/#binary-user-agents)
+1.  `HTTPUserAgent` is [required when using R 3.6 or later](https://docs.posit.co/rspm/admin/serving-binaries/#binary-user-agents)
 
 This works well but not all versions of the [Databricks Runtime](https://www.databricks.com/glossary/what-is-databricks-runtime) use the same version of Ubuntu.
 
