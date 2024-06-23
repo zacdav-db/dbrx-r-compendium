@@ -15,13 +15,15 @@ With our new found knowledge we can make installing R packages within Databricks
 The quickest method is to follow the [wizard](https://packagemanager.posit.co/client/#/repos/cran/setup?r_environment=other) and adjust the `repos` option:
 
 ```{r, eval=FALSE}
-# need to set the user agent string otherwise installs will be slow
+# set the user agent string otherwise pre-compiled binarys aren't used
 # e.g. selecting Ubuntu 22.04 in wizard 
 options(
-  HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"])),
+  HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"])), #<1>
   repos = "https://packagemanager.posit.co/cran/__linux__/jammy/latest"
 )
 ```
+
+1.  The `HTTPUserAgent` is [required when using R 3.6 or later](https://docs.posit.co/rspm/admin/serving-binaries/#binary-user-agents)
 
 This works well but not all versions of the [Databricks Runtime](https://www.databricks.com/glossary/what-is-databricks-runtime) use the same version of Ubuntu.
 
@@ -31,7 +33,7 @@ It's easier to detect the Ubuntu [release code name](https://wiki.ubuntu.com/Dev
 
 release <- system("lsb_release -c --short", intern = T) # <1>
 
-# need to set the user agent string otherwise installs will be slow
+# set the user agent string otherwise pre-compiled binarys aren't used
 options(
   HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"])),
   repos = paste0("https://packagemanager.posit.co/cran/__linux__/", release, "/latest")
