@@ -2,19 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/index.html</loc>
-    <lastmod>2024-06-21T09:11:29.123Z</lastmod>
+    <lastmod>2024-06-23T08:59:31.440Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/mlflow/log-to-uc.html</loc>
-    <lastmod>2024-06-21T07:53:18.294Z</lastmod>
+    <lastmod>2024-06-23T10:25:55.742Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/pkg-management/fast-installs.html</loc>
-    <lastmod>2024-06-23T08:24:56.085Z</lastmod>
+    <lastmod>2024-06-23T12:54:37.699Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/pkg-management/persisting-libs.html</loc>
-    <lastmod>2024-06-21T07:53:15.055Z</lastmod>
+    <lastmod>2024-06-24T00:59:38.932Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/pkg-management/renv.html</loc>
@@ -22,15 +22,15 @@
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/misc/htmlwidgets.html</loc>
-    <lastmod>2024-06-21T10:51:39.493Z</lastmod>
+    <lastmod>2024-06-23T10:26:21.439Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/mlflow/model-serving.html</loc>
-    <lastmod>2024-06-21T11:12:57.635Z</lastmod>
+    <lastmod>2024-06-23T10:26:02.844Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/misc/odbc-oauth.html</loc>
-    <lastmod>2024-06-21T07:53:01.579Z</lastmod>
+    <lastmod>2024-06-23T10:26:25.194Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/data-eng/odbc-dbplyr.html</loc>

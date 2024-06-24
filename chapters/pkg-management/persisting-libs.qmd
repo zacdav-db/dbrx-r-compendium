@@ -1,5 +1,185 @@
 # Persisting Packages
 
-::: callout-caution
-## Under Development
+::: callout-important
+Evaluate if [faster package installs](https://zacdav-db.github.io/dbrx-r-compendium/chapters/pkg-management/fast-installs.html) is able to solve any installation pain-points before investigating persisting packages, faster installs is easier to set-up and manage.
 :::
+
+Databricks clusters are ephemeral and therefore any installed packages will not be available on restart. If the cluster has cluster libraries defined then those libraries are installed after the cluster is started - this can be time consuming when there are multiple packages.
+
+The article on [faster package installs](https://zacdav-db.github.io/dbrx-r-compendium/chapters/pkg-management/fast-installs.html) details how to reduce the time it takes to install each package. Faster installs are great, but sometimes it's preferable to not install at all and persist the packages required, similar to how you'd use R locally.
+
+## Where Packages are Installed
+
+When installing packages with `install.packages` the default behaviour is that they'll be installed to the first element of `.libPaths()`.
+
+`.libPaths()` returns the paths of "R library trees", directories that R packages can reside. When you load a package it will be loaded from the first location it is found as dictated by `.libPaths()`.
+
+When working within a Databricks notebook `.libPaths()` will return 6 values by default, in order they are:
+
+| Path                                                 | Details                                                                                                                                                                                                             |
+|--------------------------------------------------------|----------------|
+| `/local_disk0/.ephemeral_nfs/envs/rEnv-<session-id>` | The first location is always a notebook specific directory, this is what allows [each notebook session to have different libraries installed](https://docs.databricks.com/en/libraries/notebooks-r-libraries.html). |
+| `/databricks/spark/R/lib`                            | Only `{SparkR}` is found here                                                                                                                                                                                       |
+| `/local_disk0/.ephemeral_nfs/cluster_libraries/r`    | [Cluster libraries](https://docs.databricks.com/en/libraries/cluster-libraries.html) - you could also install packages here explicitly to share amongst all users (e.g. `lib` parameter of `install.packages`)      |
+| `/usr/local/lib/R/site-library`                      | Packages built into the [Databricks Runtime](https://www.databricks.com/glossary/what-is-databricks-runtime)                                                                                                        |
+| `/usr/lib/R/site-library`                            | Empty                                                                                                                                                                                                               |
+| `/usr/lib/R/library`                                 | Base R packages                                                                                                                                                                                                     |
+
+It's important to understand the order defines the default behaviour as It's possible to add or remove values in `.libPaths()`. You'll almost certainly be adding values, there's little reason to remove values.
+
+::: callout-note
+All following examples will use [Unity Catalog Volumes](https://docs.databricks.com/en/connect/unity-catalog/volumes.html). [DBFS](https://docs.databricks.com/en/dbfs/index.html) can be used but it's not recommended.
+:::
+
+## Persisting a Package
+
+The recommended approach is to first install the library(s) you want to persist on a cluster via a notebook.
+
+For example, let's persist [`{leaflet}`](https://rstudio.github.io/leaflet/) to a volume:
+
+```{r, eval=FALSE}
+install.packages("leaflet") #<1>
+
+# determine where the package was installed
+pkg_location <- find.package("leaflet") #<2>
+
+# move package to volume
+new_pkg_location <- "/Volumes/<catalog>/<schema>/<volume>/my_packages"  #<3>
+file.copy(from = pkg_location, to = new_pkg_location, recursive = TRUE)  #<4>
+
+```
+
+1.  Installing `{leaflet}`
+
+2.  Return path to package files, from what was explained before we know this will be a sub-directory of `.libPaths()` first path
+
+3.  Define the path to volume where package will be persisted, make sure to adjust as needed
+
+4.  Copy the folder contents recursively to the volume
+
+At this point the package is persisted, but if you restart the cluster or detach and reattach and try to load `{leaflet}` it will fail to load.
+
+The last step is to adjust `.libPaths()` to include the volume path. You could make it the first value by:
+
+```{r, eval = FALSE}
+
+# adjust .libPaths
+.libPaths(c(new_pkg_location, .libPaths())) #<1>
+```
+
+1.  I recommend against making it the first value, will detail why in [Ordering]
+
+## Adjusting `.libPaths()`
+
+### Ordering
+
+Given that `.libPaths()` can return 6 values in a notebook you might wonder if there a "best" position to add your new volume path(s) to, that will depend on how you want packages to behave.
+
+A safe default is to add a path *after* the cluster libraries location (3rd), this will make it appear as if the Databricks Runtime has been extended to include packages in the volume path(s).
+
+Alternatively you could add it after the first path and all users will still have the notebook scope packages behaviour by default. It will be up to you to decide what works best.
+
+::: callout-important
+I don't recommend pre-pending `.libPaths()` with volume paths as packages will attempt to install to the first value and you cannot directly install packages to a volume path (due to volumes being backed onto cloud storage). This is why the example for persisting copies after installation.
+:::
+
+An example of adjusting `.libPaths()` looks like:
+
+```{r, eval=FALSE}
+volume_pkgs <- "/Volumes/<catalog>/<schema>/<volume>/my_packages"
+.libPaths(new = append(.libPaths(), volume_pkgs, after = 3))
+```
+
+### Helpful Functions
+
+The examples can be used to build a set of functions to make this easier.
+
+**Copying a Package**
+
+```{r, eval=FALSE}
+copy_package <- function(name, destination) {
+  package_loc <- find.package(name)
+  file.copy(from = package_loc, to = destination, recursive = TRUE)
+}
+
+# e.g. move {ggplot2} to volume
+copy_package("ggplot2", "/Volumes/<catalog>/<schema>/<volume>/my_packages")
+```
+
+**Alter `.libPaths()`**
+
+```{r, eval=FALSE}
+add_lib_paths <- function(path, after, version = FALSE) {
+  if (version) { #<1>
+    rver <- getRversion() #<1>
+    lib_path <- file.path(path, rver) #<1>
+  } else { #<1>
+    lib_path <- file.path(path) #<1>
+  } #<1>
+
+  # ensure directory exists
+  if (!file.exists(lib_path)) {
+    dir.create(lib_path, recursive = TRUE)
+  }
+
+  lib_path <- normalizePath(lib_path, "/")
+
+  message("primary package path is now ", lib_path)
+  .libPaths(new = append(.libPaths(), lib_path, after = after))
+  lib_path
+}
+```
+
+1.  Allows specifying `version` as `TRUE` or `FALSE` to suffix the supplied `path` with the current R version
+
+### Avoiding Repetition
+
+To avoid manually adjusting `.libPaths()` every notebook you can craft an [init script](https://docs.databricks.com/en/init-scripts/index.html) or set [environment variables](https://docs.databricks.com/en/compute/configure.html#environment-variables), depending on the desired outcome.
+
+::: callout-caution
+In practice this interferes with how Databricks sets up the environment, validate any changes thoroughly before rolling out to users.
+:::
+
+#### Init Script
+
+::: callout-note
+This example appends to the existing `Renviron.site` file to ensure any settings defined as part of runtime are preserved.
+
+The last two lines of the script are setting `R_LIBS_SITE` and `R_LIBS_USER`. Changing these lines can give you granular control over order for anything after the 1st value of `.libPaths()` as it's injected when the notebook session starts.
+:::
+
+```{bash, eval=FALSE}
+#!/bin/bash
+volume_pkgs=/Volumes/<catalog>/<schema>/<volume>/my_packages #<1>
+cat <<EOF >> "/etc/R/Renviron.site"
+R_LIBS_USER=%U:/databricks/spark/R/lib:/local_disk0/.ephemeral_nfs/cluster_libraries/r:$volume_pkgs # <2>
+EOF
+```
+
+1.  Define the path(s) to add to `R_LIBS_USER`
+
+2.  Append line to `/etc/R/Renviron.site` with location after cluster libraries, you can rearrange the paths as long as they remain `:` separated
+
+#### Environment Variables
+
+::: callout-caution
+How the Databricks Runtime defines and uses the R environment variables is something that may change and should be tested carefully, especially if upgrading runtime versions.
+:::
+
+There are particular environment variables (`R_LIBS`, `R_LIBS_USER`, `R_LIBS_SITE`) that can be set to initialise the library search path (`.libPaths()`).
+
+`R_LIBS` and `R_LIBS_USER` are defined as part of start-up processes in Databricks Runtime and they'll be overridden, it's easier to adjust via an [Init Script].
+
+`R_LIBS_SITE` can be set via an [environment variable](https://docs.databricks.com/en/compute/configure.html#environment-variables) but is referenced by `/etc/R/Renviron.site` and will provides limited control over where the path will appear in the `.libPaths()` order (it will appear 5th, after the packages included in the Databricks runtime) unless using an init script to alter `/etc/R/Renviron.site` directly.
+
+## Organising Packages
+
+When going down this route of persisting packages you should consider how this is organised and managed long term to avoid making things messy.
+
+Some practices you can consider include:
+
+-   Maintaining directories of packages per project, team, or user
+
+-   Ensuring directories are specific to an R version (and potentially even Databricks Runtime version)
+
+-   Coupling the use of persistence with [`{renv}`](https://rstudio.github.io/renv/articles/renv.html)

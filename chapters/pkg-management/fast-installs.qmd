@@ -58,7 +58,7 @@ Unfortunately this isn't as dynamic as the first option and you still need to se
 
 The init script will be:
 
-```{sh, eval=FALSE}
+```{bash, eval=FALSE}
 #!/bin/bash
 # Append changes to Rprofile.site
 cat <<EOF >> "/etc/R/Rprofile.site"
