@@ -361,7 +361,7 @@ Important
 </tr>
 </tbody>
 </table>
-<p>It’s important to understand the order defines the default behaviour as It’s possible to add or remove values in <code>.libPaths()</code>. You’ll almost certainly be adding values, there’s little reason to remove values.</p>
+<p>It’s important to understand that the order defines the default behaviour as It’s possible to add or remove values in <code>.libPaths()</code>. You’ll almost certainly be adding values, there’s little reason to remove values.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -431,7 +431,7 @@ Note
 <h3 data-number="4.3.1" class="anchored" data-anchor-id="ordering"><span class="header-section-number">4.3.1</span> Ordering</h3>
 <p>Given that <code>.libPaths()</code> can return 6 values in a notebook you might wonder if there a “best” position to add your new volume path(s) to, that will depend on how you want packages to behave.</p>
 <p>A safe default is to add a path <em>after</em> the cluster libraries location (currently 3rd), this will make it appear as if the Databricks Runtime has been extended to include packages in the volume path(s).</p>
-<p>Alternatively you could add it after the first path and all users will still have the notebook scope packages behaviour by default but cluster libraries may not load if they appear in the earlier paths under a different version.</p>
+<p>Alternatively you could add it after the first path and all users will still have the notebook scope package behaviour by default but cluster libraries may not load if they appear in the earlier paths under a different version.</p>
 <p>It will be up to you to decide what works best.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
