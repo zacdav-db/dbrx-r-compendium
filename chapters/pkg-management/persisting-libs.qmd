@@ -17,7 +17,7 @@ When installing packages with `install.packages` the default behaviour is that t
 When working within a Databricks notebook `.libPaths()` will return 6 values by default, in order they are:
 
 | Path                                                 | Details                                                                                                                                                                                                             |
-|--------------------------------------------------------|----------------|
+|-----------------------------------------------------|-------------------|
 | `/local_disk0/.ephemeral_nfs/envs/rEnv-<session-id>` | The first location is always a notebook specific directory, this is what allows [each notebook session to have different libraries installed](https://docs.databricks.com/en/libraries/notebooks-r-libraries.html). |
 | `/databricks/spark/R/lib`                            | Only `{SparkR}` is found here                                                                                                                                                                                       |
 | `/local_disk0/.ephemeral_nfs/cluster_libraries/r`    | [Cluster libraries](https://docs.databricks.com/en/libraries/cluster-libraries.html) - you could also install packages here explicitly to share amongst all users (e.g. `lib` parameter of `install.packages`)      |
@@ -25,7 +25,7 @@ When working within a Databricks notebook `.libPaths()` will return 6 values by 
 | `/usr/lib/R/site-library`                            | Empty                                                                                                                                                                                                               |
 | `/usr/lib/R/library`                                 | Base R packages                                                                                                                                                                                                     |
 
-It's important to understand the order defines the default behaviour as It's possible to add or remove values in `.libPaths()`. You'll almost certainly be adding values, there's little reason to remove values.
+It's important to understand that the order defines the default behaviour as It's possible to add or remove values in `.libPaths()`. You'll almost certainly be adding values, there's little reason to remove values.
 
 ::: callout-note
 All following examples will use [Unity Catalog Volumes](https://docs.databricks.com/en/connect/unity-catalog/volumes.html). [DBFS](https://docs.databricks.com/en/dbfs/index.html) can be used but it's not recommended.
@@ -77,7 +77,7 @@ Given that `.libPaths()` can return 6 values in a notebook you might wonder if t
 
 A safe default is to add a path *after* the cluster libraries location (currently 3rd), this will make it appear as if the Databricks Runtime has been extended to include packages in the volume path(s).
 
-Alternatively you could add it after the first path and all users will still have the notebook scope packages behaviour by default but cluster libraries may not load if they appear in the earlier paths under a different version.
+Alternatively you could add it after the first path and all users will still have the notebook scope package behaviour by default but cluster libraries may not load if they appear in the earlier paths under a different version.
 
 It will be up to you to decide what works best.
 
