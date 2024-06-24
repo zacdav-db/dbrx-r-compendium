@@ -356,7 +356,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Unfortunately this isn’t as dynamic as the first option and you still need to set the <code>HTTPUserAgent</code> in <code>Rprofile.site</code> via an <a href="https://docs.databricks.com/en/init-scripts/index.html">init script</a>.</p>
 <p>The init script will be:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">#!/bin/bash</span></span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">#!/bin/bash</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="co"># Append changes to Rprofile.site</span></span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="fu">cat</span> <span class="op">&lt;&lt;EOF</span> <span class="op">&gt;&gt;</span> <span class="st">"/etc/R/Rprofile.site"</span></span>
 <span id="cb2-4"><a href="#cb2-4"></a><span class="st">options(</span></span>

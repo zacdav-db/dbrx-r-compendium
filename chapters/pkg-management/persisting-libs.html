@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -235,7 +269,21 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#where-packages-are-installed" id="toc-where-packages-are-installed" class="nav-link active" data-scroll-target="#where-packages-are-installed"><span class="header-section-number">4.1</span> Where Packages are Installed</a></li>
+  <li><a href="#persisting-a-package" id="toc-persisting-a-package" class="nav-link" data-scroll-target="#persisting-a-package"><span class="header-section-number">4.2</span> Persisting a Package</a></li>
+  <li><a href="#adjusting-.libpaths" id="toc-adjusting-.libpaths" class="nav-link" data-scroll-target="#adjusting-.libpaths"><span class="header-section-number">4.3</span> Adjusting <code>.libPaths()</code></a>
+  <ul class="collapse">
+  <li><a href="#ordering" id="toc-ordering" class="nav-link" data-scroll-target="#ordering"><span class="header-section-number">4.3.1</span> Ordering</a></li>
+  <li><a href="#helpful-functions" id="toc-helpful-functions" class="nav-link" data-scroll-target="#helpful-functions"><span class="header-section-number">4.3.2</span> Helpful Functions</a></li>
+  <li><a href="#avoiding-repetition" id="toc-avoiding-repetition" class="nav-link" data-scroll-target="#avoiding-repetition"><span class="header-section-number">4.3.3</span> Avoiding Repetition</a></li>
+  </ul></li>
+  <li><a href="#organising-packages" id="toc-organising-packages" class="nav-link" data-scroll-target="#organising-packages"><span class="header-section-number">4.4</span> Organising Packages</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/edit/main/chapters/pkg-management/persisting-libs.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -259,21 +307,279 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Evaluate if <a href="https://zacdav-db.github.io/dbrx-r-compendium/chapters/pkg-management/fast-installs.html">faster package installs</a> is able to solve any installation pain-points before investigating persisting packages, faster installs is easier to set-up and manage.</p>
+</div>
+</div>
+<p>Databricks clusters are ephemeral and therefore any installed packages will not be available on restart. If the cluster has cluster libraries defined then those libraries are installed after the cluster is started - this can be time consuming when there are multiple packages.</p>
+<p>The article on <a href="https://zacdav-db.github.io/dbrx-r-compendium/chapters/pkg-management/fast-installs.html">faster package installs</a> details how to reduce the time it takes to install each package. Faster installs are great, but sometimes it’s preferable to not install at all and persist the packages required, similar to how you’d use R locally.</p>
+<section id="where-packages-are-installed" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="where-packages-are-installed"><span class="header-section-number">4.1</span> Where Packages are Installed</h2>
+<p>When installing packages with <code>install.packages</code> the default behaviour is that they’ll be installed to the first element of <code>.libPaths()</code>.</p>
+<p><code>.libPaths()</code> returns the paths of “R library trees”, directories that R packages can reside. When you load a package it will be loaded from the first location it is found as dictated by <code>.libPaths()</code>.</p>
+<p>When working within a Databricks notebook <code>.libPaths()</code> will return 6 values by default, in order they are:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Path</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>/local_disk0/.ephemeral_nfs/envs/rEnv-&lt;session-id&gt;</code></td>
+<td>The first location is always a notebook specific directory, this is what allows <a href="https://docs.databricks.com/en/libraries/notebooks-r-libraries.html">each notebook session to have different libraries installed</a>.</td>
+</tr>
+<tr class="even">
+<td><code>/databricks/spark/R/lib</code></td>
+<td>Only <code>{SparkR}</code> is found here</td>
+</tr>
+<tr class="odd">
+<td><code>/local_disk0/.ephemeral_nfs/cluster_libraries/r</code></td>
+<td><a href="https://docs.databricks.com/en/libraries/cluster-libraries.html">Cluster libraries</a> - you could also install packages here explicitly to share amongst all users (e.g.&nbsp;<code>lib</code> parameter of <code>install.packages</code>)</td>
+</tr>
+<tr class="even">
+<td><code>/usr/local/lib/R/site-library</code></td>
+<td>Packages built into the <a href="https://www.databricks.com/glossary/what-is-databricks-runtime">Databricks Runtime</a></td>
+</tr>
+<tr class="odd">
+<td><code>/usr/lib/R/site-library</code></td>
+<td>Empty</td>
+</tr>
+<tr class="even">
+<td><code>/usr/lib/R/library</code></td>
+<td>Base R packages</td>
+</tr>
+</tbody>
+</table>
+<p>It’s important to understand the order defines the default behaviour as It’s possible to add or remove values in <code>.libPaths()</code>. You’ll almost certainly be adding values, there’s little reason to remove values.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>All following examples will use <a href="https://docs.databricks.com/en/connect/unity-catalog/volumes.html">Unity Catalog Volumes</a>. <a href="https://docs.databricks.com/en/dbfs/index.html">DBFS</a> can be used but it’s not recommended.</p>
+</div>
+</div>
+</section>
+<section id="persisting-a-package" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="persisting-a-package"><span class="header-section-number">4.2</span> Persisting a Package</h2>
+<p>The recommended approach is to first install the library(s) you want to persist on a cluster via a notebook.</p>
+<p>For example, let’s persist <a href="https://rstudio.github.io/leaflet/"><code>{leaflet}</code></a> to a volume:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-1"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-1" class="code-annotation-target"><a href="#annotated-cell-1-1"></a><span class="fu">install.packages</span>(<span class="st">"leaflet"</span>)</span>
+<span id="annotated-cell-1-2"><a href="#annotated-cell-1-2"></a></span>
+<span id="annotated-cell-1-3"><a href="#annotated-cell-1-3"></a><span class="co"># determine where the package was installed</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-1-4" class="code-annotation-target"><a href="#annotated-cell-1-4"></a>pkg_location <span class="ot">&lt;-</span> <span class="fu">find.package</span>(<span class="st">"leaflet"</span>)</span>
+<span id="annotated-cell-1-5"><a href="#annotated-cell-1-5"></a></span>
+<span id="annotated-cell-1-6"><a href="#annotated-cell-1-6"></a><span class="co"># move package to volume</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-1-7" class="code-annotation-target"><a href="#annotated-cell-1-7"></a>new_pkg_location <span class="ot">&lt;-</span> <span class="st">"/Volumes/&lt;catalog&gt;/&lt;schema&gt;/&lt;volume&gt;/my_packages"</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-1-8" class="code-annotation-target"><a href="#annotated-cell-1-8"></a><span class="fu">file.copy</span>(<span class="at">from =</span> pkg_location, <span class="at">to =</span> new_pkg_location, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="1" data-code-annotation="1">Installing <code>{leaflet}</code></span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="4" data-code-annotation="2">Return path to package files, from what was explained before we know this will be a sub-directory of <code>.libPaths()</code> first path</span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="7" data-code-annotation="3">Define the path to volume where package will be persisted, make sure to adjust as needed</span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="8" data-code-annotation="4">Copy the folder contents recursively to the volume</span>
+</dd>
+</dl>
+</div>
+</div>
+<p>At this point the package is persisted, but if you restart the cluster or detach and reattach and try to load <code>{leaflet}</code> it will fail to load.</p>
+<p>The last step is to adjust <code>.libPaths()</code> to include the volume path. You could make it the first value by:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-2"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-2-1"><a href="#annotated-cell-2-1"></a><span class="co"># adjust .libPaths</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-2-2" class="code-annotation-target"><a href="#annotated-cell-2-2"></a><span class="fu">.libPaths</span>(<span class="fu">c</span>(new_pkg_location, <span class="fu">.libPaths</span>()))</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-2" data-code-lines="2" data-code-annotation="1">I recommend against making it the first value, will detail why in <a href="#ordering">Ordering</a></span>
+</dd>
+</dl>
+</div>
+</div>
+</section>
+<section id="adjusting-.libpaths" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="adjusting-.libpaths"><span class="header-section-number">4.3</span> Adjusting <code>.libPaths()</code></h2>
+<section id="ordering" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="ordering"><span class="header-section-number">4.3.1</span> Ordering</h3>
+<p>Given that <code>.libPaths()</code> can return 6 values in a notebook you might wonder if there a “best” position to add your new volume path(s) to, that will depend on how you want packages to behave.</p>
+<p>A safe default is to add a path <em>after</em> the cluster libraries location (3rd), this will make it appear as if the Databricks Runtime has been extended to include packages in the volume path(s).</p>
+<p>Alternatively you could add it after the first path and all users will still have the notebook scope packages behaviour by default. It will be up to you to decide what works best.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>I don’t recommend pre-pending <code>.libPaths()</code> with volume paths as packages will attempt to install to the first value and you cannot directly install packages to a volume path (due to volumes being backed onto cloud storage). This is why the example for persisting copies after installation.</p>
+</div>
+</div>
+<p>An example of adjusting <code>.libPaths()</code> looks like:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>volume_pkgs <span class="ot">&lt;-</span> <span class="st">"/Volumes/&lt;catalog&gt;/&lt;schema&gt;/&lt;volume&gt;/my_packages"</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">.libPaths</span>(<span class="at">new =</span> <span class="fu">append</span>(<span class="fu">.libPaths</span>(), volume_pkgs, <span class="at">after =</span> <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="helpful-functions" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="helpful-functions"><span class="header-section-number">4.3.2</span> Helpful Functions</h3>
+<p>The examples can be used to build a set of functions to make this easier.</p>
+<p><strong>Copying a Package</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>copy_package <span class="ot">&lt;-</span> <span class="cf">function</span>(name, destination) {</span>
+<span id="cb2-2"><a href="#cb2-2"></a>  package_loc <span class="ot">&lt;-</span> <span class="fu">find.package</span>(name)</span>
+<span id="cb2-3"><a href="#cb2-3"></a>  <span class="fu">file.copy</span>(<span class="at">from =</span> package_loc, <span class="at">to =</span> destination, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-4"><a href="#cb2-4"></a>}</span>
+<span id="cb2-5"><a href="#cb2-5"></a></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="co"># e.g. move {ggplot2} to volume</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="fu">copy_package</span>(<span class="st">"ggplot2"</span>, <span class="st">"/Volumes/&lt;catalog&gt;/&lt;schema&gt;/&lt;volume&gt;/my_packages"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Alter <code>.libPaths()</code></strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-5"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-5-1"><a href="#annotated-cell-5-1"></a>add_lib_paths <span class="ot">&lt;-</span> <span class="cf">function</span>(path, after, <span class="at">version =</span> <span class="cn">FALSE</span>) {</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-5-2" class="code-annotation-target"><a href="#annotated-cell-5-2"></a>  <span class="cf">if</span> (version) {</span>
+<span id="annotated-cell-5-3"><a href="#annotated-cell-5-3"></a>    rver <span class="ot">&lt;-</span> <span class="fu">getRversion</span>()</span>
+<span id="annotated-cell-5-4"><a href="#annotated-cell-5-4"></a>    lib_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(path, rver)</span>
+<span id="annotated-cell-5-5"><a href="#annotated-cell-5-5"></a>  } <span class="cf">else</span> {</span>
+<span id="annotated-cell-5-6"><a href="#annotated-cell-5-6"></a>    lib_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(path)</span>
+<span id="annotated-cell-5-7"><a href="#annotated-cell-5-7"></a>  }</span>
+<span id="annotated-cell-5-8"><a href="#annotated-cell-5-8"></a></span>
+<span id="annotated-cell-5-9"><a href="#annotated-cell-5-9"></a>  <span class="co"># ensure directory exists</span></span>
+<span id="annotated-cell-5-10"><a href="#annotated-cell-5-10"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(lib_path)) {</span>
+<span id="annotated-cell-5-11"><a href="#annotated-cell-5-11"></a>    <span class="fu">dir.create</span>(lib_path, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="annotated-cell-5-12"><a href="#annotated-cell-5-12"></a>  }</span>
+<span id="annotated-cell-5-13"><a href="#annotated-cell-5-13"></a></span>
+<span id="annotated-cell-5-14"><a href="#annotated-cell-5-14"></a>  lib_path <span class="ot">&lt;-</span> <span class="fu">normalizePath</span>(lib_path, <span class="st">"/"</span>)</span>
+<span id="annotated-cell-5-15"><a href="#annotated-cell-5-15"></a></span>
+<span id="annotated-cell-5-16"><a href="#annotated-cell-5-16"></a>  <span class="fu">message</span>(<span class="st">"primary package path is now "</span>, lib_path)</span>
+<span id="annotated-cell-5-17"><a href="#annotated-cell-5-17"></a>  <span class="fu">.libPaths</span>(<span class="at">new =</span> <span class="fu">append</span>(<span class="fu">.libPaths</span>(), lib_path, <span class="at">after =</span> after))</span>
+<span id="annotated-cell-5-18"><a href="#annotated-cell-5-18"></a>  lib_path</span>
+<span id="annotated-cell-5-19"><a href="#annotated-cell-5-19"></a>}</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-5" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-5" data-code-lines="2,3,4,5,6,7" data-code-annotation="1">Allows specifying <code>version</code> as <code>TRUE</code> or <code>FALSE</code> to suffix the supplied <code>path</code> with the current R version</span>
+</dd>
+</dl>
+</div>
+</div>
+</section>
+<section id="avoiding-repetition" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="avoiding-repetition"><span class="header-section-number">4.3.3</span> Avoiding Repetition</h3>
+<p>To avoid manually adjusting <code>.libPaths()</code> every notebook you can craft an <a href="https://docs.databricks.com/en/init-scripts/index.html">init script</a> or set <a href="https://docs.databricks.com/en/compute/configure.html#environment-variables">environment variables</a>, depending on the desired outcome.</p>
 <div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Under Development
+Caution
 </div>
 </div>
 <div class="callout-body-container callout-body">
-
+<p>In practice this interferes with how Databricks sets up the environment, validate any changes thoroughly before rolling out to users.</p>
 </div>
 </div>
+<section id="init-script" class="level4" data-number="4.3.3.1">
+<h4 data-number="4.3.3.1" class="anchored" data-anchor-id="init-script"><span class="header-section-number">4.3.3.1</span> Init Script</h4>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This example appends to the existing <code>Renviron.site</code> file to ensure any settings defined as part of runtime are preserved.</p>
+<p>The last two lines of the script are setting <code>R_LIBS_SITE</code> and <code>R_LIBS_USER</code>. Changing these lines can give you granular control over order for anything after the 1st value of <code>.libPaths()</code> as it’s injected when the notebook session starts.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-6"><pre class="sourceCode numberSource bash code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-6-1"><a href="#annotated-cell-6-1"></a><span class="co">#!/bin/bash</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-6" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-6-2" class="code-annotation-target"><a href="#annotated-cell-6-2"></a><span class="va">volume_pkgs</span><span class="op">=</span>/Volumes/<span class="op">&lt;</span>catalog<span class="op">&gt;</span>/<span class="op">&lt;</span>schema<span class="op">&gt;</span>/<span class="op">&lt;</span>volume<span class="op">&gt;</span>/my_packages</span>
+<span id="annotated-cell-6-3"><a href="#annotated-cell-6-3"></a><span class="fu">cat</span> <span class="op">&lt;&lt;EOF</span> <span class="op">&gt;&gt;</span> <span class="st">"/etc/R/Renviron.site"</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-6" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-6-4" class="code-annotation-target"><a href="#annotated-cell-6-4"></a><span class="st">R_LIBS_USER=%U:/databricks/spark/R/lib:/local_disk0/.ephemeral_nfs/cluster_libraries/r:</span><span class="va">$volume_pkgs</span></span>
+<span id="annotated-cell-6-5"><a href="#annotated-cell-6-5"></a><span class="op">EOF</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-6" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-6" data-code-lines="2" data-code-annotation="1">Define the path(s) to add to <code>R_LIBS_USER</code></span>
+</dd>
+<dt data-target-cell="annotated-cell-6" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-6" data-code-lines="4" data-code-annotation="2">Append line to <code>/etc/R/Renviron.site</code> with location after cluster libraries, you can rearrange the paths as long as they remain <code>:</code> separated</span>
+</dd>
+</dl>
+</div>
+</div>
+</section>
+<section id="environment-variables" class="level4" data-number="4.3.3.2">
+<h4 data-number="4.3.3.2" class="anchored" data-anchor-id="environment-variables"><span class="header-section-number">4.3.3.2</span> Environment Variables</h4>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>How the Databricks Runtime defines and uses the R environment variables is something that may change and should be tested carefully, especially if upgrading runtime versions.</p>
+</div>
+</div>
+<p>There are particular environment variables (<code>R_LIBS</code>, <code>R_LIBS_USER</code>, <code>R_LIBS_SITE</code>) that can be set to initialise the library search path (<code>.libPaths()</code>).</p>
+<p><code>R_LIBS</code> and <code>R_LIBS_USER</code> are defined as part of start-up processes in Databricks Runtime and they’ll be overridden, it’s easier to adjust via an <a href="#init-script">Init Script</a>.</p>
+<p><code>R_LIBS_SITE</code> can be set via an <a href="https://docs.databricks.com/en/compute/configure.html#environment-variables">environment variable</a> but is referenced by <code>/etc/R/Renviron.site</code> and will provides limited control over where the path will appear in the <code>.libPaths()</code> order (it will appear 5th, after the packages included in the Databricks runtime) unless using an init script to alter <code>/etc/R/Renviron.site</code> directly.</p>
+</section>
+</section>
+</section>
+<section id="organising-packages" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="organising-packages"><span class="header-section-number">4.4</span> Organising Packages</h2>
+<p>When going down this route of persisting packages you should consider how this is organised and managed long term to avoid making things messy.</p>
+<p>Some practices you can consider include:</p>
+<ul>
+<li><p>Maintaining directories of packages per project, team, or user</p></li>
+<li><p>Ensuring directories are specific to an R version (and potentially even Databricks Runtime version)</p></li>
+<li><p>Coupling the use of persistence with <a href="https://rstudio.github.io/renv/articles/renv.html"><code>{renv}</code></a></p></li>
+</ul>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -702,4 +1008,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/edit/main/chapters/pkg-management/persisting-libs.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/edit/main/chapters/pkg-management/persisting-libs.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
