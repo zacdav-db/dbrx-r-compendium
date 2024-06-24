@@ -384,19 +384,19 @@ Note
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="1" data-code-annotation="1">Installing <code>{leaflet}</code></span>
+<span data-code-lines="1" data-code-cell="annotated-cell-1" data-code-annotation="1">Installing <code>{leaflet}</code></span>
 </dd>
 <dt data-target-cell="annotated-cell-1" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="4" data-code-annotation="2">Return path to package files, from what was explained before we know this will be a sub-directory of <code>.libPaths()</code> first path</span>
+<span data-code-lines="4" data-code-cell="annotated-cell-1" data-code-annotation="2">Return path to package files, from what was explained before we know this will be a sub-directory of <code>.libPaths()</code> first path</span>
 </dd>
 <dt data-target-cell="annotated-cell-1" data-target-annotation="3">3</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="7" data-code-annotation="3">Define the path to volume where package will be persisted, make sure to adjust as needed</span>
+<span data-code-lines="7" data-code-cell="annotated-cell-1" data-code-annotation="3">Define the path to volume where package will be persisted, make sure to adjust as needed</span>
 </dd>
 <dt data-target-cell="annotated-cell-1" data-target-annotation="4">4</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="8" data-code-annotation="4">Copy the folder contents recursively to the volume</span>
+<span data-code-lines="8" data-code-cell="annotated-cell-1" data-code-annotation="4">Copy the folder contents recursively to the volume</span>
 </dd>
 </dl>
 </div>
@@ -410,7 +410,7 @@ Note
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="2" data-code-annotation="1">I recommend against making it the first value, will detail why in <a href="#ordering">Ordering</a></span>
+<span data-code-lines="2" data-code-cell="annotated-cell-2" data-code-annotation="1">I recommend against making it the first value, will detail why in <a href="#ordering">Ordering</a></span>
 </dd>
 </dl>
 </div>
@@ -421,8 +421,9 @@ Note
 <section id="ordering" class="level3" data-number="4.3.1">
 <h3 data-number="4.3.1" class="anchored" data-anchor-id="ordering"><span class="header-section-number">4.3.1</span> Ordering</h3>
 <p>Given that <code>.libPaths()</code> can return 6 values in a notebook you might wonder if there a “best” position to add your new volume path(s) to, that will depend on how you want packages to behave.</p>
-<p>A safe default is to add a path <em>after</em> the cluster libraries location (3rd), this will make it appear as if the Databricks Runtime has been extended to include packages in the volume path(s).</p>
-<p>Alternatively you could add it after the first path and all users will still have the notebook scope packages behaviour by default. It will be up to you to decide what works best.</p>
+<p>A safe default is to add a path <em>after</em> the cluster libraries location (currently 3rd), this will make it appear as if the Databricks Runtime has been extended to include packages in the volume path(s).</p>
+<p>Alternatively you could add it after the first path and all users will still have the notebook scope packages behaviour by default but cluster libraries may not load if they appear in the earlier paths under a different version.</p>
+<p>It will be up to you to decide what works best.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -480,7 +481,7 @@ Important
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-5" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-5" data-code-lines="2,3,4,5,6,7" data-code-annotation="1">Allows specifying <code>version</code> as <code>TRUE</code> or <code>FALSE</code> to suffix the supplied <code>path</code> with the current R version</span>
+<span data-code-lines="2,3,4,5,6,7" data-code-cell="annotated-cell-5" data-code-annotation="1">Allows specifying <code>version</code> as <code>TRUE</code> or <code>FALSE</code> to suffix the supplied <code>path</code> with the current R version</span>
 </dd>
 </dl>
 </div>
@@ -528,11 +529,11 @@ Note
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-6" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-6" data-code-lines="2" data-code-annotation="1">Define the path(s) to add to <code>R_LIBS_USER</code></span>
+<span data-code-lines="2" data-code-cell="annotated-cell-6" data-code-annotation="1">Define the path(s) to add to <code>R_LIBS_USER</code></span>
 </dd>
 <dt data-target-cell="annotated-cell-6" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-6" data-code-lines="4" data-code-annotation="2">Append line to <code>/etc/R/Renviron.site</code> with location after cluster libraries, you can rearrange the paths as long as they remain <code>:</code> separated</span>
+<span data-code-lines="4" data-code-cell="annotated-cell-6" data-code-annotation="2">Append line to <code>/etc/R/Renviron.site</code> with location after cluster libraries, you can rearrange the paths as long as they remain <code>:</code> separated</span>
 </dd>
 </dl>
 </div>

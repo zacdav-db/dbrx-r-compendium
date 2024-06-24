@@ -75,9 +75,11 @@ The last step is to adjust `.libPaths()` to include the volume path. You could m
 
 Given that `.libPaths()` can return 6 values in a notebook you might wonder if there a "best" position to add your new volume path(s) to, that will depend on how you want packages to behave.
 
-A safe default is to add a path *after* the cluster libraries location (3rd), this will make it appear as if the Databricks Runtime has been extended to include packages in the volume path(s).
+A safe default is to add a path *after* the cluster libraries location (currently 3rd), this will make it appear as if the Databricks Runtime has been extended to include packages in the volume path(s).
 
-Alternatively you could add it after the first path and all users will still have the notebook scope packages behaviour by default. It will be up to you to decide what works best.
+Alternatively you could add it after the first path and all users will still have the notebook scope packages behaviour by default but cluster libraries may not load if they appear in the earlier paths under a different version.
+
+It will be up to you to decide what works best.
 
 ::: callout-important
 I don't recommend pre-pending `.libPaths()` with volume paths as packages will attempt to install to the first value and you cannot directly install packages to a volume path (due to volumes being backed onto cloud storage). This is why the example for persisting copies after installation.
