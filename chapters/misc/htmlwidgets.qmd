@@ -2,16 +2,9 @@
 
 When you try to view a [`{htmlwidget}`](https://www.htmlwidgets.org/) based visualisation (e.g. [`{leaflet}`](https://rstudio.github.io/leaflet/)) in a Databricks notebook you'll find there is no rendered output by default.
 
-The Databricks [documentation](https://docs.databricks.com/en/visualizations/htmlwidgets.html) details how to get this working but requires specification of the workspace URL explicitly.
+The Databricks [documentation](https://docs.databricks.com/en/visualizations/htmlwidgets.html) details how to get this working but requires specification of the workspace URL explicitly and writes out files to DBFS's FileStore without cleaning up after itself.
 
-[`{brickster}`](https://zacdav-db.github.io/brickster/index.html) has a [helper function](https://zacdav-db.github.io/brickster/reference/notebook_enable_htmlwidgets.html) that simplifies enabling `{htmlwidgets}`:
-
-```{r, eval=FALSE}
-remotes::install_github("zacdav-db/brickster")
-brickster::notebook_enable_htmlwidgets()
-```
-
-The function itself is straightforward, here is code (simplified version of `brickster::notebook_enable_htmlwidgets`) that doesn't require installing `{brickster}`:
+The new method avoids those steps and is drastically simplified and easier to use, just run the below function in a Databricks notebook:
 
 ```{r}
 enable_htmlwidgets <- function(height = 450) {
@@ -19,7 +12,7 @@ enable_htmlwidgets <- function(height = 450) {
   # new option to control default widget height, default is 450px
   options(db_htmlwidget_height = height) # <1>
 
-  system("apt-get --yes install pandoc", intern = T)  # <2>
+  system("apt-get update && apt-get --yes install pandoc", intern = T)  # <2>
   if (!base::require("htmlwidgets")) {  # <3>
     utils::install.packages("htmlwidgets")  # <3>
   }  # <3>

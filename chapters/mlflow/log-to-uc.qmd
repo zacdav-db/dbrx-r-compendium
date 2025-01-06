@@ -55,7 +55,7 @@ The missing puzzle piece is the definition of a signature. Instead of explicitly
 That means we can focus on [`mlflow::mlflow_log_model`](https://github.com/mlflow/mlflow/blob/4bcded857b5618ed43a7ba8bd19dc490de7b74d0/mlflow/R/mlflow/R/model.R#L30C1-L48) directly, we'd need to adjust the code as follows:
 
 ```{r, eval=FALSE}
-mlflow_log_model <- function(model, artifact_path, ...) { # <1>
+mlflow_log_model <- function(model, artifact_path, signature, ...) { # <1>
   
   temp_path <- fs::path_temp(artifact_path)
   
@@ -65,7 +65,8 @@ mlflow_log_model <- function(model, artifact_path, ...) { # <1>
       utc_time_created = mlflow_timestamp(), # <2>
       run_id = mlflow_get_active_run_id_or_start_run(), # <2>
       artifact_path = artifact_path, # <2>
-      flavors = list() # <2>
+      flavors = list(), # <2>
+      signature = signature # <2>
     ),
   ...)
   
