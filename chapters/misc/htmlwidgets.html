@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>R on Databricks Compendium - 7&nbsp; {htmlwidgets} in notebooks</title>
+<title>7&nbsp; {htmlwidgets} in notebooks – R on Databricks Compendium</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -71,10 +71,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-78faf54a06e50be45dc6d83ab59297a7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -112,13 +112,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/misc/htmlwidgets.html">Miscellaneous</a></li><li class="breadcrumb-item"><a href="../../chapters/misc/htmlwidgets.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -134,17 +134,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/zacdav-db/dbrx-r-compendium" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
     <div class="dropdown">
-      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share"><i class="bi bi-share"></i></a>
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
       <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
           <li>
             <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
-              <i class="bi bi-bi-twitter pe-1"></i>
+              <i class="bi bi-twitter pe-1"></i>
             Twitter
             </a>
           </li>
           <li>
             <a class="dropdown-item sidebar-tools-main-item" href="https://www.linkedin.com/sharing/share-offsite/?url=|url|">
-              <i class="bi bi-bi-linkedin pe-1"></i>
+              <i class="bi bi-linkedin pe-1"></i>
             LinkedIn
             </a>
           </li>
@@ -173,9 +173,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Mlflow</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -196,9 +196,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Package Management</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -225,9 +225,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Data Engineering</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -242,9 +242,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Miscellaneous</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -268,7 +268,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
         
     </div>
 <!-- main -->
@@ -294,58 +294,53 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>When you try to view a <a href="https://www.htmlwidgets.org/"><code>{htmlwidget}</code></a> based visualisation (e.g.&nbsp;<a href="https://rstudio.github.io/leaflet/"><code>{leaflet}</code></a>) in a Databricks notebook you’ll find there is no rendered output by default.</p>
-<p>The Databricks <a href="https://docs.databricks.com/en/visualizations/htmlwidgets.html">documentation</a> details how to get this working but requires specification of the workspace URL explicitly.</p>
-<p><a href="https://zacdav-db.github.io/brickster/index.html"><code>{brickster}</code></a> has a <a href="https://zacdav-db.github.io/brickster/reference/notebook_enable_htmlwidgets.html">helper function</a> that simplifies enabling <code>{htmlwidgets}</code>:</p>
+<p>The Databricks <a href="https://docs.databricks.com/en/visualizations/htmlwidgets.html">documentation</a> details how to get this working but requires specification of the workspace URL explicitly and writes out files to DBFS’s FileStore without cleaning up after itself.</p>
+<p>The new method avoids those steps and is drastically simplified and easier to use, just run the below function in a Databricks notebook:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"zacdav-db/brickster"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2"></a>brickster<span class="sc">::</span><span class="fu">notebook_enable_htmlwidgets</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>The function itself is straightforward, here is code (simplified version of <code>brickster::notebook_enable_htmlwidgets</code>) that doesn’t require installing <code>{brickster}</code>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="annotated-cell-2"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-2-1"><a href="#annotated-cell-2-1"></a>enable_htmlwidgets <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">height =</span> <span class="dv">450</span>) {</span>
-<span id="annotated-cell-2-2"><a href="#annotated-cell-2-2"></a></span>
-<span id="annotated-cell-2-3"><a href="#annotated-cell-2-3"></a>  <span class="co"># new option to control default widget height, default is 450px</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-2-4" class="code-annotation-target"><a href="#annotated-cell-2-4"></a>  <span class="fu">options</span>(<span class="at">db_htmlwidget_height =</span> height)</span>
-<span id="annotated-cell-2-5"><a href="#annotated-cell-2-5"></a></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-2-6" class="code-annotation-target"><a href="#annotated-cell-2-6"></a>  <span class="fu">system</span>(<span class="st">"apt-get --yes install pandoc"</span>, <span class="at">intern =</span> T)</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-2-7" class="code-annotation-target"><a href="#annotated-cell-2-7"></a>  <span class="cf">if</span> (<span class="sc">!</span>base<span class="sc">::</span><span class="fu">require</span>(<span class="st">"htmlwidgets"</span>)) {</span>
-<span id="annotated-cell-2-8"><a href="#annotated-cell-2-8"></a>    utils<span class="sc">::</span><span class="fu">install.packages</span>(<span class="st">"htmlwidgets"</span>)</span>
-<span id="annotated-cell-2-9"><a href="#annotated-cell-2-9"></a>  }</span>
-<span id="annotated-cell-2-10"><a href="#annotated-cell-2-10"></a></span>
-<span id="annotated-cell-2-11"><a href="#annotated-cell-2-11"></a>  <span class="co"># new method will fetch height based on new option, or default to 450px</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-2-12" class="code-annotation-target"><a href="#annotated-cell-2-12"></a>  new_method <span class="ot">&lt;-</span> <span class="cf">function</span>(x, ...) {</span>
-<span id="annotated-cell-2-13"><a href="#annotated-cell-2-13"></a>    x<span class="sc">$</span>height <span class="ot">&lt;-</span> <span class="fu">getOption</span>(<span class="st">"db_htmlwidget_height"</span>, <span class="dv">450</span>)</span>
-<span id="annotated-cell-2-14"><a href="#annotated-cell-2-14"></a>    file <span class="ot">&lt;-</span> <span class="fu">tempfile</span>(<span class="at">fileext =</span> <span class="st">".html"</span>)</span>
-<span id="annotated-cell-2-15"><a href="#annotated-cell-2-15"></a>    htmlwidgets<span class="sc">::</span><span class="fu">saveWidget</span>(x, <span class="at">file =</span> file)</span>
-<span id="annotated-cell-2-16"><a href="#annotated-cell-2-16"></a>    contents <span class="ot">&lt;-</span> <span class="fu">as.character</span>(rvest<span class="sc">::</span><span class="fu">read_html</span>(file))</span>
-<span id="annotated-cell-2-17"><a href="#annotated-cell-2-17"></a>    <span class="fu">displayHTML</span>(contents)</span>
-<span id="annotated-cell-2-18"><a href="#annotated-cell-2-18"></a>  }</span>
-<span id="annotated-cell-2-19"><a href="#annotated-cell-2-19"></a></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-2-20" class="code-annotation-target"><a href="#annotated-cell-2-20"></a>  utils<span class="sc">::</span><span class="fu">assignInNamespace</span>(<span class="st">"print.htmlwidget"</span>, new_method, <span class="at">ns =</span> <span class="st">"htmlwidgets"</span>)</span>
-<span id="annotated-cell-2-21"><a href="#annotated-cell-2-21"></a>  <span class="fu">invisible</span>(<span class="fu">list</span>(<span class="at">default_height =</span> height, <span class="at">print =</span> new_method))</span>
-<span id="annotated-cell-2-22"><a href="#annotated-cell-2-22"></a>  </span>
-<span id="annotated-cell-2-23"><a href="#annotated-cell-2-23"></a>}</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="annotated-cell-1"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-1-1"><a href="#annotated-cell-1-1"></a>enable_htmlwidgets <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">height =</span> <span class="dv">450</span>) {</span>
+<span id="annotated-cell-1-2"><a href="#annotated-cell-1-2"></a></span>
+<span id="annotated-cell-1-3"><a href="#annotated-cell-1-3"></a>  <span class="co"># new option to control default widget height, default is 450px</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-4" class="code-annotation-target"><a href="#annotated-cell-1-4"></a>  <span class="fu">options</span>(<span class="at">db_htmlwidget_height =</span> height)</span>
+<span id="annotated-cell-1-5"><a href="#annotated-cell-1-5"></a></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-1-6" class="code-annotation-target"><a href="#annotated-cell-1-6"></a>  <span class="fu">system</span>(<span class="st">"apt-get update &amp;&amp; apt-get --yes install pandoc"</span>, <span class="at">intern =</span> T)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-1-7" class="code-annotation-target"><a href="#annotated-cell-1-7"></a>  <span class="cf">if</span> (<span class="sc">!</span>base<span class="sc">::</span><span class="fu">require</span>(<span class="st">"htmlwidgets"</span>)) {</span>
+<span id="annotated-cell-1-8"><a href="#annotated-cell-1-8"></a>    utils<span class="sc">::</span><span class="fu">install.packages</span>(<span class="st">"htmlwidgets"</span>)</span>
+<span id="annotated-cell-1-9"><a href="#annotated-cell-1-9"></a>  }</span>
+<span id="annotated-cell-1-10"><a href="#annotated-cell-1-10"></a></span>
+<span id="annotated-cell-1-11"><a href="#annotated-cell-1-11"></a>  <span class="co"># new method will fetch height based on new option, or default to 450px</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-1-12" class="code-annotation-target"><a href="#annotated-cell-1-12"></a>  new_method <span class="ot">&lt;-</span> <span class="cf">function</span>(x, ...) {</span>
+<span id="annotated-cell-1-13"><a href="#annotated-cell-1-13"></a>    x<span class="sc">$</span>height <span class="ot">&lt;-</span> <span class="fu">getOption</span>(<span class="st">"db_htmlwidget_height"</span>, <span class="dv">450</span>)</span>
+<span id="annotated-cell-1-14"><a href="#annotated-cell-1-14"></a>    file <span class="ot">&lt;-</span> <span class="fu">tempfile</span>(<span class="at">fileext =</span> <span class="st">".html"</span>)</span>
+<span id="annotated-cell-1-15"><a href="#annotated-cell-1-15"></a>    htmlwidgets<span class="sc">::</span><span class="fu">saveWidget</span>(x, <span class="at">file =</span> file)</span>
+<span id="annotated-cell-1-16"><a href="#annotated-cell-1-16"></a>    contents <span class="ot">&lt;-</span> <span class="fu">as.character</span>(rvest<span class="sc">::</span><span class="fu">read_html</span>(file))</span>
+<span id="annotated-cell-1-17"><a href="#annotated-cell-1-17"></a>    <span class="fu">displayHTML</span>(contents)</span>
+<span id="annotated-cell-1-18"><a href="#annotated-cell-1-18"></a>  }</span>
+<span id="annotated-cell-1-19"><a href="#annotated-cell-1-19"></a></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-1-20" class="code-annotation-target"><a href="#annotated-cell-1-20"></a>  utils<span class="sc">::</span><span class="fu">assignInNamespace</span>(<span class="st">"print.htmlwidget"</span>, new_method, <span class="at">ns =</span> <span class="st">"htmlwidgets"</span>)</span>
+<span id="annotated-cell-1-21"><a href="#annotated-cell-1-21"></a>  <span class="fu">invisible</span>(<span class="fu">list</span>(<span class="at">default_height =</span> height, <span class="at">print =</span> new_method))</span>
+<span id="annotated-cell-1-22"><a href="#annotated-cell-1-22"></a>  </span>
+<span id="annotated-cell-1-23"><a href="#annotated-cell-1-23"></a>}</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-annotation">
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="4" data-code-annotation="1">The height of the htmlwidget output is controlled via an option (<code>db_htmlwidget_height</code>), this allows the height to be adjusted without re-running the function</span>
+<span data-code-cell="annotated-cell-1" data-code-lines="4" data-code-annotation="1">The height of the htmlwidget output is controlled via an option (<code>db_htmlwidget_height</code>), this allows the height to be adjusted without re-running the function</span>
 </dd>
-<dt data-target-cell="annotated-cell-2" data-target-annotation="2">2</dt>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="6" data-code-annotation="2">Installing <code>pandoc</code> as it’s required to use <code>htmlwidgets::saveWidget</code></span>
+<span data-code-cell="annotated-cell-1" data-code-lines="6" data-code-annotation="2">Installing <code>pandoc</code> as it’s required to use <code>htmlwidgets::saveWidget</code></span>
 </dd>
-<dt data-target-cell="annotated-cell-2" data-target-annotation="3">3</dt>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="3">3</dt>
 <dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="7,8,9" data-code-annotation="3">Ensure that <code>{htmlwidgets}</code> is installed</span>
+<span data-code-cell="annotated-cell-1" data-code-lines="7,8,9" data-code-annotation="3">Ensure that <code>{htmlwidgets}</code> is installed</span>
 </dd>
-<dt data-target-cell="annotated-cell-2" data-target-annotation="4">4</dt>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="4">4</dt>
 <dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="12,13,14,15,16,17,18" data-code-annotation="4">Function that writes the widget to a temporary file as a self-contained <code>html</code> file and then reads the contents and presents via <code>displayHTML</code></span>
+<span data-code-cell="annotated-cell-1" data-code-lines="12,13,14,15,16,17,18" data-code-annotation="4">Function that writes the widget to a temporary file as a self-contained <code>html</code> file and then reads the contents and presents via <code>displayHTML</code></span>
 </dd>
-<dt data-target-cell="annotated-cell-2" data-target-annotation="5">5</dt>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="5">5</dt>
 <dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="20" data-code-annotation="5">Override the <code>htmlwidgets::print.htmlwidget</code> method</span>
+<span data-code-cell="annotated-cell-1" data-code-lines="20" data-code-annotation="5">Override the <code>htmlwidgets::print.htmlwidget</code> method</span>
 </dd>
 </dl>
 </div>
@@ -389,18 +384,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -432,7 +416,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp("https:\/\/zacdav-db\.github\.io\/dbrx-r-compendium\/");
@@ -440,7 +444,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -537,7 +541,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
