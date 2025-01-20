@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>8&nbsp; {htmlwidgets} in notebooks – R on Databricks Compendium</title>
+<title>2&nbsp; Load R Models from Unity Catalog – R on Databricks Compendium</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,8 +64,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../chapters/misc/odbc-oauth.html" rel="next">
-<link href="../../chapters/data-eng/sparkr-migration.html" rel="prev">
+<link href="../../chapters/pkg-management/fast-installs.html" rel="next">
+<link href="../../chapters/mlflow/log-to-uc.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/misc/htmlwidgets.html">Miscellaneous</a></li><li class="breadcrumb-item"><a href="../../chapters/misc/htmlwidgets.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mlflow/log-to-uc.html">Mlflow</a></li><li class="breadcrumb-item"><a href="../../chapters/mlflow/load-from-uc.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Load R Models from Unity Catalog</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -188,7 +188,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/mlflow/load-from-uc.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/mlflow/load-from-uc.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Load R Models from Unity Catalog</span></span></a>
   </div>
 </li>
@@ -235,13 +235,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/data-eng/odbc-dbplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">`{dbplyr}` &amp; `{odbc}`</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title"><code>{dbplyr}</code> and <code>{odbc}</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/data-eng/sparkr-migration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">`{dbplyr}` &amp; `{odbc}`</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title"><code>{SparkR}</code> to <code>{sparklyr}</code></span></span></a>
   </div>
 </li>
       </ul>
@@ -257,7 +257,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/misc/htmlwidgets.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../chapters/misc/htmlwidgets.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></span></a>
   </div>
 </li>
@@ -274,15 +274,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#how" id="toc-how" class="nav-link active" data-scroll-target="#how"><span class="header-section-number">2.1</span> How?</a></li>
+  <li><a href="#why-is-this-so-simple" id="toc-why-is-this-so-simple" class="nav-link" data-scroll-target="#why-is-this-so-simple"><span class="header-section-number">2.2</span> Why is this so simple?</a>
+  <ul class="collapse">
+  <li><a href="#the-details" id="toc-the-details" class="nav-link" data-scroll-target="#the-details"><span class="header-section-number">2.2.1</span> The details</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/edit/main/chapters/mlflow/load-from-uc.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/misc/htmlwidgets.html">Miscellaneous</a></li><li class="breadcrumb-item"><a href="../../chapters/misc/htmlwidgets.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mlflow/log-to-uc.html">Mlflow</a></li><li class="breadcrumb-item"><a href="../../chapters/mlflow/load-from-uc.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Load R Models from Unity Catalog</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Load R Models from Unity Catalog</span></h1>
 </div>
 
 
@@ -299,60 +309,81 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>When you try to view a <a href="https://www.htmlwidgets.org/"><code>{htmlwidget}</code></a> based visualisation (e.g.&nbsp;<a href="https://rstudio.github.io/leaflet/"><code>{leaflet}</code></a>) in a Databricks notebook you’ll find there is no rendered output by default.</p>
-<p>The Databricks <a href="https://docs.databricks.com/en/visualizations/htmlwidgets.html">documentation</a> details how to get this working but requires specification of the workspace URL explicitly and writes out files to DBFS’s FileStore without cleaning up after itself.</p>
-<p>The new method avoids those steps and is drastically simplified and easier to use, just run the below function in a Databricks notebook:</p>
+<p><code>{mlflow}</code> doesn’t support directly logging R models to Unity Catalog (without jumping through a few hoops). However, you can easily load models from Unity Catalog.</p>
+<section id="how" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="how"><span class="header-section-number">2.1</span> How?</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="annotated-cell-1"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-1-1"><a href="#annotated-cell-1-1"></a>enable_htmlwidgets <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">height =</span> <span class="dv">450</span>) {</span>
-<span id="annotated-cell-1-2"><a href="#annotated-cell-1-2"></a></span>
-<span id="annotated-cell-1-3"><a href="#annotated-cell-1-3"></a>  <span class="co"># new option to control default widget height, default is 450px</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-4" class="code-annotation-target"><a href="#annotated-cell-1-4"></a>  <span class="fu">options</span>(<span class="at">db_htmlwidget_height =</span> height)</span>
-<span id="annotated-cell-1-5"><a href="#annotated-cell-1-5"></a></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-1-6" class="code-annotation-target"><a href="#annotated-cell-1-6"></a>  <span class="fu">system</span>(<span class="st">"apt-get update &amp;&amp; apt-get --yes install pandoc"</span>, <span class="at">intern =</span> T)</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-1-7" class="code-annotation-target"><a href="#annotated-cell-1-7"></a>  <span class="cf">if</span> (<span class="sc">!</span>base<span class="sc">::</span><span class="fu">require</span>(<span class="st">"htmlwidgets"</span>)) {</span>
-<span id="annotated-cell-1-8"><a href="#annotated-cell-1-8"></a>    utils<span class="sc">::</span><span class="fu">install.packages</span>(<span class="st">"htmlwidgets"</span>)</span>
-<span id="annotated-cell-1-9"><a href="#annotated-cell-1-9"></a>  }</span>
-<span id="annotated-cell-1-10"><a href="#annotated-cell-1-10"></a></span>
-<span id="annotated-cell-1-11"><a href="#annotated-cell-1-11"></a>  <span class="co"># new method will fetch height based on new option, or default to 450px</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-1-12" class="code-annotation-target"><a href="#annotated-cell-1-12"></a>  new_method <span class="ot">&lt;-</span> <span class="cf">function</span>(x, ...) {</span>
-<span id="annotated-cell-1-13"><a href="#annotated-cell-1-13"></a>    x<span class="sc">$</span>height <span class="ot">&lt;-</span> <span class="fu">getOption</span>(<span class="st">"db_htmlwidget_height"</span>, <span class="dv">450</span>)</span>
-<span id="annotated-cell-1-14"><a href="#annotated-cell-1-14"></a>    file <span class="ot">&lt;-</span> <span class="fu">tempfile</span>(<span class="at">fileext =</span> <span class="st">".html"</span>)</span>
-<span id="annotated-cell-1-15"><a href="#annotated-cell-1-15"></a>    htmlwidgets<span class="sc">::</span><span class="fu">saveWidget</span>(x, <span class="at">file =</span> file)</span>
-<span id="annotated-cell-1-16"><a href="#annotated-cell-1-16"></a>    contents <span class="ot">&lt;-</span> <span class="fu">as.character</span>(rvest<span class="sc">::</span><span class="fu">read_html</span>(file))</span>
-<span id="annotated-cell-1-17"><a href="#annotated-cell-1-17"></a>    <span class="fu">displayHTML</span>(contents)</span>
-<span id="annotated-cell-1-18"><a href="#annotated-cell-1-18"></a>  }</span>
-<span id="annotated-cell-1-19"><a href="#annotated-cell-1-19"></a></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-1-20" class="code-annotation-target"><a href="#annotated-cell-1-20"></a>  utils<span class="sc">::</span><span class="fu">assignInNamespace</span>(<span class="st">"print.htmlwidget"</span>, new_method, <span class="at">ns =</span> <span class="st">"htmlwidgets"</span>)</span>
-<span id="annotated-cell-1-21"><a href="#annotated-cell-1-21"></a>  <span class="fu">invisible</span>(<span class="fu">list</span>(<span class="at">default_height =</span> height, <span class="at">print =</span> new_method))</span>
-<span id="annotated-cell-1-22"><a href="#annotated-cell-1-22"></a>  </span>
-<span id="annotated-cell-1-23"><a href="#annotated-cell-1-23"></a>}</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-annotation">
-<dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
-<dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="4" data-code-annotation="1">The height of the htmlwidget output is controlled via an option (<code>db_htmlwidget_height</code>), this allows the height to be adjusted without re-running the function</span>
-</dd>
-<dt data-target-cell="annotated-cell-1" data-target-annotation="2">2</dt>
-<dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="6" data-code-annotation="2">Installing <code>pandoc</code> as it’s required to use <code>htmlwidgets::saveWidget</code></span>
-</dd>
-<dt data-target-cell="annotated-cell-1" data-target-annotation="3">3</dt>
-<dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="7,8,9" data-code-annotation="3">Ensure that <code>{htmlwidgets}</code> is installed</span>
-</dd>
-<dt data-target-cell="annotated-cell-1" data-target-annotation="4">4</dt>
-<dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="12,13,14,15,16,17,18" data-code-annotation="4">Function that writes the widget to a temporary file as a self-contained <code>html</code> file and then reads the contents and presents via <code>displayHTML</code></span>
-</dd>
-<dt data-target-cell="annotated-cell-1" data-target-annotation="5">5</dt>
-<dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="20" data-code-annotation="5">Override the <code>htmlwidgets::print.htmlwidget</code> method</span>
-</dd>
-</dl>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># loading 'prod' alias of `zacdav`.`default`.`my_r_model`</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a>model <span class="ot">&lt;-</span> <span class="fu">mlflow_load_model</span>(<span class="st">"models:/zacdav.default.my_r_model@prod"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
+<p>Yep, very straightforward, it just works as-is.</p>
+</section>
+<section id="why-is-this-so-simple" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="why-is-this-so-simple"><span class="header-section-number">2.2</span> Why is this so simple?</h2>
+<p>A natural question is “<em>why did I have to go through all the pain to register the model, but loading just works?</em>”</p>
+<p>The quick answer is that <code>{mlflow}</code> doesn’t have internal consistency with how it operates, some methods use direct API calls (e.g.&nbsp;registration) and where as others defer to the <a href="https://mlflow.org/docs/latest/cli.html">mlflow CLI</a> via a system call (e.g.&nbsp;loading).</p>
+<section id="the-details" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="the-details"><span class="header-section-number">2.2.1</span> The details</h3>
+<p>As of version <code>2.20.1</code> we can split <code>{mlflow}</code> into those that directly invokes mlflow’s REST API’s via R, or the mlflow CLI.</p>
+<table class="caption-top table">
+<caption>Which functions use REST or CLI clients within <code>{mlflow}</code></caption>
+<colgroup>
+<col style="width: 24%">
+<col style="width: 48%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Invokes REST Client</th>
+<th>Invokes CLI Client</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p>Not relevant to Unity Catalog</p>
+<p>(e.g.&nbsp;experiment tracking related)</p></td>
+<td><p><code>mlflow_create_experiment()</code></p>
+<p><code>mlflow_search_experiments()</code></p>
+<p><code>mlflow_set_experiment_tag()</code></p>
+<p><code>mlflow_get_experiment()</code></p>
+<p><code>mlflow_delete_experiment()</code></p>
+<p><code>mlflow_delete_experiment()</code></p>
+<p><code>mlflow_rename_experiment()</code></p>
+<p><code>mlflow_transition_model_version_stage()</code></p>
+<p><strong><code>mlflow_record_logged_model()</code></strong></p>
+<hr>
+<p><code>mlflow_set_model_version_tag()</code></p>
+<p><code>mlflow_search_registered_models()</code></p></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>Relevant to Unity Catalog</p>
+<p>(e.g.&nbsp;model registry)</p></td>
+<td><p><code>mlflow_create_registered_model()</code></p>
+<p><code>mlflow_get_registered_model()</code></p>
+<p><code>mlflow_rename_registered_model()</code></p>
+<p><code>mlflow_update_registered_model()</code></p>
+<p><code>mlflow_delete_registered_model()</code></p>
+<p><code>mlflow_get_latest_versions()</code></p>
+<p><code>mlflow_create_model_version()</code></p>
+<p><code>mlflow_get_model_version()</code></p>
+<p><code>mlflow_update_model_version()</code></p>
+<p><code>mlflow_log_model()</code>*</p></td>
+<td><p><code>mlflow_download_artifacts_from_uri()</code></p>
+<p><code>mlflow_download_artifacts()</code></p>
+<p><strong><code>mlflow_log_artifact()</code></strong></p>
+<p><code>mlflow_load_model()</code></p></td>
+</tr>
+</tbody>
+</table>
+<p><code>mlflow_load_model()</code> calls <code>mlflow_download_artifacts_from_uri()</code>, which in turn uses the CLI directly. The CLI was updated to support Unity Catalog, hence why it ‘<em>just works</em>’ and the functions inherit Unity Catalog compatibility without code changes.</p>
+<p>You may notice <code>mlflow_log_model()</code> has an asterix, that is because it uniquely calls CLI client (<code>mlflow_log_artifact()</code>) and REST client (<code>mlflow_record_logged_model()</code>), I’ve placed it in the REST column for now.</p>
+<p>This is part of the problem discussed previously in <a href="log-to-uc.html#sec-log-to-uc-register-to-uc" class="quarto-xref"><span>Section 1.2.3</span></a>. Unfortunately the CLI doesn’t expose the model registry methods required to support registering models to Unity Catalog, these need to be implemented as part of the REST client in <code>{mlflow}</code>.</p>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -777,13 +808,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../chapters/data-eng/sparkr-migration.html" class="pagination-link" aria-label="`{dbplyr}` &amp; `{odbc}`">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title"><code>{dbplyr}</code> &amp; <code>{odbc}</code></span></span>
+      <a href="../../chapters/mlflow/log-to-uc.html" class="pagination-link" aria-label="Log R Models to Unity Catalog">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Log R Models to Unity Catalog</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/misc/odbc-oauth.html" class="pagination-link" aria-label="OAuth 🤝 `{odbc}`">
-        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">OAuth 🤝 <code>{odbc}</code></span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/pkg-management/fast-installs.html" class="pagination-link" aria-label="Faster Package Installs">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Faster Package Installs</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -792,4 +823,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/edit/main/chapters/misc/htmlwidgets.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/edit/main/chapters/mlflow/load-from-uc.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

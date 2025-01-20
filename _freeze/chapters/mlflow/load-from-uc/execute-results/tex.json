@@ -1,0 +1,21 @@
+{
+  "hash": "666685fb1881b48791cd954cf6d17935",
+  "result": {
+    "engine": "knitr",
+    "markdown": "# Load R Models from Unity Catalog\n\nWhile `{mlflow}` doesn't support directly logging R models to Unity Catalog, you can actually load models without much trouble.\n\n## How to Load Models from Unity Catalog\n\n::: callout-note\nThankfully its usually smooth sailing once the model is registered to Unity Catalog\n:::\n\n\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nmlflow_load_model(\"models:/zacdav.default.my_simple_r_model@champ\")\n```\n:::\n\n\n\n\n\n\nYep, much more straightforward than getting the R model there in the first place.\n",
+    "supporting": [
+      "load-from-uc_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {
+      "knitr": [
+        "{\"type\":\"list\",\"attributes\":{},\"value\":[]}"
+      ]
+    },
+    "preserve": null,
+    "postProcess": false
+  }
+}

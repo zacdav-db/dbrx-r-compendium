@@ -1,0 +1,78 @@
+# Load R Models from Unity Catalog
+
+`{mlflow}` doesn't support directly logging R models to Unity Catalog (without jumping through a few hoops). However, you can easily load models from Unity Catalog.
+
+## How?
+
+```{r, eval=FALSE}
+# loading 'prod' alias of `zacdav`.`default`.`my_r_model`
+model <- mlflow_load_model("models:/zacdav.default.my_r_model@prod")
+```
+
+Yep, very straightforward, it just works as-is.
+
+## Why is this so simple?
+
+A natural question is "*why did I have to go through all the pain to register the model, but loading just works?*"
+
+The quick answer is that `{mlflow}` doesn't have internal consistency with how it operates, some methods use direct API calls (e.g. registration) and where as others defer to the [mlflow CLI](https://mlflow.org/docs/latest/cli.html) via a system call (e.g. loading).
+
+### The details
+
+As of version `2.20.1` we can split `{mlflow}` into those that directly invokes mlflow's REST API's via R, or the mlflow CLI.
+
++------------------------------------+--------------------------------------------------------------------------+----------------------------------------+
+|                                    | Invokes REST Client                                                      | Invokes CLI Client                     |
++====================================+==========================================================================+========================================+
+| Not relevant to Unity Catalog      | `mlflow_create_experiment()`                                             |                                        |
+|                                    |                                                                          |                                        |
+| (e.g. experiment tracking related) | `mlflow_search_experiments()`                                            |                                        |
+|                                    |                                                                          |                                        |
+|                                    | `mlflow_set_experiment_tag()`                                            |                                        |
+|                                    |                                                                          |                                        |
+|                                    | `mlflow_get_experiment()`                                                |                                        |
+|                                    |                                                                          |                                        |
+|                                    | `mlflow_delete_experiment()`                                             |                                        |
+|                                    |                                                                          |                                        |
+|                                    | `mlflow_delete_experiment()`                                             |                                        |
+|                                    |                                                                          |                                        |
+|                                    | `mlflow_rename_experiment()`                                             |                                        |
+|                                    |                                                                          |                                        |
+|                                    | `mlflow_transition_model_version_stage()`                                |                                        |
+|                                    |                                                                          |                                        |
+|                                    | **`mlflow_record_logged_model()`**                                       |                                        |
+|                                    |                                                                          |                                        |
+|                                    | ------------------------------------------------------------------------ |                                        |
+|                                    |                                                                          |                                        |
+|                                    | `mlflow_set_model_version_tag()`                                         |                                        |
+|                                    |                                                                          |                                        |
+|                                    | `mlflow_search_registered_models()`                                      |                                        |
++------------------------------------+--------------------------------------------------------------------------+----------------------------------------+
+| Relevant to Unity Catalog          | `mlflow_create_registered_model()`                                       | `mlflow_download_artifacts_from_uri()` |
+|                                    |                                                                          |                                        |
+| (e.g. model registry)              | `mlflow_get_registered_model()`                                          | `mlflow_download_artifacts()`          |
+|                                    |                                                                          |                                        |
+|                                    | `mlflow_rename_registered_model()`                                       | **`mlflow_log_artifact()`**            |
+|                                    |                                                                          |                                        |
+|                                    | `mlflow_update_registered_model()`                                       | `mlflow_load_model()`                  |
+|                                    |                                                                          |                                        |
+|                                    | `mlflow_delete_registered_model()`                                       |                                        |
+|                                    |                                                                          |                                        |
+|                                    | `mlflow_get_latest_versions()`                                           |                                        |
+|                                    |                                                                          |                                        |
+|                                    | `mlflow_create_model_version()`                                          |                                        |
+|                                    |                                                                          |                                        |
+|                                    | `mlflow_get_model_version()`                                             |                                        |
+|                                    |                                                                          |                                        |
+|                                    | `mlflow_update_model_version()`                                          |                                        |
+|                                    |                                                                          |                                        |
+|                                    | `mlflow_log_model()`\*                                                   |                                        |
++------------------------------------+--------------------------------------------------------------------------+----------------------------------------+
+
+: Which functions use REST or CLI clients within `{mlflow}`
+
+`mlflow_load_model()` calls `mlflow_download_artifacts_from_uri()`, which in turn uses the CLI directly. The CLI was updated to support Unity Catalog, hence why it '*just works*' and the functions inherit Unity Catalog compatibility without code changes.
+
+You may notice `mlflow_log_model()` has an asterix, that is because it uniquely calls CLI client (`mlflow_log_artifact()`) and REST client (`mlflow_record_logged_model()`), I've placed it in the REST column for now.
+
+This is part of the problem discussed previously in @sec-log-to-uc-register-to-uc. Unfortunately the CLI doesn't expose the model registry methods required to support registering models to Unity Catalog, these need to be implemented as part of the REST client in `{mlflow}`.

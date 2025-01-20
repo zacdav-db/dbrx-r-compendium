@@ -2,38 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/index.html</loc>
-    <lastmod>2024-06-23T08:59:31.440Z</lastmod>
+    <lastmod>2025-01-17T07:41:09.464Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/mlflow/log-to-uc.html</loc>
-    <lastmod>2024-06-23T10:25:55.742Z</lastmod>
+    <lastmod>2025-01-18T07:16:47.638Z</lastmod>
+  </url>
+  <url>
+    <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/mlflow/load-from-uc.html</loc>
+    <lastmod>2025-01-18T07:17:11.034Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/pkg-management/fast-installs.html</loc>
-    <lastmod>2024-06-23T12:54:37.699Z</lastmod>
+    <lastmod>2024-06-23T12:54:35.610Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/pkg-management/persisting-libs.html</loc>
-    <lastmod>2024-06-25T13:55:59.018Z</lastmod>
+    <lastmod>2024-06-24T06:25:21.198Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/pkg-management/renv.html</loc>
-    <lastmod>2024-06-21T07:58:26.069Z</lastmod>
-  </url>
-  <url>
-    <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/misc/htmlwidgets.html</loc>
-    <lastmod>2024-06-23T10:26:21.439Z</lastmod>
-  </url>
-  <url>
-    <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/mlflow/model-serving.html</loc>
-    <lastmod>2024-06-23T10:26:02.844Z</lastmod>
-  </url>
-  <url>
-    <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/misc/odbc-oauth.html</loc>
-    <lastmod>2024-06-23T10:26:25.194Z</lastmod>
+    <lastmod>2024-06-20T14:36:35.421Z</lastmod>
   </url>
   <url>
     <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/data-eng/odbc-dbplyr.html</loc>
-    <lastmod>2024-06-21T05:43:24.386Z</lastmod>
+    <lastmod>2025-01-18T10:07:35.661Z</lastmod>
+  </url>
+  <url>
+    <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/data-eng/sparkr-migration.html</loc>
+    <lastmod>2025-01-20T06:05:59.337Z</lastmod>
+  </url>
+  <url>
+    <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/misc/htmlwidgets.html</loc>
+    <lastmod>2025-01-06T02:31:56.214Z</lastmod>
+  </url>
+  <url>
+    <loc>https://zacdav-db.github.io/dbrx-r-compendium/chapters/misc/odbc-oauth.html</loc>
+    <lastmod>2024-06-21T07:52:59.762Z</lastmod>
+  </url>
+  <url>
+    <loc>https://zacdav-db.github.io/dbrx-r-compendium/R-on-Databricks-Compendium.pdf</loc>
+    <lastmod>2025-01-17T07:42:07.891Z</lastmod>
   </url>
 </urlset>

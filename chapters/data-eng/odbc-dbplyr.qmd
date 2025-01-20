@@ -1,4 +1,4 @@
-# `{dbplyr}` & `{odbc}`
+# `{dbplyr}` and `{odbc}`
 
 ::: callout-caution
 ## Under Development

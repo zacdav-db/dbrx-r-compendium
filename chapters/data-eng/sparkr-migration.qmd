@@ -1,0 +1,588 @@
+# `{SparkR}` to `{sparklyr}`
+
+## Introduction
+
+Beginning with Spark `4.x`, [`{SparkR}` will be deprecated](https://spark.apache.org/docs/4.0.0-preview2/sparkr-migration-guide.html#upgrading-from-sparkr-35-to-40). Going forward, `{sparklyr}` will be the recommended R package for working with Apache Spark. This guide is intended to help users understand the differences between `{SparkR}` and `{sparklyr}` across Spark APIs, and aid in code migration from one to the other. It combines basic concepts with specific function mappings where appropriate.
+
+### Overview of `{SparkR}` and `{sparklyr}`
+
+`{SparkR}` and `{sparklyr}` are both R packages designed to work with Apache Spark, but differ significantly in design, syntax, and integration with the broader R ecosystem.
+
+`{SparkR}` is developed as part of Apache Spark itself, and its design mirrors Spark’s core APIs. This makes it straightforward for those familiar with Spark’s other language interfaces - Scala and Python. However, this may be less intuitive for R users accustomed to the [tidyverse](https://www.tidyverse.org/).
+
+In contrast, `{sparklyr}` is developed and maintained by [Posit PBC](https://posit.co/) with a focus on providing a more R-friendly experience. It leverages `{dplyr}` syntax, which is highly familiar to users of the `{tidyverse}`, enabling them to interact with Spark DataFrames using R-native verbs like `select()`, `filter()`, and `mutate()`. This makes `{sparklyr}` easier to learn for R users, especially those who are not familiar with Spark’s native API.
+
+## Environment setup
+
+### Installation
+
+If working inside of the Databricks Workspace, no installation is required - you can simply load `{sparklyr}` with `library(sparklyr)`. To install `{sparklyr}` on a machine outside of Databricks, [follow these steps](https://spark.posit.co/get-started/).
+
+### Connecting to Spark
+
+When working inside of the Databricks workspace, you can connect to Spark with `{sparklyr}` with the following code:
+
+```{r, eval = FALSE}
+library(sparklyr)
+sc <- spark_connect(method = "databricks")
+```
+
+When connecting to Databricks remotely via [Databricks Connect](https://docs.databricks.com/en/dev-tools/databricks-connect/index.html), a slightly different method is used:
+
+```{r, eval = FALSE}
+sc <- spark_connect(method = "databricks_connect")
+```
+
+For more details and an extended tutorial on Databricks Connect with `{sparklyr}`, see the [official documentation](https://spark.posit.co/deployment/databricks-connect.html).
+
+## Reading & Writing Data
+
+In contrast to generic `read.df()` and `write.df()` [functions in `{SparkR}`](https://spark.apache.org/docs/3.5.2/api/R/articles/sparkr-vignettes.html#data-sources), `{sparklyr}` has a family of `spark_read_*()`and `spark_write_*()` [functions](https://spark.posit.co/packages/sparklyr/latest/reference/#spark-data) to load and save data. There are also unique functions to create Spark DataFrames or Spark SQL [temporary views](https://spark.apache.org/docs/latest/sql-ref-syntax-ddl-create-view.html) from R data frames in memory.
+
+### TL;DR
+
+| `{SparkR}` | `{sparklyr}` |
+|----|----|
+| `createDataFrame()` | `copy_to()` |
+| `createOrReplaceTempView()` | Use `invoke()` with method directly |
+| `saveAsTable()` | `spark_write_table()` |
+| `write.df()` | `spark_write_<format>()` |
+| `tableToDF()` | `tbl()` (or `spark_read_table()` when it's fixed) |
+| `read.df()` | `spark_read_<format>()` |
+
+: Recommended function mapping
+
+### Loading Data
+
+To convert a R data frame to a Spark DataFrame, or to create a temporary view out of a DataFrame to apply SQL to it:
+
+**SparkR**
+
+```{r, eval = FALSE}
+# create SparkDataFrame from R data frame
+mtcars_df <- createDataFrame(mtcars)
+```
+
+**sparklyr**
+
+```{r, eval = FALSE}
+# create SparkDataFrame and name temporary view 'mtcars_tmp'
+mtcars_tbl <- copy_to(
+  sc,
+  df = mtcars,
+  name = "mtcars_tmp", # <1>
+  overwrite = TRUE,
+  memory = FALSE # <2>
+) 
+```
+
+1.  `copy_to()` will create a temporary view of the data with the given `name`, you can use name to reference data if using SQL directly (e.g. `sdf_sql()`).
+2.  Default behaviour of `copy_to()` will set `memory` as `TRUE` which caches the table. This helps when reading the data multiple times - sometimes its worth setting to `FALSE` if data is read as one-off.
+
+### Creating Views
+
+**SparkR**
+
+```{r, eval = FALSE}
+# create temporary view
+createOrReplaceTempView(mtcars_df, "mtcars_tmp_view")
+```
+
+**sparklyr**
+
+```{r, eval = FALSE}
+# direct equivlent from SparkR requires `invoke`
+# usually redundant given `copy_to` already creates a temp view
+spark_dataframe(mtcars_tbl) |>
+  invoke("createOrReplaceTempView", "mtcars_tmp_view")
+```
+
+### Writing Data
+
+**SparkR**
+
+```{r, eval = FALSE}
+# save SparkDataFrame to Unity Catalog
+saveAsTable(
+  mtcars_df,
+  tableName = "<catalog>.<schema>.<table>",
+  mode = "overwrite"
+)
+
+# save DataFrame using delta format to local filesystem
+write.df(
+  mtcars_df,
+  path = "file:/<path/to/save/delta/mtcars>",
+  source = "delta", # <1>
+  mode = "overwrite"
+)
+```
+
+1.  `write.df()` supports other formats via `source` parameter
+
+**sparklyr**
+
+```{r, eval = FALSE}
+# save tbl_spark to Unity Catalog
+spark_write_table(
+  mtcars_tbl,
+  name = "<catalog>.<schema>.<table>",
+  mode = "overwrite"
+)
+
+# save tbl_spark using delta format to local filesystem
+spark_write_delta(
+  mtcars_tbl,
+  path = "file:/<path/to/save/delta/mtcars>",
+  mode = "overwrite"
+)
+
+# Using {DBI}
+library(DBI)
+dbWriteTable(
+  sc,
+  value = mtcars_tbl,
+  name = "<catalog>.<schema>.<table>",
+  overwrite = TRUE
+)
+```
+
+### Reading Data
+
+**SparkR**
+
+```{r, eval = FALSE}
+# load Unity Catalog table as SparkDataFrame
+tableToDF("<catalog>.<schema>.<table>")
+
+# load csv file into SparkDataFrame
+read.df(
+  path = "file:/<path/to/read/csv/data.csv>",
+  source = "csv",
+  header = TRUE,
+  inferSchema = TRUE
+)
+
+# load delta from local filesystem as SparkDataFrame
+read.df(
+  path = "file:/<path/to/read/delta/mtcars>",
+  source = "delta"
+)
+
+# load data from a table using SQL
+# recommended to use `tableToDF`
+sql("SELECT * FROM <catalog>.<schema>.<table>")
+```
+
+**sparklyr**
+
+```{r, eval = FALSE}
+# currently has an issue if using Unity Catalog
+# recommend using `tbl` (example below)
+spark_read_table(sc, "<catalog>.<schema>.<table>", memory = FALSE)
+
+# load table from Unity Catalog with {dplyr}
+tbl(sc, "<catalog>.<schema>.<table>")
+
+# or using `in_catalog`
+tbl(sc, in_catalog("<catalog>", "<schema>", "<table>"))
+
+# load csv from local filesystem as tbl_spark
+spark_read_csv(
+  sc,
+  name = "mtcars_csv",
+  path = "file:/<path/to/delta/mtcars>",
+  header = TRUE,
+  infer_schema = TRUE
+)
+
+# load delta from local filesystem as tbl_spark
+spark_read_delta(
+  sc,
+  name = "mtcars_delta",
+  path = "file:/tmp/test/sparklyr1"
+)
+
+# using SQL
+sdf_sql(sc, "SELECT * FROM <catalog>.<schema>.<table>")
+
+```
+
+## Processing Data
+
+### Select, Filter
+
+**SparkR**
+
+```{r, eval = FALSE}
+# select specific columns
+select(mtcars_df, "mpg", "cyl", "hp")
+
+# filter rows where mpg > 20
+filter(mtcars_df, mtcars_df$mpg > 20)
+```
+
+**sparklyr**
+
+```{r, eval = FALSE}
+# select specific columns
+mtcars_tbl |>
+  select(mpg, cyl, hp)
+
+# filter rows where mpg > 20
+mtcars_tbl |>
+  filter(mpg > 20)
+```
+
+### Adding Columns
+
+**SparkR**
+
+```{r, eval = FALSE}
+# add a new column 'power_to_weight' (hp divided by wt)
+withColumn(mtcars_df, "power_to_weight", mtcars_df$hp / mtcars_df$wt)
+```
+
+**sparklyr**
+
+```{r, eval = FALSE}
+# add a new column 'power_to_weight' (hp divided by wt)
+mtcars_tbl |>
+  mutate(power_to_weight = hp / wt)
+```
+
+### Grouping & Aggregation
+
+**SparkR**
+
+```{r, eval = FALSE}
+# calculate average mpg and hp by number of cylinders
+mtcars_df |>
+  groupBy("cyl") |>
+  summarize(
+    avg_mpg = avg(mtcars_df$mpg),
+    avg_hp = avg(mtcars_df$hp)
+  )
+```
+
+**sparklyr**
+
+```{r, eval = FALSE}
+# calculate average mpg and hp by number of cylinders
+mtcars_tbl |>
+  group_by(cyl) |>
+  summarize(
+    avg_mpg = mean(mpg),
+    avg_hp = mean(hp)
+  )
+```
+
+### Joins
+
+Suppose we have another dataset with cylinder labels that we want to join to mtcars.
+
+**SparkR**
+
+```{r, eval = FALSE}
+# create another SparkDataFrame with cylinder labels
+cylinders <- data.frame(
+  cyl = c(4, 6, 8),
+  cyl_label = c("Four", "Six", "Eight")
+)
+cylinders_df <- createDataFrame(cylinders)
+
+# join mtcars_df with cylinders_df
+join(
+  x = mtcars_df,
+  y = cylinders_df,
+  mtcars_df$cyl == cylinders_df$cyl,
+  joinType = "inner"
+)
+```
+
+**sparklyr**
+
+```{r, eval = FALSE}
+# create another SparkDataFrame with cylinder labels
+cylinders <- data.frame(
+  cyl = c(4, 6, 8),
+  cyl_label = c("Four", "Six", "Eight")
+)
+cylinders_tbl <- copy_to(sc, cylinders, "cylinders", overwrite = TRUE)
+
+# join mtcars_tbl with cylinders_tbl
+mtcars_tbl |>
+  inner_join(cylinders_tbl, by = join_by(cyl))
+```
+
+## User Defined Functions (UDFs)
+
+Suppose we want to categorize horsepower into ‘High’ or ‘Low’ based on a threshold
+
+::: callout-note
+This is an arbitrary example; in practice we would recommend [`case_when()`](https://dplyr.tidyverse.org/reference/case_when.html) combined with [`mutate()`](https://spark.posit.co/guides/dplyr.html#dplyr-verbs).
+:::
+
+```{r, eval = FALSE}
+# define custom function
+categorize_hp <- function(df) {
+  df$hp_category <- ifelse(df$hp > 150, "High", "Low")
+  df
+}
+```
+
+**SparkR**
+
+UDFs in `{SparkR}` require an output schema, which we define first.
+
+```{r, eval = FALSE}
+# define the schema for the output DataFrame
+schema <- structType(
+  structField("mpg", "double"),
+  structField("cyl", "double"),
+  structField("disp", "double"),
+  structField("hp", "double"),
+  structField("drat", "double"),
+  structField("wt", "double"),
+  structField("qsec", "double"),
+  structField("vs", "double"),
+  structField("am", "double"),
+  structField("gear", "double"),
+  structField("carb", "double"),
+  structField("hp_category", "string")
+)
+```
+
+To apply this function to each partition of a Spark DataFrame, we use `dapply()`.
+
+```{r, eval = FALSE}
+# apply function across partitions using dapply
+dapply(
+  mtcars_df,
+  categorize_hp,
+  schema
+)
+```
+
+To apply the same function to each group of a Spark DataFrame, we use `gapply()`. Note that the schema is still required.
+
+```{r, eval = FALSE}
+# apply function across groups
+gapply(
+  mtcars_df,
+  cols = "hp",
+  func = categorize_hp,
+  schema = schema
+)
+```
+
+**sparklyr**
+
+::: callout-tip
+Highly recommended '[Distrubuting R Computations](https://spark.posit.co/guides/distributed-r.html)' guide in `{sparklyr}` docs, it goes into much more detail on `spark_apply()`.
+:::
+
+::: callout-note
+[`spark_apply()`](https://spark.posit.co/packages/sparklyr/latest/reference/spark_apply.html) will do it's best to derive the column names and schema of the output via sampling 10 rows, this can add overhead that can be omitted by specifying the `columns` parameter.
+:::
+
+```{r, eval = FALSE}
+# ensure that {arrow} is loaded, otherwise may encounter cryptic errors
+library(arrow)
+
+# apply the function over data 
+# by default applies to each partition
+mtcars_tbl |>
+  spark_apply(f = categorize_hp)
+
+# apply the function over data 
+# Using `group_by` to apply data over groups
+mtcars_tbl |>
+  spark_apply(
+    f = summary,
+    group_by = "hp" # <1>
+  )
+```
+
+1.  In this example `group_by` isn't changing the resulting output as the functions behaviour is applied to rows independently. Other functions that operate on a set of rows would behave differently (e.g. `summary()`).
+
+`SparkR::spark.lapply()` is unique in that it applies to lists in R, as opposed to DataFrames. There is no exact equivalent in `{sparklyr}`, but using `spark_apply()` with a DataFrame with unique IDs and grouping it by ID will behave similarly in many cases, or, more creative functions that operate on a row-wise basis.
+
+**SparkR**
+
+```{r, eval = FALSE}
+# define a list of integers
+numbers <- list(1, 2, 3, 4, 5)
+
+# define a function to apply
+square <- function(x) {
+  x * x
+}
+
+# apply the function over list using spark
+spark.lapply(numbers, square)
+```
+
+**sparklyr**
+
+```{r, eval = FALSE}
+# create a spark DataFrame of given length
+sdf <- sdf_len(sc, 5, repartition = 1)
+
+# apply function to each partition of data.frame
+spark_apply(sdf, f = nrow) # <1>
+
+# apply function to each row (option 1)
+spark_apply(sdf, f = nrow, group_by = "id") # <2>
+
+# apply function to each row (option 2)
+row_func <- function(df) { # <3>
+  df |> # <3>
+    dplyr::rowwise() |> # <3>
+    dplyr::mutate(x = id * 2)
+} # <3>
+spark_apply(sdf, f = row_func) # <3>
+```
+
+1.  `spark_apply()` defaults to processing data based on number of partitions, in this case it will return a single row as due to `repartition = 1`.
+2.  To force behaviour like `spark.lapply()` you can create a DataFrame with `N` rows and force grouping with `group_by` set to a unique row identifier (in this case it's the `id` column automatically generated by `sdf_len()`). This will return `N` rows.
+3.  This requires writing a function that operates across rows of a `data.frame`, in some occassions this *may* be faster relative to (2). Specifying `group_by` in optional for this example. This example does not require `rowwise()`, but is just to illustrate one method to force computations to be for every row. Your function should take care to import required packages, etc.
+
+## Machine learning
+
+Full examples for each package can be found in the official reference for [`{SparkR}`](https://spark.apache.org/docs/3.5.2/ml-guide.html) and [`{sparklyr}`](https://spark.posit.co/packages/sparklyr/latest/reference/#spark-ml---regression), respectively.
+
+If not using Spark MLlib it is recommended to use UDFs to train with the library of your choice (e.g. `{xgboost}`).
+
+### Linear regression
+
+**SparkR**
+
+```{r, eval = FALSE}
+# select features
+training_df <- select(mtcars_df, "mpg", "hp", "wt")
+
+# fit the model using Generalized Linear Model (GLM)
+linear_model <- spark.glm(training_df, mpg ~ hp + wt, family = "gaussian")
+
+# view model summary
+summary(linear_model)
+```
+
+**sparklyr**
+
+```{r, eval = FALSE}
+# select features
+training_tbl <- mtcars_tbl |>
+  select(mpg, hp, wt)
+
+# fit the model using Generalized Linear Model
+linear_model <- training_tbl |>
+  ml_linear_regression(response = "mpg", features = c("hp", "wt"))
+
+# view model summary
+summary(linear_model)
+```
+
+### K-means clustering
+
+**SparkR**
+
+```{r, eval = FALSE}
+# apply KMeans clustering with 3 clusters using mpg and hp as features
+kmeans_model <- spark.kmeans(mtcars_df, mpg ~ hp, k = 3)
+
+# get cluster predictions
+predict(kmeans_model, mtcars_df) # <1>
+```
+
+1.  Predicting on input data to keep example simple
+
+**sparklyr**
+
+```{r, eval = FALSE}
+# use mpg and hp as features
+features_tbl <- mtcars_tbl |>
+  select(mpg, hp)
+
+# assemble features into a vector column
+features_vector_tbl <- features_tbl |>
+  ft_vector_assembler(
+    input_cols = c("mpg", "hp"),
+    output_col = "features"
+  )
+
+# apply K-Means clustering
+kmeans_model <- features_vector_tbl |>
+  ml_kmeans(features_col = "features", k = 3)
+
+# get cluster predictions
+ml_predict(kmeans_model, features_vector_tbl) # <1>
+```
+
+1.  Predicting on input data to keep example simple
+
+## Performance and optimization
+
+### Collecting
+
+Both `{SparkR}` and `{sparklyr}` use the same function name, `collect()`, to convert Spark DataFrames to R data frames. In general, only collect small amounts of data back to R data frames or the Spark driver will run out of memory, crashing your script (and you want to use Spark to accelerate workloads as much as possible!).
+
+To prevent out of memory errors, `{SparkR}` has built-in optimizations in Databricks Runtime that help collect data or execute user-defined functions (which also require collecting data to workers). To ensure smooth performance with `{sparklyr}` for collecting data and UDFs, make sure to load the [`{arrow}`](https://arrow.apache.org/docs/r/) package in your scripts.
+
+```{r, eval = FALSE}
+# when on Databricks DBR 14.3 or higher {arrow} is pre-installed
+library(arrow)
+```
+
+If you encounter issues with collecting ***large*** datasets with `{sparklyr}` the methods documented [here](https://medium.com/@NotZacDavies/collecting-large-results-with-sparklyr-8256a0370ec6) may assist, however, hitting this is typically an indicator that you should defer more work to Spark.
+
+### In-Memory Partitioning
+
+**SparkR**
+
+```{r, eval = FALSE}
+# repartition the SparkDataFrame based on 'cyl' column
+repartition(mtcars_df, col = mtcars_df$cyl)
+
+# repartition the SparkDataFrame to number of partitions
+repartition(mtcars_df, numPartitions = 10)
+
+# coalesce the SparkDataFrame to number of partitions
+coalesce(mtcars_df, numPartitions = 1)
+
+# get number of partitions
+getNumPartitions(mtcars_df)
+```
+
+**sparklyr**
+
+```{r, eval = FALSE}
+# repartition the tbl_spark based on 'cyl' column
+sdf_repartition(mtcars_tbl, partition_by = "cyl")
+
+# repartition the tbl_spark to number of partitions
+sdf_repartition(mtcars_tbl, partitions = 10)
+
+# coalesce the tbl_spark to number of partitions
+sdf_coalesce(mtcars_tbl, partitions = 1)
+
+# get number of partitions
+sdf_num_partitions(mtcars_tbl)
+```
+
+### Caching
+
+**SparkR**
+
+```{r, eval = FALSE}
+# cache the SparkDataFrame in memory
+cache(mtcars_df)
+```
+
+**sparklyr**
+
+```{r, eval = FALSE}
+# cache the tbl_spark in memory
+tbl_cache(sc, name = "mtcars_tmp")
+```

@@ -1,4 +1,4 @@
-# Log R Models to Unity Catalog
+# Log R Models to Unity Catalog {#sec-log-to-uc}
 
 Currently `{mlflow}` doesn't support directly logging R models to Unity Catalog. This section will cover why, and then how to overcome each roadblock.
 
@@ -193,7 +193,7 @@ with(mlflow_start_run(), {
 
 2.  Passing defined signature to the now patched `mlflow_log_model` function
 
-### Registration to Unity Catalog
+### Registration to Unity Catalog {#sec-log-to-uc-register-to-uc}
 
 Now that the prerequisite of adding a model signature has been satisfied there is one last hurdle to overcome, registering to Unity Catalog.
 

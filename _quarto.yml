@@ -22,7 +22,7 @@ book:
     - part: "Mlflow"
       chapters:
         - chapters/mlflow/log-to-uc.qmd
-        - chapters/mlflow/model-serving.qmd
+        - chapters/mlflow/load-from-uc.qmd
     
     - part: "Package Management"
       chapters: 
@@ -33,6 +33,7 @@ book:
     - part: "Data Engineering"
       chapters:
         - chapters/data-eng/odbc-dbplyr.qmd
+        - chapters/data-eng/sparkr-migration.qmd
 
     - part: "Miscellaneous"
       chapters:

@@ -1,4 +1,4 @@
-#  What is this? {.unnumbered}
+# What is this? {.unnumbered}
 
 ::: callout-caution
 ## Under Development
