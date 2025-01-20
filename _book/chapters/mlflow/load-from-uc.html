@@ -280,9 +280,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#how" id="toc-how" class="nav-link active" data-scroll-target="#how"><span class="header-section-number">2.1</span> How?</a></li>
-  <li><a href="#why-is-this-so-simple" id="toc-why-is-this-so-simple" class="nav-link" data-scroll-target="#why-is-this-so-simple"><span class="header-section-number">2.2</span> Why is this so simple?</a>
+  <li><a href="#why-is-this-so-simple" id="toc-why-is-this-so-simple" class="nav-link" data-scroll-target="#why-is-this-so-simple"><span class="header-section-number">2.2</span> Why Is This So Simple?</a>
   <ul class="collapse">
-  <li><a href="#the-details" id="toc-the-details" class="nav-link" data-scroll-target="#the-details"><span class="header-section-number">2.2.1</span> The details</a></li>
+  <li><a href="#the-details" id="toc-the-details" class="nav-link" data-scroll-target="#the-details"><span class="header-section-number">2.2.1</span> The Details</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/edit/main/chapters/mlflow/load-from-uc.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -319,11 +319,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Yep, very straightforward, it just works as-is.</p>
 </section>
 <section id="why-is-this-so-simple" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="why-is-this-so-simple"><span class="header-section-number">2.2</span> Why is this so simple?</h2>
+<h2 data-number="2.2" class="anchored" data-anchor-id="why-is-this-so-simple"><span class="header-section-number">2.2</span> Why Is This So Simple?</h2>
 <p>A natural question is “<em>why did I have to go through all the pain to register the model, but loading just works?</em>”</p>
 <p>The quick answer is that <code>{mlflow}</code> doesn’t have internal consistency with how it operates, some methods use direct API calls (e.g.&nbsp;registration) and where as others defer to the <a href="https://mlflow.org/docs/latest/cli.html">mlflow CLI</a> via a system call (e.g.&nbsp;loading).</p>
 <section id="the-details" class="level3" data-number="2.2.1">
-<h3 data-number="2.2.1" class="anchored" data-anchor-id="the-details"><span class="header-section-number">2.2.1</span> The details</h3>
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="the-details"><span class="header-section-number">2.2.1</span> The Details</h3>
 <p>As of version <code>2.20.1</code> we can split <code>{mlflow}</code> into those that directly invokes mlflow’s REST API’s via R, or the mlflow CLI.</p>
 <table class="caption-top table">
 <caption>Which functions use REST or CLI clients within <code>{mlflow}</code></caption>
