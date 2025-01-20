@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>8&nbsp; OAuth 🤝 {odbc} – R on Databricks Compendium</title>
+<title>9&nbsp; OAuth 🤝 {odbc} – R on Databricks Compendium</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -114,7 +114,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/misc/htmlwidgets.html">Miscellaneous</a></li><li class="breadcrumb-item"><a href="../../chapters/misc/odbc-oauth.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">OAuth 🤝 <code>{odbc}</code></span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/misc/htmlwidgets.html">Miscellaneous</a></li><li class="breadcrumb-item"><a href="../../chapters/misc/odbc-oauth.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">OAuth 🤝 <code>{odbc}</code></span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -187,8 +187,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/mlflow/model-serving.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Model Serving</span></span></a>
+  <a href="../../chapters/mlflow/load-from-uc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Load R Models from Unity Catalog</span></span></a>
   </div>
 </li>
       </ul>
@@ -234,7 +234,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/data-eng/odbc-dbplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">`{dbplyr}` &amp; `{odbc}`</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title"><code>{dbplyr}</code> and <code>{odbc}</code></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/data-eng/sparkr-migration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title"><code>{SparkR}</code> to <code>{sparklyr}</code></span></span></a>
   </div>
 </li>
       </ul>
@@ -251,13 +257,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/misc/htmlwidgets.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/misc/odbc-oauth.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">OAuth 🤝 <code>{odbc}</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">OAuth 🤝 <code>{odbc}</code></span></span></a>
   </div>
 </li>
       </ul>
@@ -272,16 +278,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#u2m-example" id="toc-u2m-example" class="nav-link active" data-scroll-target="#u2m-example"><span class="header-section-number">8.1</span> U2M Example</a></li>
+  <li><a href="#u2m-example" id="toc-u2m-example" class="nav-link active" data-scroll-target="#u2m-example"><span class="header-section-number">9.1</span> U2M Example</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/edit/main/chapters/misc/odbc-oauth.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/misc/htmlwidgets.html">Miscellaneous</a></li><li class="breadcrumb-item"><a href="../../chapters/misc/odbc-oauth.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">OAuth 🤝 <code>{odbc}</code></span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/misc/htmlwidgets.html">Miscellaneous</a></li><li class="breadcrumb-item"><a href="../../chapters/misc/odbc-oauth.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">OAuth 🤝 <code>{odbc}</code></span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">OAuth 🤝 <code>{odbc}</code></span></h1>
+<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">OAuth 🤝 <code>{odbc}</code></span></h1>
 </div>
 
 
@@ -301,8 +307,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>When using <code>{odbc}</code> to connect to Databricks clusters and SQL warehouses you’ll likely have used a personal access token (PAT). It’s not uncommon for workspace administrators to <a href="https://docs.databricks.com/en/admin/access-control/tokens.html#enable-or-disable-personal-access-token-authentication-for-the-workspace">disable the use of PATs</a>.</p>
 <p>If you are unable to create a PAT you are still able to connect to Databricks but you’ll need to use OAuth (either <a href="https://docs.databricks.com/en/dev-tools/auth/oauth-m2m.html">M2M</a> or <a href="https://docs.databricks.com/en/dev-tools/auth/oauth-u2m.html">U2M</a>).</p>
 <p>User-to-machine (U2M) is typically what you’d want to use. Good news, <a href="https://docs.databricks.com/en/integrations/odbc/authentication.html#oauth-20-tokens">the Databricks ODBC driver supports both since <code>2.7.5</code></a>.</p>
-<section id="u2m-example" class="level2" data-number="8.1">
-<h2 data-number="8.1" class="anchored" data-anchor-id="u2m-example"><span class="header-section-number">8.1</span> U2M Example</h2>
+<section id="u2m-example" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="u2m-example"><span class="header-section-number">9.1</span> U2M Example</h2>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -774,7 +780,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../../chapters/misc/htmlwidgets.html" class="pagination-link" aria-label="`{htmlwidgets}` in notebooks">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

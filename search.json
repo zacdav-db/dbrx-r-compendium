@@ -54,58 +54,25 @@
     ]
   },
   {
-    "objectID": "chapters/mlflow/model-serving.html",
-    "href": "chapters/mlflow/model-serving.html",
-    "title": "2  Model Serving",
+    "objectID": "chapters/mlflow/load-from-uc.html",
+    "href": "chapters/mlflow/load-from-uc.html",
+    "title": "2  Load R Models from Unity Catalog",
     "section": "",
-    "text": "2.1 Serving Overview\nModel serving on Databricks is well documented for Python. It is a common misconception that you cannot serve R models on Databricks, you can!\nFor most model flavours the amount of effort is not worth it - but that decision is not mine to make, I will show you how and you can decide for yourself.",
+    "text": "2.1 How?\n{mlflow} doesn’t support directly logging R models to Unity Catalog (without jumping through a few hoops). However, you can easily load models from Unity Catalog.\n# loading 'prod' alias of `zacdav`.`default`.`my_r_model`\nmodel &lt;- mlflow_load_model(\"models:/zacdav.default.my_r_model@prod\")\nYep, very straightforward, it just works as-is.",
     "crumbs": [
       "Mlflow",
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Model Serving</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Load R Models from Unity Catalog</span>"
     ]
   },
   {
-    "objectID": "chapters/mlflow/model-serving.html#serving-overview",
-    "href": "chapters/mlflow/model-serving.html#serving-overview",
-    "title": "2  Model Serving",
-    "section": "",
-    "text": "Caution\n\n\n\nWork In Progress",
+    "objectID": "chapters/mlflow/load-from-uc.html#why-is-this-so-simple",
+    "href": "chapters/mlflow/load-from-uc.html#why-is-this-so-simple",
+    "title": "2  Load R Models from Unity Catalog",
+    "section": "2.2 Why is this so simple?",
+    "text": "2.2 Why is this so simple?\nA natural question is “why did I have to go through all the pain to register the model, but loading just works?”\nThe quick answer is that {mlflow} doesn’t have internal consistency with how it operates, some methods use direct API calls (e.g. registration) and where as others defer to the mlflow CLI via a system call (e.g. loading).\n\n2.2.1 The details\nAs of version 2.20.1 we can split {mlflow} into those that directly invokes mlflow’s REST API’s via R, or the mlflow CLI.\n\nWhich functions use REST or CLI clients within {mlflow}\n\n\n\n\n\n\n\n\nInvokes REST Client\nInvokes CLI Client\n\n\n\n\nNot relevant to Unity Catalog\n(e.g. experiment tracking related)\nmlflow_create_experiment()\nmlflow_search_experiments()\nmlflow_set_experiment_tag()\nmlflow_get_experiment()\nmlflow_delete_experiment()\nmlflow_delete_experiment()\nmlflow_rename_experiment()\nmlflow_transition_model_version_stage()\nmlflow_record_logged_model()\n\nmlflow_set_model_version_tag()\nmlflow_search_registered_models()\n\n\n\nRelevant to Unity Catalog\n(e.g. model registry)\nmlflow_create_registered_model()\nmlflow_get_registered_model()\nmlflow_rename_registered_model()\nmlflow_update_registered_model()\nmlflow_delete_registered_model()\nmlflow_get_latest_versions()\nmlflow_create_model_version()\nmlflow_get_model_version()\nmlflow_update_model_version()\nmlflow_log_model()*\nmlflow_download_artifacts_from_uri()\nmlflow_download_artifacts()\nmlflow_log_artifact()\nmlflow_load_model()\n\n\n\nmlflow_load_model() calls mlflow_download_artifacts_from_uri(), which in turn uses the CLI directly. The CLI was updated to support Unity Catalog, hence why it ‘just works’ and the functions inherit Unity Catalog compatibility without code changes.\nYou may notice mlflow_log_model() has an asterix, that is because it uniquely calls CLI client (mlflow_log_artifact()) and REST client (mlflow_record_logged_model()), I’ve placed it in the REST column for now.\nThis is part of the problem discussed previously in Section 1.2.3. Unfortunately the CLI doesn’t expose the model registry methods required to support registering models to Unity Catalog, these need to be implemented as part of the REST client in {mlflow}.",
     "crumbs": [
       "Mlflow",
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Model Serving</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/mlflow/model-serving.html#xgboost",
-    "href": "chapters/mlflow/model-serving.html#xgboost",
-    "title": "2  Model Serving",
-    "section": "2.2 XGBoost",
-    "text": "2.2 XGBoost\n\n\n\n\n\n\nCaution\n\n\n\nWork In Progress\n\n\nXGBoost is relatively straightforward since it the artifacts generated when saving the model are universally understood across each language the library is available in.",
-    "crumbs": [
-      "Mlflow",
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Model Serving</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/mlflow/model-serving.html#onnx",
-    "href": "chapters/mlflow/model-serving.html#onnx",
-    "title": "2  Model Serving",
-    "section": "2.3 ONNX",
-    "text": "2.3 ONNX\n\n\n\n\n\n\nCaution\n\n\n\nWork In Progress",
-    "crumbs": [
-      "Mlflow",
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Model Serving</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/mlflow/model-serving.html#crate",
-    "href": "chapters/mlflow/model-serving.html#crate",
-    "title": "2  Model Serving",
-    "section": "2.4 Crate",
-    "text": "2.4 Crate\n\n\n\n\n\n\nCaution\n\n\n\nWork In Progress",
-    "crumbs": [
-      "Mlflow",
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Model Serving</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Load R Models from Unity Catalog</span>"
     ]
   },
   {
@@ -210,45 +177,133 @@
   {
     "objectID": "chapters/data-eng/odbc-dbplyr.html",
     "href": "chapters/data-eng/odbc-dbplyr.html",
-    "title": "6  {dbplyr} & {odbc}",
+    "title": "6  {dbplyr} and {odbc}",
     "section": "",
     "text": "Under Development",
     "crumbs": [
       "Data Engineering",
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>`{dbplyr}` & `{odbc}`</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>`{dbplyr}` and `{odbc}`</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/data-eng/sparkr-migration.html",
+    "href": "chapters/data-eng/sparkr-migration.html",
+    "title": "7  {SparkR} to {sparklyr}",
+    "section": "",
+    "text": "7.1 Introduction\nBeginning with Spark 4.x, {SparkR} will be deprecated. Going forward, {sparklyr} will be the recommended R package for working with Apache Spark. This guide is intended to help users understand the differences between {SparkR} and {sparklyr} across Spark APIs, and aid in code migration from one to the other. It combines basic concepts with specific function mappings where appropriate.",
+    "crumbs": [
+      "Data Engineering",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>`{SparkR}` to `{sparklyr}`</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/data-eng/sparkr-migration.html#introduction",
+    "href": "chapters/data-eng/sparkr-migration.html#introduction",
+    "title": "7  {SparkR} to {sparklyr}",
+    "section": "",
+    "text": "7.1.1 Overview of {SparkR} and {sparklyr}\n{SparkR} and {sparklyr} are both R packages designed to work with Apache Spark, but differ significantly in design, syntax, and integration with the broader R ecosystem.\n{SparkR} is developed as part of Apache Spark itself, and its design mirrors Spark’s core APIs. This makes it straightforward for those familiar with Spark’s other language interfaces - Scala and Python. However, this may be less intuitive for R users accustomed to the tidyverse.\nIn contrast, {sparklyr} is developed and maintained by Posit PBC with a focus on providing a more R-friendly experience. It leverages {dplyr} syntax, which is highly familiar to users of the {tidyverse}, enabling them to interact with Spark DataFrames using R-native verbs like select(), filter(), and mutate(). This makes {sparklyr} easier to learn for R users, especially those who are not familiar with Spark’s native API.",
+    "crumbs": [
+      "Data Engineering",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>`{SparkR}` to `{sparklyr}`</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/data-eng/sparkr-migration.html#environment-setup",
+    "href": "chapters/data-eng/sparkr-migration.html#environment-setup",
+    "title": "7  {SparkR} to {sparklyr}",
+    "section": "7.2 Environment setup",
+    "text": "7.2 Environment setup\n\n7.2.1 Installation\nIf working inside of the Databricks Workspace, no installation is required - you can simply load {sparklyr} with library(sparklyr). To install {sparklyr} on a machine outside of Databricks, follow these steps.\n\n\n7.2.2 Connecting to Spark\nWhen working inside of the Databricks workspace, you can connect to Spark with {sparklyr} with the following code:\n\nlibrary(sparklyr)\nsc &lt;- spark_connect(method = \"databricks\")\n\nWhen connecting to Databricks remotely via Databricks Connect, a slightly different method is used:\n\nsc &lt;- spark_connect(method = \"databricks_connect\")\n\nFor more details and an extended tutorial on Databricks Connect with {sparklyr}, see the official documentation.",
+    "crumbs": [
+      "Data Engineering",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>`{SparkR}` to `{sparklyr}`</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/data-eng/sparkr-migration.html#reading-writing-data",
+    "href": "chapters/data-eng/sparkr-migration.html#reading-writing-data",
+    "title": "7  {SparkR} to {sparklyr}",
+    "section": "7.3 Reading & Writing Data",
+    "text": "7.3 Reading & Writing Data\nIn contrast to generic read.df() and write.df() functions in {SparkR}, {sparklyr} has a family of spark_read_*()and spark_write_*() functions to load and save data. There are also unique functions to create Spark DataFrames or Spark SQL temporary views from R data frames in memory.\n\n7.3.1 TL;DR\n\nRecommended function mapping\n\n\n{SparkR}\n{sparklyr}\n\n\n\n\ncreateDataFrame()\ncopy_to()\n\n\ncreateOrReplaceTempView()\nUse invoke() with method directly\n\n\nsaveAsTable()\nspark_write_table()\n\n\nwrite.df()\nspark_write_&lt;format&gt;()\n\n\ntableToDF()\ntbl() (or spark_read_table() when it’s fixed)\n\n\nread.df()\nspark_read_&lt;format&gt;()\n\n\n\n\n\n7.3.2 Loading Data\nTo convert a R data frame to a Spark DataFrame, or to create a temporary view out of a DataFrame to apply SQL to it:\nSparkR\n\n# create SparkDataFrame from R data frame\nmtcars_df &lt;- createDataFrame(mtcars)\n\nsparklyr\n\n# create SparkDataFrame and name temporary view 'mtcars_tmp'\nmtcars_tbl &lt;- copy_to(\n  sc,\n  df = mtcars,\n1  name = \"mtcars_tmp\",\n  overwrite = TRUE,\n2  memory = FALSE\n) \n\n\n1\n\ncopy_to() will create a temporary view of the data with the given name, you can use name to reference data if using SQL directly (e.g. sdf_sql()).\n\n2\n\nDefault behaviour of copy_to() will set memory as TRUE which caches the table. This helps when reading the data multiple times - sometimes its worth setting to FALSE if data is read as one-off.\n\n\n\n\n\n\n7.3.3 Creating Views\nSparkR\n\n# create temporary view\ncreateOrReplaceTempView(mtcars_df, \"mtcars_tmp_view\")\n\nsparklyr\n\n# direct equivlent from SparkR requires `invoke`\n# usually redundant given `copy_to` already creates a temp view\nspark_dataframe(mtcars_tbl) |&gt;\n  invoke(\"createOrReplaceTempView\", \"mtcars_tmp_view\")\n\n\n\n7.3.4 Writing Data\nSparkR\n\n# save SparkDataFrame to Unity Catalog\nsaveAsTable(\n  mtcars_df,\n  tableName = \"&lt;catalog&gt;.&lt;schema&gt;.&lt;table&gt;\",\n  mode = \"overwrite\"\n)\n\n# save DataFrame using delta format to local filesystem\nwrite.df(\n  mtcars_df,\n  path = \"file:/&lt;path/to/save/delta/mtcars&gt;\",\n1  source = \"delta\",\n  mode = \"overwrite\"\n)\n\n\n1\n\nwrite.df() supports other formats via source parameter\n\n\n\n\nsparklyr\n\n# save tbl_spark to Unity Catalog\nspark_write_table(\n  mtcars_tbl,\n  name = \"&lt;catalog&gt;.&lt;schema&gt;.&lt;table&gt;\",\n  mode = \"overwrite\"\n)\n\n# save tbl_spark using delta format to local filesystem\nspark_write_delta(\n  mtcars_tbl,\n  path = \"file:/&lt;path/to/save/delta/mtcars&gt;\",\n  mode = \"overwrite\"\n)\n\n# Using {DBI}\nlibrary(DBI)\ndbWriteTable(\n  sc,\n  value = mtcars_tbl,\n  name = \"&lt;catalog&gt;.&lt;schema&gt;.&lt;table&gt;\",\n  overwrite = TRUE\n)\n\n\n\n7.3.5 Reading Data\nSparkR\n\n# load Unity Catalog table as SparkDataFrame\ntableToDF(\"&lt;catalog&gt;.&lt;schema&gt;.&lt;table&gt;\")\n\n# load csv file into SparkDataFrame\nread.df(\n  path = \"file:/&lt;path/to/read/csv/data.csv&gt;\",\n  source = \"csv\",\n  header = TRUE,\n  inferSchema = TRUE\n)\n\n# load delta from local filesystem as SparkDataFrame\nread.df(\n  path = \"file:/&lt;path/to/read/delta/mtcars&gt;\",\n  source = \"delta\"\n)\n\n# load data from a table using SQL\n# recommended to use `tableToDF`\nsql(\"SELECT * FROM &lt;catalog&gt;.&lt;schema&gt;.&lt;table&gt;\")\n\nsparklyr\n\n# currently has an issue if using Unity Catalog\n# recommend using `tbl` (example below)\nspark_read_table(sc, \"&lt;catalog&gt;.&lt;schema&gt;.&lt;table&gt;\", memory = FALSE)\n\n# load table from Unity Catalog with {dplyr}\ntbl(sc, \"&lt;catalog&gt;.&lt;schema&gt;.&lt;table&gt;\")\n\n# or using `in_catalog`\ntbl(sc, in_catalog(\"&lt;catalog&gt;\", \"&lt;schema&gt;\", \"&lt;table&gt;\"))\n\n# load csv from local filesystem as tbl_spark\nspark_read_csv(\n  sc,\n  name = \"mtcars_csv\",\n  path = \"file:/&lt;path/to/delta/mtcars&gt;\",\n  header = TRUE,\n  infer_schema = TRUE\n)\n\n# load delta from local filesystem as tbl_spark\nspark_read_delta(\n  sc,\n  name = \"mtcars_delta\",\n  path = \"file:/tmp/test/sparklyr1\"\n)\n\n# using SQL\nsdf_sql(sc, \"SELECT * FROM &lt;catalog&gt;.&lt;schema&gt;.&lt;table&gt;\")",
+    "crumbs": [
+      "Data Engineering",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>`{SparkR}` to `{sparklyr}`</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/data-eng/sparkr-migration.html#processing-data",
+    "href": "chapters/data-eng/sparkr-migration.html#processing-data",
+    "title": "7  {SparkR} to {sparklyr}",
+    "section": "7.4 Processing Data",
+    "text": "7.4 Processing Data\n\n7.4.1 Select, Filter\nSparkR\n\n# select specific columns\nselect(mtcars_df, \"mpg\", \"cyl\", \"hp\")\n\n# filter rows where mpg &gt; 20\nfilter(mtcars_df, mtcars_df$mpg &gt; 20)\n\nsparklyr\n\n# select specific columns\nmtcars_tbl |&gt;\n  select(mpg, cyl, hp)\n\n# filter rows where mpg &gt; 20\nmtcars_tbl |&gt;\n  filter(mpg &gt; 20)\n\n\n\n7.4.2 Adding Columns\nSparkR\n\n# add a new column 'power_to_weight' (hp divided by wt)\nwithColumn(mtcars_df, \"power_to_weight\", mtcars_df$hp / mtcars_df$wt)\n\nsparklyr\n\n# add a new column 'power_to_weight' (hp divided by wt)\nmtcars_tbl |&gt;\n  mutate(power_to_weight = hp / wt)\n\n\n\n7.4.3 Grouping & Aggregation\nSparkR\n\n# calculate average mpg and hp by number of cylinders\nmtcars_df |&gt;\n  groupBy(\"cyl\") |&gt;\n  summarize(\n    avg_mpg = avg(mtcars_df$mpg),\n    avg_hp = avg(mtcars_df$hp)\n  )\n\nsparklyr\n\n# calculate average mpg and hp by number of cylinders\nmtcars_tbl |&gt;\n  group_by(cyl) |&gt;\n  summarize(\n    avg_mpg = mean(mpg),\n    avg_hp = mean(hp)\n  )\n\n\n\n7.4.4 Joins\nSuppose we have another dataset with cylinder labels that we want to join to mtcars.\nSparkR\n\n# create another SparkDataFrame with cylinder labels\ncylinders &lt;- data.frame(\n  cyl = c(4, 6, 8),\n  cyl_label = c(\"Four\", \"Six\", \"Eight\")\n)\ncylinders_df &lt;- createDataFrame(cylinders)\n\n# join mtcars_df with cylinders_df\njoin(\n  x = mtcars_df,\n  y = cylinders_df,\n  mtcars_df$cyl == cylinders_df$cyl,\n  joinType = \"inner\"\n)\n\nsparklyr\n\n# create another SparkDataFrame with cylinder labels\ncylinders &lt;- data.frame(\n  cyl = c(4, 6, 8),\n  cyl_label = c(\"Four\", \"Six\", \"Eight\")\n)\ncylinders_tbl &lt;- copy_to(sc, cylinders, \"cylinders\", overwrite = TRUE)\n\n# join mtcars_tbl with cylinders_tbl\nmtcars_tbl |&gt;\n  inner_join(cylinders_tbl, by = join_by(cyl))",
+    "crumbs": [
+      "Data Engineering",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>`{SparkR}` to `{sparklyr}`</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/data-eng/sparkr-migration.html#user-defined-functions-udfs",
+    "href": "chapters/data-eng/sparkr-migration.html#user-defined-functions-udfs",
+    "title": "7  {SparkR} to {sparklyr}",
+    "section": "7.5 User Defined Functions (UDFs)",
+    "text": "7.5 User Defined Functions (UDFs)\nSuppose we want to categorize horsepower into ‘High’ or ‘Low’ based on a threshold\n\n\n\n\n\n\nNote\n\n\n\nThis is an arbitrary example; in practice we would recommend case_when() combined with mutate().\n\n\n\n# define custom function\ncategorize_hp &lt;- function(df) {\n  df$hp_category &lt;- ifelse(df$hp &gt; 150, \"High\", \"Low\")\n  df\n}\n\nSparkR\nUDFs in {SparkR} require an output schema, which we define first.\n\n# define the schema for the output DataFrame\nschema &lt;- structType(\n  structField(\"mpg\", \"double\"),\n  structField(\"cyl\", \"double\"),\n  structField(\"disp\", \"double\"),\n  structField(\"hp\", \"double\"),\n  structField(\"drat\", \"double\"),\n  structField(\"wt\", \"double\"),\n  structField(\"qsec\", \"double\"),\n  structField(\"vs\", \"double\"),\n  structField(\"am\", \"double\"),\n  structField(\"gear\", \"double\"),\n  structField(\"carb\", \"double\"),\n  structField(\"hp_category\", \"string\")\n)\n\nTo apply this function to each partition of a Spark DataFrame, we use dapply().\n\n# apply function across partitions using dapply\ndapply(\n  mtcars_df,\n  categorize_hp,\n  schema\n)\n\nTo apply the same function to each group of a Spark DataFrame, we use gapply(). Note that the schema is still required.\n\n# apply function across groups\ngapply(\n  mtcars_df,\n  cols = \"hp\",\n  func = categorize_hp,\n  schema = schema\n)\n\nsparklyr\n\n\n\n\n\n\nTip\n\n\n\nHighly recommended ‘Distrubuting R Computations’ guide in {sparklyr} docs, it goes into much more detail on spark_apply().\n\n\n\n\n\n\n\n\nNote\n\n\n\nspark_apply() will do it’s best to derive the column names and schema of the output via sampling 10 rows, this can add overhead that can be omitted by specifying the columns parameter.\n\n\n\n# ensure that {arrow} is loaded, otherwise may encounter cryptic errors\nlibrary(arrow)\n\n# apply the function over data \n# by default applies to each partition\nmtcars_tbl |&gt;\n  spark_apply(f = categorize_hp)\n\n# apply the function over data \n# Using `group_by` to apply data over groups\nmtcars_tbl |&gt;\n  spark_apply(\n    f = summary,\n1    group_by = \"hp\"\n  )\n\n\n1\n\nIn this example group_by isn’t changing the resulting output as the functions behaviour is applied to rows independently. Other functions that operate on a set of rows would behave differently (e.g. summary()).\n\n\n\n\nSparkR::spark.lapply() is unique in that it applies to lists in R, as opposed to DataFrames. There is no exact equivalent in {sparklyr}, but using spark_apply() with a DataFrame with unique IDs and grouping it by ID will behave similarly in many cases, or, more creative functions that operate on a row-wise basis.\nSparkR\n\n# define a list of integers\nnumbers &lt;- list(1, 2, 3, 4, 5)\n\n# define a function to apply\nsquare &lt;- function(x) {\n  x * x\n}\n\n# apply the function over list using spark\nspark.lapply(numbers, square)\n\nsparklyr\n\n# create a spark DataFrame of given length\nsdf &lt;- sdf_len(sc, 5, repartition = 1)\n\n# apply function to each partition of data.frame\n1spark_apply(sdf, f = nrow)\n\n# apply function to each row (option 1)\n2spark_apply(sdf, f = nrow, group_by = \"id\")\n\n# apply function to each row (option 2)\n3row_func &lt;- function(df) {\n  df |&gt;\n    dplyr::rowwise() |&gt;\n    dplyr::mutate(x = id * 2)\n}\nspark_apply(sdf, f = row_func)\n\n\n1\n\nspark_apply() defaults to processing data based on number of partitions, in this case it will return a single row as due to repartition = 1.\n\n2\n\nTo force behaviour like spark.lapply() you can create a DataFrame with N rows and force grouping with group_by set to a unique row identifier (in this case it’s the id column automatically generated by sdf_len()). This will return N rows.\n\n3\n\nThis requires writing a function that operates across rows of a data.frame, in some occassions this may be faster relative to (2). Specifying group_by in optional for this example. This example does not require rowwise(), but is just to illustrate one method to force computations to be for every row. Your function should take care to import required packages, etc.",
+    "crumbs": [
+      "Data Engineering",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>`{SparkR}` to `{sparklyr}`</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/data-eng/sparkr-migration.html#machine-learning",
+    "href": "chapters/data-eng/sparkr-migration.html#machine-learning",
+    "title": "7  {SparkR} to {sparklyr}",
+    "section": "7.6 Machine learning",
+    "text": "7.6 Machine learning\nFull examples for each package can be found in the official reference for {SparkR} and {sparklyr}, respectively.\nIf not using Spark MLlib it is recommended to use UDFs to train with the library of your choice (e.g. {xgboost}).\n\n7.6.1 Linear regression\nSparkR\n\n# select features\ntraining_df &lt;- select(mtcars_df, \"mpg\", \"hp\", \"wt\")\n\n# fit the model using Generalized Linear Model (GLM)\nlinear_model &lt;- spark.glm(training_df, mpg ~ hp + wt, family = \"gaussian\")\n\n# view model summary\nsummary(linear_model)\n\nsparklyr\n\n# select features\ntraining_tbl &lt;- mtcars_tbl |&gt;\n  select(mpg, hp, wt)\n\n# fit the model using Generalized Linear Model\nlinear_model &lt;- training_tbl |&gt;\n  ml_linear_regression(response = \"mpg\", features = c(\"hp\", \"wt\"))\n\n# view model summary\nsummary(linear_model)\n\n\n\n7.6.2 K-means clustering\nSparkR\n\n# apply KMeans clustering with 3 clusters using mpg and hp as features\nkmeans_model &lt;- spark.kmeans(mtcars_df, mpg ~ hp, k = 3)\n\n# get cluster predictions\n1predict(kmeans_model, mtcars_df)\n\n\n1\n\nPredicting on input data to keep example simple\n\n\n\n\nsparklyr\n\n# use mpg and hp as features\nfeatures_tbl &lt;- mtcars_tbl |&gt;\n  select(mpg, hp)\n\n# assemble features into a vector column\nfeatures_vector_tbl &lt;- features_tbl |&gt;\n  ft_vector_assembler(\n    input_cols = c(\"mpg\", \"hp\"),\n    output_col = \"features\"\n  )\n\n# apply K-Means clustering\nkmeans_model &lt;- features_vector_tbl |&gt;\n  ml_kmeans(features_col = \"features\", k = 3)\n\n# get cluster predictions\n1ml_predict(kmeans_model, features_vector_tbl)\n\n\n1\n\nPredicting on input data to keep example simple",
+    "crumbs": [
+      "Data Engineering",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>`{SparkR}` to `{sparklyr}`</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/data-eng/sparkr-migration.html#performance-and-optimization",
+    "href": "chapters/data-eng/sparkr-migration.html#performance-and-optimization",
+    "title": "7  {SparkR} to {sparklyr}",
+    "section": "7.7 Performance and optimization",
+    "text": "7.7 Performance and optimization\n\n7.7.1 Collecting\nBoth {SparkR} and {sparklyr} use the same function name, collect(), to convert Spark DataFrames to R data frames. In general, only collect small amounts of data back to R data frames or the Spark driver will run out of memory, crashing your script (and you want to use Spark to accelerate workloads as much as possible!).\nTo prevent out of memory errors, {SparkR} has built-in optimizations in Databricks Runtime that help collect data or execute user-defined functions (which also require collecting data to workers). To ensure smooth performance with {sparklyr} for collecting data and UDFs, make sure to load the {arrow} package in your scripts.\n\n# when on Databricks DBR 14.3 or higher {arrow} is pre-installed\nlibrary(arrow)\n\nIf you encounter issues with collecting large datasets with {sparklyr} the methods documented here may assist, however, hitting this is typically an indicator that you should defer more work to Spark.\n\n\n7.7.2 In-Memory Partitioning\nSparkR\n\n# repartition the SparkDataFrame based on 'cyl' column\nrepartition(mtcars_df, col = mtcars_df$cyl)\n\n# repartition the SparkDataFrame to number of partitions\nrepartition(mtcars_df, numPartitions = 10)\n\n# coalesce the SparkDataFrame to number of partitions\ncoalesce(mtcars_df, numPartitions = 1)\n\n# get number of partitions\ngetNumPartitions(mtcars_df)\n\nsparklyr\n\n# repartition the tbl_spark based on 'cyl' column\nsdf_repartition(mtcars_tbl, partition_by = \"cyl\")\n\n# repartition the tbl_spark to number of partitions\nsdf_repartition(mtcars_tbl, partitions = 10)\n\n# coalesce the tbl_spark to number of partitions\nsdf_coalesce(mtcars_tbl, partitions = 1)\n\n# get number of partitions\nsdf_num_partitions(mtcars_tbl)\n\n\n\n7.7.3 Caching\nSparkR\n\n# cache the SparkDataFrame in memory\ncache(mtcars_df)\n\nsparklyr\n\n# cache the tbl_spark in memory\ntbl_cache(sc, name = \"mtcars_tmp\")",
+    "crumbs": [
+      "Data Engineering",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>`{SparkR}` to `{sparklyr}`</span>"
     ]
   },
   {
     "objectID": "chapters/misc/htmlwidgets.html",
     "href": "chapters/misc/htmlwidgets.html",
-    "title": "7  {htmlwidgets} in notebooks",
+    "title": "8  {htmlwidgets} in notebooks",
     "section": "",
     "text": "When you try to view a {htmlwidget} based visualisation (e.g. {leaflet}) in a Databricks notebook you’ll find there is no rendered output by default.\nThe Databricks documentation details how to get this working but requires specification of the workspace URL explicitly and writes out files to DBFS’s FileStore without cleaning up after itself.\nThe new method avoids those steps and is drastically simplified and easier to use, just run the below function in a Databricks notebook:\n\nenable_htmlwidgets &lt;- function(height = 450) {\n\n  # new option to control default widget height, default is 450px\n1  options(db_htmlwidget_height = height)\n\n2  system(\"apt-get update && apt-get --yes install pandoc\", intern = T)\n3  if (!base::require(\"htmlwidgets\")) {\n    utils::install.packages(\"htmlwidgets\")\n  }\n\n  # new method will fetch height based on new option, or default to 450px\n4  new_method &lt;- function(x, ...) {\n    x$height &lt;- getOption(\"db_htmlwidget_height\", 450)\n    file &lt;- tempfile(fileext = \".html\")\n    htmlwidgets::saveWidget(x, file = file)\n    contents &lt;- as.character(rvest::read_html(file))\n    displayHTML(contents)\n  }\n\n5  utils::assignInNamespace(\"print.htmlwidget\", new_method, ns = \"htmlwidgets\")\n  invisible(list(default_height = height, print = new_method))\n  \n}\n\n\n1\n\nThe height of the htmlwidget output is controlled via an option (db_htmlwidget_height), this allows the height to be adjusted without re-running the function\n\n2\n\nInstalling pandoc as it’s required to use htmlwidgets::saveWidget\n\n3\n\nEnsure that {htmlwidgets} is installed\n\n4\n\nFunction that writes the widget to a temporary file as a self-contained html file and then reads the contents and presents via displayHTML\n\n5\n\nOverride the htmlwidgets::print.htmlwidget method",
     "crumbs": [
       "Miscellaneous",
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>`{htmlwidgets}` in notebooks</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>`{htmlwidgets}` in notebooks</span>"
     ]
   },
   {
     "objectID": "chapters/misc/odbc-oauth.html",
     "href": "chapters/misc/odbc-oauth.html",
-    "title": "8  OAuth 🤝 {odbc}",
+    "title": "9  OAuth 🤝 {odbc}",
     "section": "",
-    "text": "8.1 U2M Example\nWhen using {odbc} to connect to Databricks clusters and SQL warehouses you’ll likely have used a personal access token (PAT). It’s not uncommon for workspace administrators to disable the use of PATs.\nIf you are unable to create a PAT you are still able to connect to Databricks but you’ll need to use OAuth (either M2M or U2M).\nUser-to-machine (U2M) is typically what you’d want to use. Good news, the Databricks ODBC driver supports both since 2.7.5.\nWhen running this code you should be prompted to login to the workspace or you’ll see a window that says “success”. You can close the window and continue working in R.\nlibrary(odbc)\nlibrary(DBI)\n\ncon &lt;- DBI::dbConnect(\n1  drv = odbc::databricks(),\n2  httpPath = \"/sql/1.0/warehouses/&lt;warehouse-id&gt;\",\n3  workspace = \"&lt;workspace-name&gt;.cloud.databricks.com\",\n4  authMech = 11,\n  auth_flow = 2\n)\n\n\n1\n\n{odbc} recently added odbc::databricks() to simplify connecting to Databricks (requires version &gt;=1.4.0)\n\n2\n\nThe httpPath can be found in the ‘Connection Details’ tab of a SQL warehouse\n\n3\n\nworkspace refers to the workspace URL, also found in ‘Connection Details’ tab as ‘Server hostname’\n\n4\n\nThe docs mention setting AuthMech to 11 and Auth_Flow to 2",
+    "text": "9.1 U2M Example\nWhen using {odbc} to connect to Databricks clusters and SQL warehouses you’ll likely have used a personal access token (PAT). It’s not uncommon for workspace administrators to disable the use of PATs.\nIf you are unable to create a PAT you are still able to connect to Databricks but you’ll need to use OAuth (either M2M or U2M).\nUser-to-machine (U2M) is typically what you’d want to use. Good news, the Databricks ODBC driver supports both since 2.7.5.\nWhen running this code you should be prompted to login to the workspace or you’ll see a window that says “success”. You can close the window and continue working in R.\nlibrary(odbc)\nlibrary(DBI)\n\ncon &lt;- DBI::dbConnect(\n1  drv = odbc::databricks(),\n2  httpPath = \"/sql/1.0/warehouses/&lt;warehouse-id&gt;\",\n3  workspace = \"&lt;workspace-name&gt;.cloud.databricks.com\",\n4  authMech = 11,\n  auth_flow = 2\n)\n\n\n1\n\n{odbc} recently added odbc::databricks() to simplify connecting to Databricks (requires version &gt;=1.4.0)\n\n2\n\nThe httpPath can be found in the ‘Connection Details’ tab of a SQL warehouse\n\n3\n\nworkspace refers to the workspace URL, also found in ‘Connection Details’ tab as ‘Server hostname’\n\n4\n\nThe docs mention setting AuthMech to 11 and Auth_Flow to 2",
     "crumbs": [
       "Miscellaneous",
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>OAuth 🤝 `{odbc}`</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>OAuth 🤝 `{odbc}`</span>"
     ]
   },
   {
     "objectID": "chapters/misc/odbc-oauth.html#u2m-example",
     "href": "chapters/misc/odbc-oauth.html#u2m-example",
-    "title": "8  OAuth 🤝 {odbc}",
+    "title": "9  OAuth 🤝 {odbc}",
     "section": "",
     "text": "Note\n\n\n\nOAuth U2M or OAuth 2.0 browser-based authentication works only with applications that run locally. It does not work with server-based or cloud-based applications.",
     "crumbs": [
       "Miscellaneous",
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>OAuth 🤝 `{odbc}`</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>OAuth 🤝 `{odbc}`</span>"
     ]
   }
 ]

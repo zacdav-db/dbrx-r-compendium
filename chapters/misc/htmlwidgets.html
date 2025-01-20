@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>7&nbsp; {htmlwidgets} in notebooks – R on Databricks Compendium</title>
+<title>8&nbsp; {htmlwidgets} in notebooks – R on Databricks Compendium</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -65,7 +65,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
 <link href="../../chapters/misc/odbc-oauth.html" rel="next">
-<link href="../../chapters/data-eng/odbc-dbplyr.html" rel="prev">
+<link href="../../chapters/data-eng/sparkr-migration.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/misc/htmlwidgets.html">Miscellaneous</a></li><li class="breadcrumb-item"><a href="../../chapters/misc/htmlwidgets.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/misc/htmlwidgets.html">Miscellaneous</a></li><li class="breadcrumb-item"><a href="../../chapters/misc/htmlwidgets.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -188,8 +188,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/mlflow/model-serving.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Model Serving</span></span></a>
+  <a href="../../chapters/mlflow/load-from-uc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Load R Models from Unity Catalog</span></span></a>
   </div>
 </li>
       </ul>
@@ -235,7 +235,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/data-eng/odbc-dbplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">`{dbplyr}` &amp; `{odbc}`</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title"><code>{dbplyr}</code> and <code>{odbc}</code></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/data-eng/sparkr-migration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title"><code>{SparkR}</code> to <code>{sparklyr}</code></span></span></a>
   </div>
 </li>
       </ul>
@@ -252,13 +258,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/misc/htmlwidgets.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/misc/odbc-oauth.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">OAuth 🤝 <code>{odbc}</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">OAuth 🤝 <code>{odbc}</code></span></span></a>
   </div>
 </li>
       </ul>
@@ -274,9 +280,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/misc/htmlwidgets.html">Miscellaneous</a></li><li class="breadcrumb-item"><a href="../../chapters/misc/htmlwidgets.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/misc/htmlwidgets.html">Miscellaneous</a></li><li class="breadcrumb-item"><a href="../../chapters/misc/htmlwidgets.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></h1>
+<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></h1>
 </div>
 
 
@@ -768,13 +774,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../chapters/data-eng/odbc-dbplyr.html" class="pagination-link" aria-label="`{dbplyr}` &amp; `{odbc}`">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title"><code>{dbplyr}</code> &amp; <code>{odbc}</code></span></span>
+      <a href="../../chapters/data-eng/sparkr-migration.html" class="pagination-link" aria-label="`{SparkR}` to `{sparklyr}`">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title"><code>{SparkR}</code> to <code>{sparklyr}</code></span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../../chapters/misc/odbc-oauth.html" class="pagination-link" aria-label="OAuth 🤝 `{odbc}`">
-        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">OAuth 🤝 <code>{odbc}</code></span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">OAuth 🤝 <code>{odbc}</code></span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

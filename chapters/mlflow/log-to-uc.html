@@ -64,7 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../chapters/mlflow/model-serving.html" rel="next">
+<link href="../../chapters/mlflow/load-from-uc.html" rel="next">
 <link href="../../index.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
@@ -188,8 +188,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/mlflow/model-serving.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Model Serving</span></span></a>
+  <a href="../../chapters/mlflow/load-from-uc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Load R Models from Unity Catalog</span></span></a>
   </div>
 </li>
       </ul>
@@ -235,7 +235,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/data-eng/odbc-dbplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">`{dbplyr}` &amp; `{odbc}`</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title"><code>{dbplyr}</code> and <code>{odbc}</code></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/data-eng/sparkr-migration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title"><code>{SparkR}</code> to <code>{sparklyr}</code></span></span></a>
   </div>
 </li>
       </ul>
@@ -252,13 +258,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/misc/htmlwidgets.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/misc/odbc-oauth.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">OAuth 🤝 <code>{odbc}</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">OAuth 🤝 <code>{odbc}</code></span></span></a>
   </div>
 </li>
       </ul>
@@ -278,7 +284,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#patching-mlflow_log_model" id="toc-patching-mlflow_log_model" class="nav-link" data-scroll-target="#patching-mlflow_log_model"><span class="header-section-number">1.2.1</span> Patching <code>mlflow_log_model</code></a></li>
   <li><a href="#logging-model-with-a-signature" id="toc-logging-model-with-a-signature" class="nav-link" data-scroll-target="#logging-model-with-a-signature"><span class="header-section-number">1.2.2</span> Logging Model with a Signature</a></li>
-  <li><a href="#registration-to-unity-catalog" id="toc-registration-to-unity-catalog" class="nav-link" data-scroll-target="#registration-to-unity-catalog"><span class="header-section-number">1.2.3</span> Registration to Unity Catalog</a></li>
+  <li><a href="#sec-log-to-uc-register-to-uc" id="toc-sec-log-to-uc-register-to-uc" class="nav-link" data-scroll-target="#sec-log-to-uc-register-to-uc"><span class="header-section-number">1.2.3</span> Registration to Unity Catalog</a></li>
   </ul></li>
   <li><a href="#fixing-mlflow" id="toc-fixing-mlflow" class="nav-link" data-scroll-target="#fixing-mlflow"><span class="header-section-number">1.3</span> Fixing <code>mlflow</code></a></li>
   </ul>
@@ -289,7 +295,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mlflow/log-to-uc.html">Mlflow</a></li><li class="breadcrumb-item"><a href="../../chapters/mlflow/log-to-uc.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Log R Models to Unity Catalog</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Log R Models to Unity Catalog</span></h1>
+<h1 class="title"><span id="sec-log-to-uc" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Log R Models to Unity Catalog</span></span></h1>
 </div>
 
 
@@ -548,8 +554,8 @@ Note
 </div>
 </div>
 </section>
-<section id="registration-to-unity-catalog" class="level3" data-number="1.2.3">
-<h3 data-number="1.2.3" class="anchored" data-anchor-id="registration-to-unity-catalog"><span class="header-section-number">1.2.3</span> Registration to Unity Catalog</h3>
+<section id="sec-log-to-uc-register-to-uc" class="level3" data-number="1.2.3">
+<h3 data-number="1.2.3" class="anchored" data-anchor-id="sec-log-to-uc-register-to-uc"><span class="header-section-number">1.2.3</span> Registration to Unity Catalog</h3>
 <p>Now that the prerequisite of adding a model signature has been satisfied there is one last hurdle to overcome, registering to Unity Catalog.</p>
 <p>The hurdle is due to <code>{mlflow}</code> not having been updated yet to support registration to Unity Catalog directly. The easiest way to overcome this is to simply register the run via python.</p>
 <p>For example:</p>
@@ -1040,8 +1046,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/mlflow/model-serving.html" class="pagination-link" aria-label="Model Serving">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Model Serving</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/mlflow/load-from-uc.html" class="pagination-link" aria-label="Load R Models from Unity Catalog">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Load R Models from Unity Catalog</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
