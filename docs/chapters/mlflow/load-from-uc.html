@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Zac Davies">
-<meta name="dcterms.date" content="2024-06-20">
 
-<title>R on Databricks Compendium</title>
+<title>2&nbsp; Load R Models from Unity Catalog – R on Databricks Compendium</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,26 +20,61 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./chapters/mlflow/log-to-uc.html" rel="next">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/pkg-management/fast-installs.html" rel="next">
+<link href="../../chapters/mlflow/log-to-uc.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -82,7 +115,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">What is this?</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mlflow/log-to-uc.html">Mlflow</a></li><li class="breadcrumb-item"><a href="../../chapters/mlflow/load-from-uc.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Load R Models from Unity Catalog</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -97,7 +130,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">R on Databricks Compendium</a> 
+      <a href="../../">R on Databricks Compendium</a> 
         <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/zacdav-db/dbrx-r-compendium" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
     <div class="dropdown">
@@ -134,7 +167,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">What is this?</span></a>
   </div>
 </li>
@@ -149,13 +182,13 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/mlflow/log-to-uc.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/mlflow/log-to-uc.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Log R Models to Unity Catalog</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/mlflow/load-from-uc.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/mlflow/load-from-uc.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Load R Models from Unity Catalog</span></span></a>
   </div>
 </li>
@@ -172,19 +205,19 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/pkg-management/fast-installs.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/pkg-management/fast-installs.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Faster Package Installs</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/pkg-management/persisting-libs.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/pkg-management/persisting-libs.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Persisting Packages</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/pkg-management/renv.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/pkg-management/renv.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title"><code>{renv}</code></span></span></a>
   </div>
 </li>
@@ -201,13 +234,13 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/data-eng/odbc-dbplyr.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/data-eng/odbc-dbplyr.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title"><code>{dbplyr}</code> and <code>{odbc}</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/data-eng/sparkr-migration.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/data-eng/sparkr-migration.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title"><code>{SparkR}</code> to <code>{sparklyr}</code></span></span></a>
   </div>
 </li>
@@ -224,13 +257,13 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/misc/htmlwidgets.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/misc/htmlwidgets.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title"><code>{htmlwidgets}</code> in notebooks</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/misc/odbc-oauth.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/misc/odbc-oauth.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">OAuth 🤝 <code>{odbc}</code></span></span></a>
   </div>
 </li>
@@ -246,35 +279,27 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#what-is-this" id="toc-what-is-this" class="nav-link active" data-scroll-target="#what-is-this">What is this?</a></li>
+  <li><a href="#how" id="toc-how" class="nav-link active" data-scroll-target="#how"><span class="header-section-number">2.1</span> How?</a></li>
+  <li><a href="#why-is-this-so-simple" id="toc-why-is-this-so-simple" class="nav-link" data-scroll-target="#why-is-this-so-simple"><span class="header-section-number">2.2</span> Why Is This So Simple?</a>
+  <ul class="collapse">
+  <li><a href="#the-details" id="toc-the-details" class="nav-link" data-scroll-target="#the-details"><span class="header-section-number">2.2.1</span> The Details</a></li>
+  </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/edit/main/chapters/mlflow/load-from-uc.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mlflow/log-to-uc.html">Mlflow</a></li><li class="breadcrumb-item"><a href="../../chapters/mlflow/load-from-uc.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Load R Models from Unity Catalog</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">R on Databricks Compendium</h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Load R Models from Unity Catalog</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Zac Davies </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">June 20, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -284,37 +309,80 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="what-is-this" class="level1 unnumbered">
-<h1 class="unnumbered">What is this?</h1>
-<div class="callout callout-style-default callout-caution callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<p><code>{mlflow}</code> doesn’t support directly logging R models to Unity Catalog (without jumping through a few hoops). However, you can easily load models from Unity Catalog.</p>
+<section id="how" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="how"><span class="header-section-number">2.1</span> How?</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># loading 'prod' alias of `zacdav`.`default`.`my_r_model`</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a>model <span class="ot">&lt;-</span> <span class="fu">mlflow_load_model</span>(<span class="st">"models:/zacdav.default.my_r_model@prod"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="callout-title-container flex-fill">
-Under Development
-</div>
-</div>
-<div class="callout-body-container callout-body">
+<p>Yep, very straightforward, it just works as-is.</p>
+</section>
+<section id="why-is-this-so-simple" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="why-is-this-so-simple"><span class="header-section-number">2.2</span> Why Is This So Simple?</h2>
+<p>A natural question is “<em>why did I have to go through all the pain to register the model, but loading just works?</em>”</p>
+<p>The quick answer is that <code>{mlflow}</code> doesn’t have internal consistency with how it operates, some methods use direct API calls (e.g.&nbsp;registration) and where as others defer to the <a href="https://mlflow.org/docs/latest/cli.html">mlflow CLI</a> via a system call (e.g.&nbsp;loading).</p>
+<section id="the-details" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="the-details"><span class="header-section-number">2.2.1</span> The Details</h3>
+<p>As of version <code>2.20.1</code> we can split <code>{mlflow}</code> into those that directly invokes mlflow’s REST API’s via R, or the mlflow CLI.</p>
+<table class="caption-top table">
+<caption>Which functions use REST or CLI clients within <code>{mlflow}</code></caption>
+<colgroup>
+<col style="width: 24%">
+<col style="width: 48%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Invokes REST Client</th>
+<th>Invokes CLI Client</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p>Not relevant to Unity Catalog</p>
+<p>(e.g.&nbsp;experiment tracking related)</p></td>
+<td><p><code>mlflow_create_experiment()</code></p>
+<p><code>mlflow_search_experiments()</code></p>
+<p><code>mlflow_set_experiment_tag()</code></p>
+<p><code>mlflow_get_experiment()</code></p>
+<p><code>mlflow_delete_experiment()</code></p>
+<p><code>mlflow_delete_experiment()</code></p>
+<p><code>mlflow_rename_experiment()</code></p>
+<p><code>mlflow_transition_model_version_stage()</code></p>
+<p><strong><code>mlflow_record_logged_model()</code></strong></p>
+<hr>
+<p><code>mlflow_set_model_version_tag()</code></p>
+<p><code>mlflow_search_registered_models()</code></p></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>Relevant to Unity Catalog</p>
+<p>(e.g.&nbsp;model registry)</p></td>
+<td><p><code>mlflow_create_registered_model()</code></p>
+<p><code>mlflow_get_registered_model()</code></p>
+<p><code>mlflow_rename_registered_model()</code></p>
+<p><code>mlflow_update_registered_model()</code></p>
+<p><code>mlflow_delete_registered_model()</code></p>
+<p><code>mlflow_get_latest_versions()</code></p>
+<p><code>mlflow_create_model_version()</code></p>
+<p><code>mlflow_get_model_version()</code></p>
+<p><code>mlflow_update_model_version()</code></p>
+<p><code>mlflow_log_model()</code>*</p></td>
+<td><p><code>mlflow_download_artifacts_from_uri()</code></p>
+<p><code>mlflow_download_artifacts()</code></p>
+<p><strong><code>mlflow_log_artifact()</code></strong></p>
+<p><code>mlflow_load_model()</code></p></td>
+</tr>
+</tbody>
+</table>
+<p><code>mlflow_load_model()</code> calls <code>mlflow_download_artifacts_from_uri()</code>, which in turn uses the CLI directly. The CLI was updated to support Unity Catalog, hence why it ‘<em>just works</em>’ and the functions inherit Unity Catalog compatibility without code changes.</p>
+<p>You may notice <code>mlflow_log_model()</code> has an asterix, that is because it uniquely calls CLI client (<code>mlflow_log_artifact()</code>) and REST client (<code>mlflow_record_logged_model()</code>), I’ve placed it in the REST column for now.</p>
+<p>This is part of the problem discussed previously in <a href="log-to-uc.html#sec-log-to-uc-register-to-uc" class="quarto-xref"><span>Section 1.2.3</span></a>. Unfortunately the CLI doesn’t expose the model registry methods required to support registering models to Unity Catalog, these need to be implemented as part of the REST client in <code>{mlflow}</code>.</p>
 
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-This is not intended to be an exhaustive guide, it’s currently a place for me to document and collate useful information regarding R on Databricks.
-</div>
-</div>
-<div class="callout-body-container callout-body">
 
-</div>
-</div>
-<p>There aren’t many definitive examples of how to use R and Databricks together - hopefully the content here will serve as a useful resource.</p>
-
-
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -740,10 +808,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="../../chapters/mlflow/log-to-uc.html" class="pagination-link" aria-label="Log R Models to Unity Catalog">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Log R Models to Unity Catalog</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./chapters/mlflow/log-to-uc.html" class="pagination-link" aria-label="Log R Models to Unity Catalog">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Log R Models to Unity Catalog</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/pkg-management/fast-installs.html" class="pagination-link" aria-label="Faster Package Installs">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Faster Package Installs</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -752,4 +823,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/edit/main/chapters/mlflow/load-from-uc.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/zacdav-db/dbrx-r-compendium/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

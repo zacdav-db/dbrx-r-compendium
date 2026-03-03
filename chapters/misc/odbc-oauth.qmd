@@ -4,7 +4,10 @@ When using `{odbc}` to connect to Databricks clusters and SQL warehouses you'll 
 
 If you are unable to create a PAT you are still able to connect to Databricks but you'll need to use OAuth (either [M2M](https://docs.databricks.com/en/dev-tools/auth/oauth-m2m.html) or [U2M](https://docs.databricks.com/en/dev-tools/auth/oauth-u2m.html)).
 
-User-to-machine (U2M) is typically what you'd want to use. Good news, [the Databricks ODBC driver supports both since `2.7.5`](https://docs.databricks.com/en/integrations/odbc/authentication.html#oauth-20-tokens).
+User-to-machine (U2M) is typically what you'd want to use. The Databricks ODBC driver supports OAuth flows, but the minimum driver version differs by flow:
+
+- [OAuth token passthrough / M2M requires `2.7.5` or above](https://docs.databricks.com/en/integrations/odbc/authentication.html#oauth-token-passthrough-authentication)
+- [Browser-based OAuth U2M requires `2.8.2` or above](https://docs.databricks.com/en/integrations/odbc/authentication.html#oauth-user-to-machine-u2m-authentication)
 
 ## U2M Example
 

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Beginning with Spark `4.x`, [`{SparkR}` will be deprecated](https://spark.apache.org/docs/4.0.0-preview2/sparkr-migration-guide.html#upgrading-from-sparkr-35-to-40). Going forward, `{sparklyr}` will be the recommended R package for working with Apache Spark. This guide is intended to help users understand the differences between `{SparkR}` and `{sparklyr}` across Spark APIs, and aid in code migration from one to the other. It combines basic concepts with specific function mappings where appropriate.
+As of Spark `4.0`, [`{SparkR}` is deprecated and will be removed in a future version](https://spark.apache.org/docs/latest/sparkr-migration-guide.html#upgrading-from-sparkr-35-to-40). Going forward, `{sparklyr}` is the recommended R package for working with Apache Spark. This guide is intended to help users understand the differences between `{SparkR}` and `{sparklyr}` across Spark APIs, and aid in code migration from one to the other. It combines basic concepts with specific function mappings where appropriate.
 
 ### Overview of `{SparkR}` and `{sparklyr}`
 
@@ -42,7 +42,7 @@ In contrast to generic `read.df()` and `write.df()` [functions in `{SparkR}`](ht
 ### TL;DR
 
 | Task | `{SparkR}` | `{sparklyr}` |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | Copy data to Spark | `createDataFrame()` | `copy_to()` |
 | Create temporary view | `createOrReplaceTempView()` | Use `invoke()` with method directly |
 | Write data to table | `saveAsTable()` | `spark_write_table()` |
@@ -191,7 +191,7 @@ tbl(sc, in_catalog("<catalog>", "<schema>", "<table>"))
 spark_read_csv(
   sc,
   name = "mtcars_csv",
-  path = "file:/<path/to/delta/mtcars>",
+  path = "file:/<path/to/csv/mtcars>",
   header = TRUE,
   infer_schema = TRUE
 )
